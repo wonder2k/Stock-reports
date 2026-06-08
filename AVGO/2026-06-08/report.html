@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVGO — Warm Analysis Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js" integrity="sha384-BQKzmHvQLMCAnL3UtDBA1Al5tFjsCz1wrMlIUA1wkzo14DYkRWjywW+p9pCj0cwd" crossorigin="anonymous"></script>
+<style>
+:root {
+    --bg-primary: #faf5ef;
+    --bg-secondary: #f5ede3;
+    --bg-card: #f0e8dd;
+    --text-primary: #2c1810;
+    --text-secondary: #7c6a5a;
+    --text-muted: #a89888;
+    --accent-1: #c2410c;
+    --accent-2: #b91c1c;
+    --accent-green: #059669;
+    --accent-amber: #d97706;
+    --font-display: 'Merriweather', serif;
+    --font-body: 'Inter', sans-serif;
+    --border-color: #d6c8b8;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: var(--font-body);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.slides-container {
+    height: 100vh;
+    width: 100vw;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+}
+.slide {
+    min-height: 100vh;
+    width: 100%;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 64px;
+    background: var(--bg-primary);
+    position: relative;
+    transition: opacity 0.2s ease;
+}
+.grid-bg {
+    background-image:
+        linear-gradient(rgba(194,65,12,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(194,65,12,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+}
+.nav-dots {
+    position: fixed;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 1000;
+}
+.nav-dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--accent-1); background: transparent; cursor: pointer; transition: all 0.15s ease; padding: 0; }
+.nav-dot.active { background: var(--accent-1); transform: scale(1.2); }
+.nav-dot:hover { background: var(--accent-1); opacity: 0.5; }
+.slide-indicator {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    font-family: var(--font-body); font-size: 12px; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--text-secondary); z-index: 1000;
+    background: var(--bg-primary); padding: 6px 16px;
+    border: 1px solid var(--border-color); border-radius: 20px;
+}
+.title-slide { text-align: center; }
+.rating-badge {
+    display: inline-block; padding: 10px 28px; border-radius: 6px;
+    font-family: var(--font-body); font-size: 13px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px;
+}
+.rating-badge.buy { background: #059669; color: #fff; }
+.rating-badge.accumulate { background: #65a30d; color: #fff; }
+.rating-badge.hold { background: #d97706; color: #fff; }
+.rating-badge.reduce { background: #ea580c; color: #fff; }
+.rating-badge.sell { background: #dc2626; color: #fff; }
+.ticker-gradient {
+    font-family: var(--font-display); font-size: 96px; font-weight: 900;
+    letter-spacing: -2px; line-height: 1; margin-bottom: 8px; color: var(--text-primary);
+}
+.company-name { font-family: var(--font-body); font-size: 22px; font-weight: 400; color: var(--text-secondary); margin-bottom: 24px; }
+.title-meta { font-size: 13px; color: var(--text-secondary); letter-spacing: 1px; text-transform: uppercase; }
+.title-meta span { margin: 0 8px; }
+.title-meta .sep { color: var(--border-color); }
+.metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 800px; width: 100%; }
+.metric-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; text-align: center; transition: border-color 0.15s ease; }
+.metric-card:hover { border-color: var(--accent-1); }
+.metric-value { font-family: var(--font-display); font-size: 32px; font-weight: 700; color: var(--text-primary); line-height: 1.2; margin-bottom: 4px; }
+.metric-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); font-weight: 500; }
+.metric-change { font-size: 13px; font-weight: 600; margin-top: 8px; }
+.metric-change.positive { color: #059669; }
+.metric-change.negative { color: var(--accent-2); }
+
+/* Content tables */
+.data-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 16px; }
+.data-table th, .data-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border-color); }
+.data-table th { background: var(--accent-1); color: #fff; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.data-table .label-col { font-weight: 600; color: var(--text-primary); }
+.data-table .val-col { font-weight: 600; }
+.data-table .sig-up { color: #059669; }
+.data-table .sig-down { color: var(--accent-2); }
+.data-table .sig-neutral { color: var(--text-muted); }
+
+/* Table grid */
+.table-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 1000px; width: 100%; }
+
+/* Data cards */
+.data-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 900px; width: 100%; }
+.data-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 20px; text-align: center; }
+.data-card .dc-value { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+.data-card .dc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-top: 4px; font-weight: 500; }
+.data-card .dc-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+/* Scenario grid */
+.scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 900px; margin: 0 auto; }
+.scenario-card { border-radius: 6px; padding: 20px; text-align: center; border: 1px solid var(--border-color); }
+.scenario-card.optimistic { border-color: #059669; background: rgba(5,150,105,0.04); }
+.scenario-card.base { border-color: var(--accent-1); background: rgba(194,65,12,0.04); }
+.scenario-card.pessimistic { border-color: var(--accent-2); background: rgba(185,28,28,0.04); }
+.scenario-card .sc-title { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-bottom: 8px; color: var(--text-secondary); }
+.scenario-card .sc-value { font-family: var(--font-display); font-weight: 700; margin-bottom: 4px; }
+.scenario-card .sc-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+.scenario-card.optimistic .sc-value { color: #059669; }
+.scenario-card.base .sc-value { color: var(--accent-1); }
+.scenario-card.pessimistic .sc-value { color: var(--accent-2); }
+
+/* News list */
+.news-list { list-style: none; max-width: 900px; width: 100%; }
+.news-item { display: flex; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-size: 12px; line-height: 1.5; }
+.news-item:last-child { border-bottom: none; }
+.news-date { font-size: 10px; color: var(--text-muted); white-space: nowrap; min-width: 70px; }
+.news-tag { display: inline-block; padding: 1px 8px; border-radius: 3px; font-size: 10px; font-weight: 600; margin-right: 6px; text-transform: uppercase; }
+.news-tag.bull { background: rgba(5,150,105,0.12); color: #059669; }
+.news-tag.bear { background: rgba(185,28,28,0.12); color: #b91c1c; }
+.news-tag.neutral { background: rgba(168,152,136,0.2); color: var(--text-muted); }
+
+/* Debate */
+.debate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1000px; width: 100%; }
+.debate-panel { border: 1px solid var(--border-color); border-radius: 8px; padding: 32px; background: var(--bg-secondary); }
+.debate-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid var(--border-color); }
+.debate-icon { width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; }
+.debate-icon.bull { background: #059669; color: #fff; }
+.debate-icon.bear { background: var(--accent-2); color: #fff; }
+.debate-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
+.arg-item { padding: 14px 0; border-bottom: 1px solid var(--border-color); }
+.arg-item:last-child { border-bottom: none; }
+.arg-title { display: block; font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.arg-detail { display: block; font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+.arg-data { display: inline-block; font-size: 10px; color: var(--text-muted); padding: 4px 8px; background: rgba(194,65,12,0.05); border-radius: 3px; margin-top: 4px; }
+
+/* Rebuttals */
+.rebuttal-panel { border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; background: var(--bg-secondary); max-width: 900px; width: 100%; margin-bottom: 16px; }
+.rp-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.rp-side { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+.rp-side.bull-side { color: #059669; }
+.rp-side.bear-side { color: var(--accent-2); }
+.rebuttal-item { padding: 10px 0; border-bottom: 1px solid var(--border-color); font-size: 13px; line-height: 1.6; }
+.rebuttal-item:last-child { border-bottom: none; }
+.rebuttal-item strong { color: var(--text-primary); }
+
+/* Core comparison */
+.core-compare-table { width: 100%; max-width: 900px; border-collapse: collapse; font-size: 12px; margin: 0 auto; }
+.core-compare-table th, .core-compare-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border-color); }
+.core-compare-table th { background: var(--accent-1); color: #fff; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+.core-compare-table .dim-col { font-weight: 600; color: var(--text-primary); }
+.core-compare-table .cell-bull { color: #059669; }
+.core-compare-table .cell-bear { color: var(--accent-2); }
+
+/* Decision */
+.decision-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; max-width: 800px; width: 100%; }
+.decision-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; text-align: center; }
+.decision-card .dc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 8px; font-weight: 500; }
+.decision-card .dc-value { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--text-primary); }
+.decision-card .dc-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+.trigger-list { list-style: none; max-width: 700px; width: 100%; }
+.trigger-item { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--border-color); font-size: 12px; color: var(--text-secondary); }
+.trigger-item:last-child { border-bottom: none; }
+.trigger-item .tr-icon { font-size: 14px; }
+.trigger-item .tr-dir { font-weight: 600; }
+.trigger-item .tr-dir.up { color: #059669; }
+.trigger-item .tr-dir.down { color: var(--accent-2); }
+
+.chart-container { width: 100%; max-width: 600px; height: 480px; }
+.kline-container { width: 100%; max-width: 1000px; margin: 0 auto; }
+.kline-container .chart-container { width: 100%; max-width: none; }
+.kline-info { display: flex; gap: 24px; justify-content: center; align-items: center; margin-top: 16px; font-size: 13px; color: var(--text-secondary); }
+.kline-meta { font-weight: 500; }
+.kline-level strong { color: var(--text-primary); }
+.slide-title { font-family: var(--font-body); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--text-secondary); margin-bottom: 32px; text-align: center; }
+
+/* Final score */
+.final-score { font-family: var(--font-display); font-size: 80px; font-weight: 900; line-height: 1; margin-bottom: 8px; color: var(--text-primary); }
+.final-label { font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 8px; }
+.final-rating { margin-bottom: 32px; }
+.per-dim-section { margin-top: 32px; max-width: 700px; width: 100%; }
+.per-dim-section h3 { font-family: var(--font-body); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-bottom: 16px; text-align: center; }
+.per-dim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.score-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 16px; text-align: center; font-size: 13px; color: var(--text-secondary); transition: border-color 0.15s ease; }
+.score-item:hover { border-color: var(--accent-1); }
+.score-item .score-value { display: block; font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+
+@media (max-width: 768px) {
+    .slide { padding: 32px 24px; }
+    .ticker-gradient { font-size: 56px; letter-spacing: -1px; }
+    .company-name { font-size: 18px; }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .data-cards { grid-template-columns: repeat(2, 1fr); }
+    .scenario-grid { grid-template-columns: 1fr; }
+    .table-grid { grid-template-columns: 1fr; }
+    .decision-grid { grid-template-columns: 1fr; }
+    .metric-value { font-size: 24px; }
+    .debate-grid { grid-template-columns: 1fr; gap: 16px; }
+    .final-score { font-size: 56px; }
+    .nav-dots { right: 12px; gap: 8px; }
+    .nav-dot { width: 8px; height: 8px; }
+    .chart-container { height: 360px; }
+}
+@media (max-width: 480px) { .metrics-grid { grid-template-columns: 1fr 1fr; } .data-cards { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="slides-container" id="slidesContainer">
+    <!-- Slide 1 -->
+    <section class="slide title-slide grid-bg">
+        <div class="rating-badge accumulate">ACCUMULATE</div>
+        <div class="ticker-gradient">AVGO</div>
+        <div class="company-name">AVGO</div>
+        <div class="title-meta">
+            <span>全新深度研究</span>
+            <span class="sep">|</span>
+            <span>2026-06-08</span>
+        </div>
+    </section>
+
+    <!-- Slide 2 -->
+    <section class="slide grid-bg">
+        <h2 class="slide-title">Key Metrics</h2>
+        <div class="metrics-grid">
+            <div class="metric-card"><div class="metric-value">385.73</div><div class="metric-label">Price</div></div>
+            <div class="metric-card"><div class="metric-value">39.51</div><div class="metric-label">RSI (14)</div></div>
+            <div class="metric-card"><div class="metric-value">96.43</div><div class="metric-label">P / E</div></div>
+            <div class="metric-card"><div class="metric-value">N/A%</div><div class="metric-label">Short % Float</div></div>
+            <div class="metric-card"><div class="metric-value"><span class="metric-change negative">-5.37%</span></div><div class="metric-label">YTD Return</div></div>
+            <div class="metric-card"><div class="metric-value"><span class="metric-change negative">空头排列 (Bearish)</span></div><div class="metric-label">MACD Signal</div></div>
+        </div>
+    </section>
+
+    <!-- Slide 3: Fundamental -->
+    <section class="slide grid-bg">
+        <h2 class="slide-title">Fundamental Analysis</h2>
+        <p style="font-size:13px;line-height:1.7;color:var(--text-secondary);margin-bottom:16px;text-align:center;max-width:800px;margin-left:auto;margin-right:auto;">Broadcom是半导体和基础设施软件巨头。AI网络芯片(Tomahawk/Jericho)和定制加速器需求强劲，VMware订阅转型稳步推进。PE 96x在AI驱动的结构性周期中不算极端，PEG 1.5合理偏低。</p><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;">损益表摘要</h4><table class="data-table"><thead><tr><th>指标</th><th>TTM</th><th>YoY</th></tr></thead><tbody><tr><td class="label-col">营收</td><td class="val-col">~$550B+</td><td class="sig-neutral">VMware并表</td></tr><tr><td class="label-col">毛利率</td><td class="val-col">~65%+</td><td class="sig-neutral">软件占比提升</td></tr><tr><td class="label-col">净利润率</td><td class="val-col">~25%+</td><td class="sig-neutral">高利润率软件</td></tr><tr><td class="label-col">EPS(TTM)</td><td class="val-col">$4.0</td><td class="sig-neutral">整合期中</td></tr></tbody></table><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">估值指标</h4><table class="data-table"><thead><tr><th>指标</th><th>当前</th><th>评价</th></tr></thead><tbody><tr><td class="label-col">PE(TTM)</td><td class="val-col">96.43</td><td>偏高—周期位置</td></tr><tr><td class="label-col">PEG</td><td class="val-col">1.5</td><td>合理偏低</td></tr><tr><td class="label-col">目标价均值</td><td class="val-col">$424.30</td><td>+10%上行</td></tr></tbody></table><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">EPS &amp; 股价情景</h4><div class="scenario-grid"><div class="scenario-card optimistic"><div class="sc-title">乐观</div><div class="sc-value">$6.00</div><div class="sc-value" style="font-size:16px">$501</div><div class="sc-desc">AI芯片爆发+VMware超预期</div></div><div class="scenario-card base"><div class="sc-title">基准</div><div class="sc-value">$5.00</div><div class="sc-value" style="font-size:16px">$424</div><div class="sc-desc">AI稳健+VMware如期</div></div><div class="scenario-card pessimistic"><div class="sc-title">悲观</div><div class="sc-value">$3.80</div><div class="sc-value" style="font-size:16px">$328</div><div class="sc-desc">AI放缓+整合超成本</div></div></div>
+    </section>
+
+    <!-- Slide 4: K-line + Technical -->
+    <section class="slide grid-bg">
+        <h2 class="slide-title">Price History &amp; Technical Levels</h2>
+        <div class="kline-container">
+            <div class="chart-container" id="klineChart" style="height:520px;"></div>
+        </div>
+        <div class="kline-info">
+            <span>2026-01-13 ~ 2026-06-05</span>
+            <span>Support: <strong>385.73</strong></span>
+            <span>Resistance: <strong>481.57</strong></span>
+        </div>
+        <div class="table-grid"><table class="data-table"><thead><tr><th>指标</th><th>数值</th><th>备注</th></tr></thead><tbody><tr><td class="label-col">当前价</td><td class="val-col">385.73</td><td>回调-19%</td></tr><tr><td class="label-col">52周高/低</td><td class="val-col">~495/~290</td><td></td></tr><tr><td class="label-col">YTD涨幅</td><td class="val-col">-5.37%</td><td>跑输大盘</td></tr><tr><td class="label-col">近1月</td><td class="val-col">-14%</td><td>从$482回落</td></tr></tbody></table><table class="data-table"><thead><tr><th>均线</th><th>当前值</th><th>价格位置</th><th>方向</th><th>评价</th></tr></thead><tbody><tr><td class="label-col">20SMA(MA20)</td><td class="val-col">429.02</td><td>下方</td><td class="sig-down">↓</td><td>短期偏空</td></tr><tr><td class="label-col">50SMA</td><td class="val-col">~420</td><td>下方</td><td class="sig-down">↓</td><td>中期考验</td></tr><tr><td class="label-col">200SMA</td><td class="val-col">~330</td><td>上方</td><td class="sig-up">↑</td><td>长期支撑完好</td></tr></tbody></table></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">动量指标</h4><table class="data-table"><thead><tr><th>指标</th><th>数值</th><th>信号</th></tr></thead><tbody><tr><td class="label-col">RSI(14)</td><td class="val-col">39.51</td><td class="sig-neutral">偏弱近超卖</td></tr><tr><td class="label-col">MACD</td><td class="val-col">空头排列</td><td class="sig-neutral">短期空头</td></tr><tr><td class="label-col">布林带宽</td><td class="val-col">20.81%</td><td class="sig-neutral">中等</td></tr><tr><td class="label-col">ATR(14)</td><td class="val-col">22.88</td><td class="sig-neutral">中高波动</td></tr></tbody></table><div class="kline-info" style="margin-top:8px;">支撑 $385(当前) | 下一支撑 $360-370 | 阻力 $420-430 | 长期多头排列未破</div>
+    </section>
+
+    <!-- Slide 5: Sentiment -->
+    <section class="slide grid-bg">
+        <h2 class="slide-title">Sentiment Analysis</h2>
+        <div class="data-cards"><div class="data-card"><div class="dc-value">N/A</div><div class="dc-label">Short Float</div><div class="dc-sub">空头比例</div></div><div class="data-card"><div class="dc-value">$424.3</div><div class="dc-label">共识目标价</div><div class="dc-sub">vs 当前价</div></div><div class="data-card"><div class="dc-value">50</div><div class="dc-label">Fear &amp; Greed</div><div class="dc-sub">市场情绪</div></div><div class="data-card"><div class="dc-value">18</div><div class="dc-label">VIX</div><div class="dc-sub">波动率指数</div></div></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">分析师评级分布</h4><div style="display:flex;gap:12px;max-width:500px;margin:0 auto 12px;"><div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-card)"><div style="font-size:24px;font-weight:700;color:var(--accent-1)">25</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-muted)">buy</div></div><div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-card)"><div style="font-size:24px;font-weight:700;color:var(--accent-1)">10</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-muted)">hold</div></div><div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-card)"><div style="font-size:24px;font-weight:700;color:var(--accent-1)">3</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-muted)">sell</div></div></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">情绪信号汇总</h4><table class="data-table"><thead><tr><th>指标</th><th>数值</th><th>评价</th><th>信号</th></tr></thead><tbody><tr><td class="label-col">共识目标</td><td>$424.30</td><td>+10%</td><td>🟢</td></tr><tr><td class="label-col">分析师Buy%</td><td>~66%</td><td>多数看多</td><td>🟢</td></tr><tr><td class="label-col">目标区间</td><td>$328-$501</td><td>分散度大</td><td>🟡</td></tr></tbody></table>
+    </section>
+
+    <!-- Slide 6: Macro & News -->
+    <section class="slide grid-bg">
+        <h2 class="slide-title">Macro &amp; News Analysis</h2>
+        <h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;">宏观经济快照</h4><table class="data-table"><thead><tr><th>指标</th><th>当前值</th><th>3M前</th><th>变化</th><th>评价</th></tr></thead><tbody><tr><td class="label-col">AI投资</td><td class="val-col">持续强劲</td><td>↑</td><td class="sig-up">↑</td><td>核心受益</td></tr><tr><td class="label-col">半导体周期</td><td class="val-col">上行</td><td>↑</td><td class="sig-up">↑</td><td>AI结构性</td></tr><tr><td class="label-col">10Y</td><td class="val-col">~4.3%</td><td>4.0%</td><td class="sig-up">↑</td><td>高估值压制</td></tr><tr><td class="label-col">数据中心</td><td class="val-col">快速增长</td><td>—</td><td class="sig-up">↑</td><td>核心受益</td></tr></tbody></table><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">重大新闻事件</h4><ul class="news-list"><li class="news-item"><span class="news-date">2026-05</span><span><span class="news-tag neutral">中性</span><strong>AVGO从$495高点回调</strong><br><span style="color:var(--text-secondary);font-size:11px;">市场调整+获利了结</span></span></li><li class="news-item"><span class="news-date">2026-04</span><span><span class="news-tag bull">利好</span><strong>AI网络芯片需求强劲</strong><br><span style="color:var(--text-secondary);font-size:11px;">Tomahawk 5/Jericho 3订单增长</span></span></li><li class="news-item"><span class="news-date">2026-03</span><span><span class="news-tag bull">利好</span><strong>VMware订阅转型顺利</strong><br><span style="color:var(--text-secondary);font-size:11px;">客户接受度好于预期</span></span></li></ul><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">宏观情景分析</h4><div class="scenario-grid"><div class="scenario-card optimistic"><div class="sc-title">乐观</div><div class="sc-value"></div><div class="sc-value" style="font-size:16px">$</div><div class="sc-desc">AI CapEx持续高增+VMware利润率扩张</div></div><div class="scenario-card base"><div class="sc-title">基准</div><div class="sc-value"></div><div class="sc-value" style="font-size:16px">$</div><div class="sc-desc">AI温和增长+VMware如期</div></div><div class="scenario-card pessimistic"><div class="sc-title">悲观</div><div class="sc-value"></div><div class="sc-value" style="font-size:16px">$</div><div class="sc-desc">AI放缓+VMware客户流失</div></div></div>
+    </section>
+
+    <!-- Slide 7: Debate Round 1 -->
+    <section class="slide grid-bg">
+        <h2 class="slide-title">Bull vs Bear — Round 1</h2>
+        <div class="debate-grid"><div class="debate-panel"><div class="debate-header"><div class="debate-icon bull">B</div><div class="debate-title">Bull Case</div></div><div class="arg-item"><span class="arg-title">AI芯片核心受益</span><span class="arg-detail">网络芯片和定制加速器直接受益数据中心爆发</span><span class="arg-data">📊 Tomahawk 5|定制AI芯片</span></div><div class="arg-item"><span class="arg-title">VMware转型价值</span><span class="arg-detail">订阅化将提升利润率和收入可见性</span><span class="arg-data">📊 VMware年化$30B+</span></div></div><div class="debate-panel"><div class="debate-header"><div class="debate-icon bear">B</div><div class="debate-title">Bear Case</div></div><div class="arg-item"><span class="arg-title">短期技术恶化</span><span class="arg-detail">$495回落-19%，RSI 39.5，MACD空头</span><span class="arg-data">📊 -19%|RSI39.5</span></div><div class="arg-item"><span class="arg-title">高估值承压</span><span class="arg-detail">PE 96x在4.3%利率下脆弱</span><span class="arg-data">📊 PE 96x|10Y4.3%</span></div></div></div>
+    </section>
+
+    <!-- Slide 8: Rebuttals -->
+    <section class="slide grid-bg">
+        <h2 class="slide-title">Round 2 — Rebuttals &amp; Core Comparison</h2>
+        <div class="rebuttal-panel"><div class="rp-header"><div class="debate-icon bull" style="width:24px;height:24px;font-size:12px;">B</div><div class="rp-side bull-side">Bull Rebuttals</div></div><div class="rebuttal-item">↪ <strong>技术面</strong> — 健康回调，AI结构性需求未变</div><div class="rebuttal-item">↪ <strong>估值</strong> — PE反映AI高增长，PEG 1.5支撑</div></div><div class="rebuttal-panel"><div class="rp-header"><div class="debate-icon bear" style="width:24px;height:24px;font-size:12px;">B</div><div class="rp-side bear-side">Bear Rebuttals</div></div><div class="rebuttal-item">↪ <strong>AI增长</strong> — AI渗透率仍低，定制化壁垒深厚</div><div class="rebuttal-item">↪ <strong>VMware</strong> — 客户流失风险未被充分反映</div></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;text-align:center;">核心论点对照</h4><table class="core-compare-table"><thead><tr><th>维度</th><th>看涨观点</th><th>看跌观点</th></tr></thead><tbody><tr><td class="dim-col">增长</td><td class="cell-bull">AI芯片+VMware双轮</td><td class="cell-bear">AI周期见顶+客户流失</td></tr><tr><td class="dim-col">估值</td><td class="cell-bull">PE高但AI溢价合理</td><td class="cell-bear">利率敏感</td></tr><tr><td class="dim-col">技术</td><td class="cell-bull">长期多头未破</td><td class="cell-bear">短期全面偏空</td></tr></tbody></table><p style="font-size:12px;color:var(--text-secondary);text-align:center;margin-top:12px;">看涨方 6-3 胜出 | AI需求强劲但短期有压力</p>
+    </section>
+
+    <!-- Slide 9: Decision -->
+    <section class="slide grid-bg">
+        <h2 class="slide-title">Decision &amp; Risk Management</h2>
+        <div class="decision-grid"><div class="decision-card"><div class="dc-label">目标价</div><div class="dc-value">$424</div><div class="dc-sub">基准 ~$501</div></div><div class="decision-card"><div class="dc-label">止损位</div><div class="dc-value" style="color:var(--accent-2)">$360</div><div class="dc-sub">最大回撤 15%</div></div><div class="decision-card"><div class="dc-label">仓位建议</div><div class="dc-value" style="font-size:20px;font-family:var(--font-body);font-weight:700">核心5-8% 分批$360-400建仓</div></div></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">评级触发条件</h4><ul class="trigger-list" style="margin:0 auto;"><li class="trigger-item"><span class="tr-icon">⬆</span><span class="tr-dir up">上调条件：</span>站回MA20$430+RSI50+</li><li class="trigger-item"><span class="tr-icon">⬇</span><span class="tr-dir down">下调条件：</span>跌破$360→HOLD</li></ul>
+    </section>
+
+    <!-- Slide 10: Radar -->
+    <section class="slide grid-bg">
+        <h2 class="slide-title">Factor Scorecard</h2>
+        <div class="chart-container" id="radarChart"></div>
+    </section>
+</div>
+
+<div class="nav-dots" id="navDots"></div>
+<div class="slide-indicator" id="slideIndicator">1 / 10</div>
+
+<script>
+function SlidePresentation() {
+    'use strict';
+    var container = document.getElementById('slidesContainer');
+    var slides = container.querySelectorAll('.slide');
+    var navDotsEl = document.getElementById('navDots');
+    var slideIndicatorEl = document.getElementById('slideIndicator');
+    var totalSlides = slides.length;
+    var currentIndex = 0;
+    var isScrolling = false;
+
+    slides.forEach(function(_, i) {
+        var dot = document.createElement('div');
+        dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('data-index', i);
+        dot.addEventListener('click', function() { goToSlide(parseInt(this.getAttribute('data-index'))); });
+        navDotsEl.appendChild(dot);
+    });
+
+    function updateActiveDot(index) { var dots = navDotsEl.querySelectorAll('.nav-dot'); dots.forEach(function(d, i) { d.classList.toggle('active', i === index); }); }
+    function updateIndicator(index) { slideIndicatorEl.textContent = (index + 1) + ' / ' + totalSlides; }
+
+    function goToSlide(index) {
+        if (index < 0 || index >= totalSlides || isScrolling) return;
+        isScrolling = true;
+        currentIndex = index;
+        slides[index].scrollIntoView({ behavior: 'smooth' });
+        updateActiveDot(index);
+        updateIndicator(index);
+        setTimeout(function() { isScrolling = false; }, 400);
+    }
+
+    var observerOptions = { root: container, threshold: 0.5 };
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting && !isScrolling) {
+                var idx = Array.prototype.indexOf.call(slides, entry.target);
+                if (idx !== -1) { currentIndex = idx; updateActiveDot(idx); updateIndicator(idx); }
+            }
+        });
+    }, observerOptions);
+    slides.forEach(function(s) { observer.observe(s); });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goToSlide(currentIndex + 1); }
+        else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); goToSlide(currentIndex - 1); }
+    });
+
+    var touchStartY = 0;
+    container.addEventListener('touchstart', function(e) { touchStartY = e.changedTouches[0].screenY; }, { passive: true });
+    container.addEventListener('touchend', function(e) {
+        var diff = touchStartY - e.changedTouches[0].screenY;
+        if (Math.abs(diff) > 50) { if (diff > 0) goToSlide(currentIndex + 1); else goToSlide(currentIndex - 1); }
+    }, { passive: true });
+
+    function initRadar() {
+        var dom = document.getElementById('radarChart');
+        if (!dom) return;
+        var scores;
+        try { scores = JSON.parse('[8,6,7.5,7,7]'); } catch(e) { return; }
+        if (!scores || !Array.isArray(scores)) return;
+        var dimLabels = ['基本面','技术面','情绪面','宏观','风险'];
+        var chart = echarts.init(dom, null);
+        var indicators = dimLabels.map(function(d) { return { name: d, max: 10 }; });
+        chart.setOption({
+            radar: { indicator: indicators, radius: '65%', center: ['50%', '50%'],
+                axisName: { color: '#7c6a5a', fontSize: 12, fontWeight: 500 },
+                splitLine: { lineStyle: { color: 'rgba(194,65,12,0.08)' } },
+                splitArea: { areaStyle: { color: ['rgba(194,65,12,0.02)', 'rgba(194,65,12,0.04)'] } },
+                axisLine: { lineStyle: { color: 'rgba(194,65,12,0.1)' } }
+            },
+            series: [{ type: 'radar', data: [{ value: scores }],
+                areaStyle: { color: 'rgba(194,65,12,0.1)' }, lineStyle: { color: '#c2410c', width: 2 },
+                itemStyle: { color: '#c2410c' }, symbol: 'circle', symbolSize: 6 }]
+        });
+        new ResizeObserver(function() { chart.resize(); }).observe(dom);
+    }
+
+    function initKline() {
+        var dom = document.getElementById('klineChart');
+        if (!dom) return;
+        try {
+            var dates = JSON.parse('["2026-01-13","2026-01-14","2026-01-15","2026-01-16","2026-01-20","2026-01-21","2026-01-22","2026-01-23","2026-01-26","2026-01-27","2026-01-28","2026-01-29","2026-01-30","2026-02-02","2026-02-03","2026-02-04","2026-02-05","2026-02-06","2026-02-09","2026-02-10","2026-02-11","2026-02-12","2026-02-13","2026-02-17","2026-02-18","2026-02-19","2026-02-20","2026-02-23","2026-02-24","2026-02-25","2026-02-26","2026-02-27","2026-03-02","2026-03-03","2026-03-04","2026-03-05","2026-03-06","2026-03-09","2026-03-10","2026-03-11","2026-03-12","2026-03-13","2026-03-16","2026-03-17","2026-03-18","2026-03-19","2026-03-20","2026-03-23","2026-03-24","2026-03-25","2026-03-26","2026-03-27","2026-03-30","2026-03-31","2026-04-01","2026-04-02","2026-04-06","2026-04-07","2026-04-08","2026-04-09","2026-04-10","2026-04-13","2026-04-14","2026-04-15","2026-04-16","2026-04-17","2026-04-20","2026-04-21","2026-04-22","2026-04-23","2026-04-24","2026-04-27","2026-04-28","2026-04-29","2026-04-30","2026-05-01","2026-05-04","2026-05-05","2026-05-06","2026-05-07","2026-05-08","2026-05-11","2026-05-12","2026-05-13","2026-05-14","2026-05-15","2026-05-18","2026-05-19","2026-05-20","2026-05-21","2026-05-22","2026-05-26","2026-05-27","2026-05-28","2026-05-29","2026-06-01","2026-06-02","2026-06-03","2026-06-04","2026-06-05"]'); var values = JSON.parse('[[352.88,359.49,350.91,354.61],[348.97,350.69,334.42,339.89],[349.12,349.68,341.67,343.02],[346.265,354.51,344.05,351.71],[344.1,345.4,331.8,332.6],[335.505,335.8,324.2001,328.8],[335.35,336.99,324.89,325.49],[319.3,321.99,314.11,320.05],[319.8,328.68,317.6,324.85],[329.76,334.76,327.02,332.79],[338.85,339.99,326.7,333.24],[332.56,335.95,320.28,330.73],[332.44,338.2,328.33,331.3],[326.11,336.055,325.75,331.11],[336.74,338.9,308.65,320.33],[319.51,319.51,295.3,308.05],[314.335,326.53,306.7001,310.51],[320.1,335,316.3,332.92],[330.77,352.34,330.65,343.94],[347.47,348.01,339.84,340.44],[346.8,347.2,333.74,342.76],[343.83,346.29,329.56,331.17],[329.85,334.32,324.69,325.17],[319.675,335.75,316.31,332.54],[329.52,337.88,327.23,333.51],[333.01,338.44,329.68,333.99],[332.355,340.11,329.58,332.65],[332.25,338.5,325.32,330.34],[322.54,328.305,314.45,325.49],[330.74,335.91,329.28,332.31],[326.5,326.575,307.93,321.7],[310.7,320,310,319.55],[309.36,320.04,307.2,318.82],[313,315.88,307.4,313.84],[315.68,322.64,311.74,317.53],[330.175,336.12,323.03,332.77],[328.28,343.51,327.404,330.48],[327.25,348.49,323.6101,345.75],[348.73,353.14,340.8,342.58],[342.59,345.81,338.22,341.57],[337.74,339.83,332.2,335.97],[337.68,338.32,321.43,322.16],[326.02,329.2,320.06,324.92],[325.76,327.44,317.25,321.31],[320.425,325.44,315.55,315.93],[312.47,323.27,308.51,319.84],[320.12,321.51,309.92,310.51],[318,326.48,314.93,322.51],[320,324.3999,314.84,318.29],[322.59,324.3,316.719,318.81],[314.02,316.92,309.17,309.415],[307.06,307.5,298.87,300.68],[300.87,304.77,289.96,293.41],[299.39,310.31,296.335,309.51],[313.365,315.79,310.48,313.49],[304.49,314.69,301.7485,314.55],[315.06,316.4,310.28,314.43],[326.73,334.15,321.8,333.97],[351.75,354.14,342.53,350.63],[352.3,358.7,351.5,354.91],[360.94,376.55,360.82,371.55],[369.66,380.86,369.48,379.75],[377.9,382.28,376.32,380.78],[389.88,397.08,385.57,396.72],[395,399.68,392.35,398.47],[400.9,406.725,399.81,406.54],[405.7,406.42,395.9,399.63],[399.41,403.6,394.57,402.17],[406.98,423.2,404.86,422.65],[422.39,429.31,417.8,419.94],[424.98,425,408.86,422.76],[420.475,422.75,414.63,418.2],[400.305,405.81,394.65,399.83],[403.5,405.64,396.78,405.45],[415.52,418.38,404.2301,417.43],[415.092,423.17,413.28,421.28],[418.215,423.83,409.53,416.5],[421.66,433.39,419.35,427.36],[435.56,437.68,417.78,425.44],[421.82,426.49,406.3,412.56],[419.8,435,414,430],[427.615,433.6463,425.0501,428.43],[423.43,429.34,408.41,419.3],[415.805,418.63,404.8,416.79],[416.73,442.36,415.59,439.79],[432.81,432.81,419.8,425.19],[421.41,422.01,414.37,420.71],[409.815,417.9499,405.86,411.07],[412.81,424.17,411.42,417.76],[413.55,422.25,410.5,414.57],[417.49,419.99,410.21,414.14],[418.5,435.31,417,422.01],[425.07,432.8,416.49,421.86],[421.14,429.68,414.01,426.58],[432.95,448.9,431.4707,446.77],[450.09,466.05,442.22,459.97],[488.79,488.82,470.459,481.57],[494.775,495,472.64,479.23],[408.99,426.48,403.0101,418.91],[407.605,410.5,385.59,385.73]]');
+            var volumes = JSON.parse('[18307969,30094734,22218787,31291206,31888371,32006555,24275398,30259482,25006396,23634625,23001670,20447467,28313039,17278166,36489438,43330322,42775810,33003432,30091014,19542682,17004712,22007269,18397161,23469727,13565299,15180877,17658930,16472389,23614368,20182314,33025280,28004177,20567227,20826179,34895801,57076634,39152159,40605821,29531698,20104102,21982746,34724950,31363086,38026497,25460596,23524816,43325937,27369188,19799006,19899988,20343712,23593929,28054452,29289516,19171020,14021076,12111344,33310926,31573114,20514938,29958080,24115842,24423034,29559299,18872895,20581701,16922033,16275473,23702546,19501553,22491076,17451598,25519212,15962458,21821575,11882589,15140433,21175177,20707022,22791741,22561421,16825489,19004345,16981163,19733760,18957093,17863287,20652068,15740503,16865293,14086441,22562895,17601013,17855573,41798353,30585993,38306651,50126446,80979446,51146089]'); var ma20 = JSON.parse('[354.61,339.89,343.02,351.71,332.6,328.8,325.49,320.05,324.85,332.79,333.24,330.73,331.3,331.11,320.33,308.05,310.51,332.92,343.94,331.82,331.23,330.79,329.9,328.94,328.99,329.24,329.6,330.12,330.15,330.12,329.55,328.99,328.37,327.5,327.36,328.6,329.6,330.24,330.17,330.23,329.89,329.44,329.42,328.86,327.98,327.28,326.17,325.78,325.42,324.74,324.13,323.18,321.91,321.7,321.5,320.58,319.78,319.19,319.6,320.26,322.04,324.92,327.71,331.48,335.61,339.95,344.4,348.39,353.6,358.66,364.33,370.2,375.52,380.32,385.52,390.85,395.96,400.63,404.37,407.25,410.17,412.61,414.53,415.54,417.6,418.53,419.59,420.03,419.79,419.52,419.09,419.28,420.38,421.44,422.91,424.84,428.09,430.69,430.36,429.02]');
+            var support = parseFloat('385.73'); var resistance = parseFloat('481.57');
+        } catch(e) { return; }
+        if (!dates || !values || dates.length === 0) return;
+        var chart = echarts.init(dom, null);
+        chart.setOption({
+            tooltip: { trigger: 'axis', axisPointer: { type: 'cross' }, borderWidth: 1, borderColor: '#d6c8b8', backgroundColor: 'rgba(250,245,239,0.95)', textStyle: { color: '#2c1810', fontSize: 12 } },
+            grid: [{ left: '8%', right: '8%', top: '8%', height: '55%' }, { left: '8%', right: '8%', top: '72%', height: '20%' }],
+            xAxis: [{ type: 'category', data: dates, gridIndex: 0, axisLine: { lineStyle: { color: '#d6c8b8' } }, axisTick: { alignWithLabel: true }, axisLabel: { color: '#7c6a5a', fontSize: 10, rotate: 45, interval: Math.max(1, Math.floor(dates.length / 12)) } }, { type: 'category', gridIndex: 1, data: dates, axisLabel: { show: false }, axisLine: { show: false }, axisTick: { show: false } }],
+            yAxis: [{ type: 'value', gridIndex: 0, scale: true, splitLine: { lineStyle: { color: 'rgba(194,65,12,0.06)' } }, axisLabel: { color: '#7c6a5a', fontSize: 10 } }, { type: 'value', gridIndex: 1, scale: true, splitNumber: 2, axisLabel: { color: '#7c6a5a', fontSize: 10 }, splitLine: { show: false } }],
+            dataZoom: [{ type: 'inside', xAxisIndex: [0,1], start: 50, end: 100 }, { type: 'slider', xAxisIndex: [0,1], start: 50, end: 100, bottom: 2, height: 12, borderColor: '#d6c8b8', fillerColor: 'rgba(194,65,12,0.1)' }],
+            series: [
+                { name: 'K-Line', type: 'candlestick', xAxisIndex: 0, yAxisIndex: 0, data: values, itemStyle: { color: '#059669', color0: '#dc2626', borderColor: '#059669', borderColor0: '#dc2626' } },
+                { name: 'MA20', type: 'line', xAxisIndex: 0, yAxisIndex: 0, data: ma20, smooth: true, symbol: 'none', lineStyle: { color: '#c2410c', width: 1.5, type: 'dashed' } },
+                { name: 'Support', type: 'line', xAxisIndex: 0, yAxisIndex: 0, markLine: { silent: true, data: [{ yAxis: support, label: { formatter: 'Support ' + support, color: '#059669', fontSize: 10 }, lineStyle: { color: '#059669', type: 'dotted', width: 1 } }] }, data: [] },
+                { name: 'Resistance', type: 'line', xAxisIndex: 0, yAxisIndex: 0, markLine: { silent: true, data: [{ yAxis: resistance, label: { formatter: 'Resistance ' + resistance, color: '#dc2626', fontSize: 10 }, lineStyle: { color: '#dc2626', type: 'dotted', width: 1 } }] }, data: [] },
+                { name: 'Volume', type: 'bar', xAxisIndex: 1, yAxisIndex: 1, data: volumes.map(function(v, i) { var isUp = values[i][0] <= values[i][3]; return { value: v, itemStyle: { color: isUp ? '#059669' : '#dc2626' } }; }) }
+            ]
+        });
+        new ResizeObserver(function() { chart.resize(); }).observe(dom);
+    }
+
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', function() { initRadar(); initKline(); }); }
+    else { initRadar(); initKline(); }
+    updateIndicator(0);
+}
+new SlidePresentation();
+</script>
+</body>
+</html>
