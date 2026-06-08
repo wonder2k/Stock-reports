@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AAPL — Corporate Analysis Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js" integrity="sha384-BQKzmHvQLMCAnL3UtDBA1Al5tFjsCz1wrMlIUA1wkzo14DYkRWjywW+p9pCj0cwd" crossorigin="anonymous"></script>
+<style>
+:root{--bg-primary:#ffffff;--bg-secondary:#f8fafc;--bg-card:#ffffff;--text-primary:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;--accent-1:#1e3a5f;--accent-2:#b91c1c;--accent-green:#0f766e;--accent-amber:#b45309;--border-color:#e2e8f0;--font-display:'DM Serif Display',serif;--font-body:'DM Sans',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-primary);overflow:hidden;height:100vh;width:100vw;-webkit-font-smoothing:antialiased}
+.slides-container{height:100vh;width:100vw;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;scroll-behavior:smooth}
+.slide{min-height:100vh;width:100%;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:48px 64px;background:var(--bg-primary);position:relative}
+.grid-bg{background-image:linear-gradient(rgba(30,58,95,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,95,0.04) 1px,transparent 1px);background-size:60px 60px}
+.nav-dots{position:fixed;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;z-index:1000}
+.nav-dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--accent-1);background:transparent;cursor:pointer;transition:all .15s ease;padding:0}
+.nav-dot.active{background:var(--accent-1);transform:scale(1.2)}
+.nav-dot:hover{background:var(--accent-1);opacity:.5}
+.slide-indicator{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-secondary);z-index:1000;background:var(--bg-primary);padding:6px 16px;border:1px solid var(--border-color);border-radius:20px}
+.title-slide{text-align:center}
+.rating-badge{display:inline-block;padding:10px 28px;border-radius:4px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px}
+.rating-badge.buy{background:#0f766e;color:#fff}
+.rating-badge.accumulate{background:#4f772d;color:#fff}
+.rating-badge.hold{background:var(--accent-amber);color:#fff}
+.rating-badge.reduce{background:#c2410c;color:#fff}
+.rating-badge.sell{background:var(--accent-2);color:#fff}
+.ticker-gradient{font-family:var(--font-display);font-size:96px;font-weight:400;letter-spacing:-1px;line-height:1;margin-bottom:4px;color:var(--accent-1)}
+.company-name{font-size:22px;font-weight:500;color:var(--text-secondary);margin-bottom:24px}
+.title-meta{font-size:13px;color:var(--text-secondary);letter-spacing:1px;text-transform:uppercase}
+.title-meta .sep{color:var(--border-color);margin:0 8px}
+.slide-title{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--text-muted);margin-bottom:24px;text-align:center}
+.slide-subtitle{font-family:var(--font-display);font-size:28px;font-weight:400;color:var(--accent-1);margin-bottom:24px;text-align:center;line-height:1.3}
+.metrics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:800px;width:100%}
+.metric-card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:6px;padding:24px;text-align:center}
+.metric-value{font-family:var(--font-display);font-size:32px;font-weight:400;color:var(--accent-1);line-height:1.2;margin-bottom:4px}
+.metric-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-secondary);font-weight:500}
+.metric-change{font-size:13px;font-weight:600;margin-top:8px}
+.metric-change.positive{color:var(--accent-green)}
+.metric-change.negative{color:var(--accent-2)}
+.chart-container{width:100%;max-width:600px;height:460px}
+.kline-container{width:100%;max-width:1000px;margin:0 auto}
+.kline-container .chart-container{width:100%;max-width:none}
+.kline-info{display:flex;gap:24px;justify-content:center;align-items:center;margin-top:12px;font-size:13px;color:var(--text-secondary)}
+.kline-level strong{color:var(--text-primary)}
+.data-section{max-width:1000px;width:100%}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px}
+.data-table th,.data-table td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border-color)}
+.data-table thead th{background:var(--accent-1);color:#fff;font-weight:600;letter-spacing:.5px;font-size:11px;text-transform:uppercase}
+.data-table tbody tr:hover{background:var(--bg-secondary)}
+.data-table .label-col{font-weight:600;color:var(--text-primary);white-space:nowrap}
+.data-table .val-col{font-family:var(--font-display);font-size:14px;color:var(--accent-1)}
+.data-table .sig-up{color:var(--accent-green);font-weight:600}
+.data-table .sig-down{color:var(--accent-2);font-weight:600}
+.data-table .sig-neutral{color:var(--text-secondary)}
+.data-table .trend-up{color:var(--accent-green)}
+.data-table .trend-down{color:var(--accent-2)}
+.table-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.table-grid .data-table{margin-bottom:0}
+.data-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.data-card{border:1px solid var(--border-color);border-radius:6px;padding:16px;text-align:center;background:var(--bg-card)}
+.data-card .dc-value{font-family:var(--font-display);font-size:24px;color:var(--accent-1);line-height:1.2}
+.data-card .dc-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-top:4px}
+.data-card .dc-sub{font-size:11px;color:var(--text-secondary);margin-top:2px}
+.news-list{list-style:none;margin-bottom:16px}
+.news-item{padding:10px 0;border-bottom:1px solid var(--border-color);display:flex;gap:12px;align-items:flex-start;font-size:13px;line-height:1.5}
+.news-date{white-space:nowrap;color:var(--text-muted);font-size:11px;font-weight:600;min-width:60px}
+.news-tag{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:600;margin-right:8px}
+.news-tag.bull{background:rgba(15,118,110,.1);color:var(--accent-green)}
+.news-tag.bear{background:rgba(185,28,28,.1);color:var(--accent-2)}
+.news-tag.neutral{background:rgba(100,116,139,.1);color:var(--text-secondary)}
+.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.scenario-card{border:1px solid var(--border-color);border-radius:6px;padding:16px;text-align:center;background:var(--bg-card)}
+.scenario-card.optimistic{border-top:3px solid var(--accent-green)}
+.scenario-card.base{border-top:3px solid var(--accent-amber)}
+.scenario-card.pessimistic{border-top:3px solid var(--accent-2)}
+.scenario-card .sc-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px}
+.scenario-card .sc-value{font-family:var(--font-display);font-size:20px;color:var(--accent-1);margin-bottom:4px}
+.scenario-card .sc-desc{font-size:11px;color:var(--text-secondary);line-height:1.5}
+.debate-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:1000px;width:100%}
+.debate-panel{border:1px solid var(--border-color);border-radius:6px;padding:24px;background:var(--bg-secondary)}
+.debate-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--accent-1)}
+.debate-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700}
+.debate-icon.bull{background:var(--accent-green);color:#fff}
+.debate-icon.bear{background:var(--accent-2);color:#fff}
+.debate-title{font-family:var(--font-display);font-size:18px;text-transform:uppercase;letter-spacing:1px;color:var(--accent-1)}
+.arg-item{padding:10px 0;border-bottom:1px solid var(--border-color)}
+.arg-item:last-child{border-bottom:none}
+.arg-item .arg-title{font-weight:700;font-size:14px;color:var(--text-primary);display:block;margin-bottom:4px}
+.arg-item .arg-detail{font-size:12px;color:var(--text-secondary);line-height:1.6;display:block}
+.arg-item .arg-data{font-size:10px;color:var(--text-muted);margin-top:4px;padding:4px 8px;background:rgba(30,58,95,.05);border-radius:3px;display:inline-block}
+.rebuttal-panel{border:1px solid var(--border-color);border-radius:6px;padding:20px;background:var(--bg-secondary);margin-bottom:12px}
+.rebuttal-panel .rp-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.rebuttal-panel .rp-side{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.rebuttal-panel .rp-side.bull-side{color:var(--accent-green)}
+.rebuttal-panel .rp-side.bear-side{color:var(--accent-2)}
+.rebuttal-item{padding:6px 0;font-size:12px;line-height:1.6;color:var(--text-primary)}
+.rebuttal-item strong{color:var(--accent-1)}
+.core-compare-table{width:100%;margin-top:12px}
+.core-compare-table th,.core-compare-table td{padding:8px 12px;border-bottom:1px solid var(--border-color);font-size:11px;text-align:center}
+.core-compare-table th{background:var(--accent-1);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:1px}
+.core-compare-table .dim-col{text-align:left;font-weight:600;color:var(--text-primary);font-size:12px}
+.core-compare-table .cell-bull{color:var(--accent-green);font-size:11px}
+.core-compare-table .cell-bear{color:var(--accent-2);font-size:11px}
+.final-score{font-family:var(--font-display);font-size:80px;font-weight:400;line-height:1;margin-bottom:8px;color:var(--accent-1)}
+.final-label{font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-secondary);margin-bottom:8px}
+.final-rating{margin-bottom:24px}
+.per-dim-section{margin-top:24px;max-width:700px;width:100%}
+.per-dim-section h3{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:12px;text-align:center}
+.per-dim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.score-item{background:var(--bg-card);border:1px solid var(--border-color);border-radius:6px;padding:14px;text-align:center;font-size:12px;color:var(--text-secondary)}
+.score-item .score-value{font-family:var(--font-display);font-size:18px;font-weight:400;margin-bottom:2px}
+.decision-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;max-width:800px;width:100%;margin-bottom:20px}
+.decision-card{border:1px solid var(--border-color);border-radius:6px;padding:20px;text-align:center;background:var(--bg-card)}
+.decision-card .dc-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:6px}
+.decision-card .dc-value{font-family:var(--font-display);font-size:28px;color:var(--accent-1)}
+.decision-card .dc-sub{font-size:11px;color:var(--text-secondary);margin-top:4px}
+.trigger-list{list-style:none;max-width:600px;width:100%}
+.trigger-item{padding:8px 0;display:flex;align-items:center;gap:10px;font-size:13px;border-bottom:1px solid var(--border-color);color:var(--text-primary)}
+.trigger-item:last-child{border-bottom:none}
+.trigger-item .tr-icon{font-size:16px}
+.trigger-item .tr-dir.up{color:var(--accent-green);font-weight:600}
+.trigger-item .tr-dir.down{color:var(--accent-2);font-weight:600}
+.conclusion-text{max-width:700px;text-align:center;font-size:14px;line-height:1.8;color:var(--text-secondary);margin-top:8px}
+@media(max-width:768px){
+.slide{padding:32px 20px}
+.ticker-gradient{font-size:56px}
+.metrics-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+.metric-value{font-size:24px}
+.data-cards{grid-template-columns:1fr 1fr}
+.table-grid,.scenario-grid,.decision-grid{grid-template-columns:1fr}
+.debate-grid{grid-template-columns:1fr;gap:14px}
+.final-score{font-size:56px}
+.nav-dots{right:12px;gap:8px}
+.nav-dot{width:8px;height:8px}
+.chart-container{height:360px}
+}
+</style>
+</head>
+<body>
+
+<div class="slides-container" id="slidesContainer">
+  <!-- Slide 1: Title -->
+  <section class="slide title-slide grid-bg">
+    <div class="rating-badge accumulate">ACCUMULATE</div>
+    <div class="ticker-gradient">AAPL</div>
+    <div class="company-name">Apple Inc</div>
+    <div class="title-meta"><span>全新深度研究</span><span class="sep">|</span><span>2026-06-08</span></div>
+  </section>
+
+  <!-- Slide 2: Key Metrics -->
+  <section class="slide grid-bg">
+    <h2 class="slide-title">Key Metrics</h2>
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="metric-value">210.30</div><div class="metric-label">Price</div></div>
+      <div class="metric-card"><div class="metric-value">58</div><div class="metric-label">RSI (14)</div></div>
+      <div class="metric-card"><div class="metric-value">32.1</div><div class="metric-label">P / E</div></div>
+      <div class="metric-card"><div class="metric-value">2.1%</div><div class="metric-label">Short % Float</div></div>
+      <div class="metric-card"><div class="metric-value"><span class="metric-change positive">+12.3%</span></div><div class="metric-label">YTD Return</div></div>
+      <div class="metric-card"><div class="metric-value"><span class="metric-change positive">多头状态 (Bullish)</span></div><div class="metric-label">MACD Signal</div></div>
+    </div>
+  </section>
+
+  <!-- Slide 3: Fundamental Analysis -->
+  <section class="slide grid-bg">
+    <h2 class="slide-title">Fundamental Analysis</h2>
+    <h3 class="slide-subtitle">财务三表 &amp; 估值深度拆解</h3>
+    <div class="data-section">
+      <p style="font-size:13px;line-height:1.7;color:var(--text-secondary);margin-bottom:16px;text-align:center;max-width:800px;margin-left:auto;margin-right:auto;">Apple财务状况极为健康，营收$100B (+12% YoY)，毛利率55% (+2pp)反映出高毛利服务业务占比持续提升。EPS $6.55 (+15%)增长强劲，ROIC 20%彰显资本效率。FCF $50B支撑大规模回购（年$100B+）。PE 32x虽高于市场均值，但PEG 1.5x合理，反映增长与定价权支撑。最大看点：Apple Intelligence驱动的AI升级周期有望催化未来12-18个月需求。</p><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;">损益表摘要</h4><table class="data-table"><thead><tr><th>指标</th><th>TTM</th><th>YoY</th></tr></thead><tbody><tr><td class="label-col">营收</td><td class="val-col">100B</td><td class="sig-up">+12%</td></tr><tr><td class="label-col">毛利率</td><td class="val-col">55%</td><td class="sig-up">+2pp</td></tr><tr><td class="label-col">净利润率</td><td class="val-col">22%</td><td class="sig-neutral">持平</td></tr><tr><td class="label-col">EPS</td><td class="val-col">$6.55</td><td class="sig-up">+15%</td></tr></tbody></table><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">估值指标</h4><table class="data-table"><thead><tr><th>指标</th><th>当前</th><th>评价</th></tr></thead><tbody><tr><td class="label-col">PE</td><td class="val-col">32.1</td><td>偏高—行业均值25x但品牌溢价合理</td></tr><tr><td class="label-col">PEG</td><td class="val-col">1.5</td><td>合理—增长与估值匹配</td></tr><tr><td class="label-col">FCF Yield</td><td class="val-col">3.5%</td><td>稳健—支持回购+分红</td></tr></tbody></table><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">EPS &amp; 股价情景</h4><div class="scenario-grid"><div class="scenario-card optimistic"><div class="sc-title">乐观</div><div class="sc-value">$7.80</div><div class="sc-value" style="font-size:16px">$310</div><div class="sc-desc">AI超级升级周期+服务加速</div></div><div class="scenario-card base"><div class="sc-title">基准</div><div class="sc-value">$7.20</div><div class="sc-value" style="font-size:16px">$260</div><div class="sc-desc">稳步增长+服务占比提升</div></div><div class="scenario-card pessimistic"><div class="sc-title">悲观</div><div class="sc-value">$6.00</div><div class="sc-value" style="font-size:16px">$195</div><div class="sc-desc">iPhone需求疲软+竞争加剧</div></div></div>
+    </div>
+  </section>
+
+  <!-- Slide 4: Technical Analysis -->
+  <section class="slide grid-bg">
+    <h2 class="slide-title">Technical Analysis</h2>
+    <h3 class="slide-subtitle">多时间框架技术指标全景</h3>
+    <div class="data-section">
+      <div class="table-grid"><table class="data-table"><thead><tr><th>指标</th><th>数值</th><th>备注</th></tr></thead><tbody><tr><td class="label-col">当前价</td><td class="val-col">210.30</td><td>52周高$252回落16.5%</td></tr><tr><td class="label-col">52周高/低</td><td class="val-col">252 / 168</td><td></td></tr><tr><td class="label-col">YTD涨幅</td><td class="val-col">+12.3%</td><td>跑赢S&amp;P(+8.5%)</td></tr><tr><td class="label-col">近3月涨幅</td><td class="val-col">-8.5%</td><td>从高点回调中</td></tr></tbody></table><table class="data-table"><thead><tr><th>均线</th><th>当前值</th><th>价格位置</th><th>方向</th><th>评价</th></tr></thead><tbody><tr><td class="label-col">20 SMA</td><td class="val-col">219.67</td><td>下方</td><td class="sig-down">↓</td><td>短期偏空</td></tr><tr><td class="label-col">50 SMA</td><td class="val-col">218.50</td><td>下方</td><td class="sig-neutral">→</td><td>中期中性</td></tr><tr><td class="label-col">200 SMA</td><td class="val-col">195.00</td><td>上方</td><td class="sig-up">↑</td><td>长期支撑强劲</td></tr></tbody></table></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">动量指标</h4><table class="data-table"><thead><tr><th>指标</th><th>数值</th><th>信号</th></tr></thead><tbody><tr><td class="label-col">RSI(14)</td><td class="val-col">58</td><td class="sig-neutral">中性偏强</td></tr><tr><td class="label-col">MACD</td><td class="val-col">Bullish</td><td class="sig-neutral">维持多头信号</td></tr><tr><td class="label-col">布林带宽</td><td class="val-col">8%</td><td class="sig-neutral">窄幅盘整—即将变盘</td></tr><tr><td class="label-col">ATR</td><td class="val-col">5.26</td><td class="sig-neutral">正常波动</td></tr></tbody></table><div class="kline-info" style="margin-top:8px;">支撑位 $195.58 (200日均线附近) | 阻力位 $227.12 (布林上轨) | 从$252高位回调17%后处于关键支撑区</div>
+    </div>
+  </section>
+
+  <!-- Slide 5: K-line Chart -->
+  <section class="slide grid-bg">
+    <h2 class="slide-title">Price History &amp; Technical Levels</h2>
+    <div class="kline-container">
+      <div class="chart-container" id="klineChart" style="height:520px;"></div>
+    </div>
+    <div class="kline-info">
+      <span>2026-02-02 ~ 2026-06-05</span>
+      <span>Support: <strong>195.58</strong></span>
+      <span>Resistance: <strong>227.12</strong></span>
+    </div>
+  </section>
+
+  <!-- Slide 6: Sentiment Analysis -->
+  <section class="slide grid-bg">
+    <h2 class="slide-title">Sentiment Analysis</h2>
+    <h3 class="slide-subtitle">情绪面综合信号监测</h3>
+    <div class="data-section">
+      <div class="data-cards"><div class="data-card"><div class="dc-value">2.1%</div><div class="dc-label">Short Float</div><div class="dc-sub">空头比例</div></div><div class="data-card"><div class="dc-value">$252.36</div><div class="dc-label">共识目标价</div><div class="dc-sub">vs 当前价</div></div><div class="data-card"><div class="dc-value">58</div><div class="dc-label">Fear &amp; Greed</div><div class="dc-sub">市场情绪</div></div><div class="data-card"><div class="dc-value">18</div><div class="dc-label">VIX</div><div class="dc-sub">波动率指数</div></div></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">分析师评级分布</h4><div style="display:flex;gap:12px;max-width:500px;margin:0 auto 12px;"><div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-card)"><div style="font-size:24px;font-weight:700;color:var(--accent-1)">28</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-muted)">buy</div></div><div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-card)"><div style="font-size:24px;font-weight:700;color:var(--accent-1)">12</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-muted)">hold</div></div><div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-card)"><div style="font-size:24px;font-weight:700;color:var(--accent-1)">3</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-muted)">sell</div></div></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">情绪信号汇总</h4><table class="data-table"><thead><tr><th>指标</th><th>数值</th><th>评价</th><th>信号</th></tr></thead><tbody><tr><td class="label-col">Short Float</td><td>2.1%</td><td>极低</td><td>🟢</td></tr><tr><td class="label-col">机构持仓</td><td>70%</td><td>稳定—信心充足</td><td>🟢</td></tr><tr><td class="label-col">分析师Buy%</td><td>65%</td><td>强烈看多</td><td>🟢</td></tr></tbody></table>
+    </div>
+  </section>
+
+  <!-- Slide 7: Macro & News Analysis -->
+  <section class="slide grid-bg">
+    <h2 class="slide-title">Macro &amp; News</h2>
+    <h3 class="slide-subtitle">宏观环境与行业动态全景</h3>
+    <div class="data-section">
+      <h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;">宏观经济快照</h4><table class="data-table"><thead><tr><th>指标</th><th>当前值</th><th>3M前</th><th>变化</th><th>评价</th></tr></thead><tbody><tr><td class="label-col">SPY YTD</td><td class="val-col">+8.5%</td><td>+6.0%</td><td class="sig-up">↑</td><td>市场整体向好</td></tr><tr><td class="label-col">QQQ YTD</td><td class="val-col">+10.2%</td><td>+7.5%</td><td class="sig-up">↑</td><td>科技领涨</td></tr><tr><td class="label-col">10Y收益率</td><td class="val-col">4.35%</td><td>4.10%</td><td class="sig-up">↑</td><td>成长股估值承压</td></tr></tbody></table><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">重大新闻事件</h4><ul class="news-list"><li class="news-item"><span class="news-date">2026-06-05</span><span><span class="news-tag bull">利好</span><strong>Apple Intelligence AI功能全球扩展</strong><br><span style="color:var(--text-secondary);font-size:11px;">iOS 19内置AI功能获好评，推动iPhone升级预期</span></span></li><li class="news-item"><span class="news-date">2026-05-20</span><span><span class="news-tag bull">利好</span><strong>Apple Q2财报超预期</strong><br><span style="color:var(--text-secondary);font-size:11px;">营收$95B超预期，服务收入$26B创新高</span></span></li><li class="news-item"><span class="news-date">2026-04-15</span><span><span class="news-tag bull">利好</span><strong>Vision Pro中国获批上市</strong><br><span style="color:var(--text-secondary);font-size:11px;">中国区Vision Pro开售，打开长期增长空间</span></span></li></ul><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">宏观情景分析</h4><div class="scenario-grid"><div class="scenario-card optimistic"><div class="sc-title">乐观</div><div class="sc-value"></div><div class="sc-value" style="font-size:16px">$</div><div class="sc-desc">软着陆+降息——利好高估值科技</div></div><div class="scenario-card base"><div class="sc-title">基准</div><div class="sc-value"></div><div class="sc-value" style="font-size:16px">$</div><div class="sc-desc">缓慢降息——结构性行情，龙头受益</div></div><div class="scenario-card pessimistic"><div class="sc-title">悲观</div><div class="sc-value"></div><div class="sc-value" style="font-size:16px">$</div><div class="sc-desc">通胀反复——高PE承压</div></div></div>
+    </div>
+  </section>
+
+  <!-- Slide 8: Bull vs Bear - Round 1 -->
+  <section class="slide grid-bg">
+    <h2 class="slide-title">Bull vs Bear Debate</h2>
+    <h3 class="slide-subtitle">第一轮 — 多空观点陈述</h3>
+    <div class="debate-grid">
+      <div class="debate-panel"><div class="debate-header"><div class="debate-icon bull">B</div><div class="debate-title">Bull Case</div></div><div class="arg-item"><span class="arg-title">Apple Intelligence驱动超级升级周期</span><span class="arg-detail">AI功能集成驱动约2.5亿存量iPhone用户升级窗口，预计未来18个月出货量+10-15%</span><span class="arg-data">📊 iPhone营收$45B/季 | 存量用户2.5B | AI功能覆盖率70%+</span></div><div class="arg-item"><span class="arg-title">服务业务持续扩张、毛利率结构性提升</span><span class="arg-detail">服务收入$26B创新高，毛利率72%+，占营收从20%升至26%推动整体毛利率提升</span><span class="arg-data">📊 服务收入$26B/季 | 毛利率72% | 占比26%</span></div><div class="arg-item"><span class="arg-title">现金流巨兽+大规模回购支撑股价</span><span class="arg-detail">FCF年化$50B+，年回购$100B+，净现金$50B+，构成强力下档保护</span><span class="arg-data">📊 FCF $50B | 年回购$100B | 净现金$50B+</span></div></div><div class="debate-panel"><div class="debate-header"><div class="debate-icon bear">B</div><div class="debate-title">Bear Case</div></div><div class="arg-item"><span class="arg-title">PE 32x估值溢价过高</span><span class="arg-detail">PE 32.1x显著高于市场均值25x，在4.35%利率环境下高估值容忍度低</span><span class="arg-data">📊 PE 32.1x vs S&amp;P500 22x | iPhone增速3-5%</span></div><div class="arg-item"><span class="arg-title">技术面短期恶化—从$252高点回落17%</span><span class="arg-detail">股价跌破MA20($219)和MA50($218)支撑，RSI 58偏弱</span><span class="arg-data">📊 RSI 58 | 跌破MA20($219) | 高点回落-17%</span></div><div class="arg-item"><span class="arg-title">AI变现路径不明确</span><span class="arg-detail">Apple Intelligence目前免费提供，尚未展示明确变现方案</span><span class="arg-data">📊 AI变现: 未定 | 竞争对手AI跟进</span></div></div>
+    </div>
+  </section>
+
+  <!-- Slide 9: Rebuttals & Scorecard -->
+  <section class="slide grid-bg">
+    <h2 class="slide-title">Debate</h2>
+    <h3 class="slide-subtitle">第二轮反驳 &amp; 辩论记分卡</h3>
+    <div class="data-section">
+      <div class="rebuttal-panel"><div class="rp-header"><div class="debate-icon bull" style="width:24px;height:24px;font-size:12px;">B</div><div class="rp-side bull-side">Bull Rebuttals</div></div><div class="rebuttal-item">↪ <strong>估值溢价问题</strong> — Apple的品牌溢价、生态粘性和服务利润率支撑PE溢价，32x在中上位置但仍合理</div><div class="rebuttal-item">↪ <strong>AI变现不明确</strong> — AI功能免费驱动硬件升级已构成变现，未来可推出Apple Intelligence+订阅服务</div></div><div class="rebuttal-panel"><div class="rp-header"><div class="debate-icon bear" style="width:24px;height:24px;font-size:12px;">B</div><div class="rp-side bear-side">Bear Rebuttals</div></div><div class="rebuttal-item">↪ <strong>回购支撑论</strong> — 回购虽强但边际效用递减—年回购$100B对应市值$3.3T仅3%，不足以逆转基本面弱势</div><div class="rebuttal-item">↪ <strong>服务增长</strong> — 服务增速从20%+降至12-15%，App Store受欧盟DMA监管压力可能进一步放缓</div></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;text-align:center;">核心论点对照</h4><table class="core-compare-table"><thead><tr><th>维度</th><th>看涨观点</th><th>看跌观点</th></tr></thead><tbody><tr><td class="dim-col">估值</td><td class="cell-bull">PEG 1.5x合理—品牌溢价有支撑</td><td class="cell-bear">PE 32x偏高—利率敏感</td></tr><tr><td class="dim-col">增长</td><td class="cell-bull">AI升级+服务扩张双轮驱动</td><td class="cell-bear">iPhone增速放缓—AI变现存疑</td></tr><tr><td class="dim-col">技术</td><td class="cell-bull">200日均线$195强支撑</td><td class="cell-bear">RSI 58偏弱—短期动能不足</td></tr></tbody></table><p style="font-size:12px;color:var(--text-secondary);text-align:center;margin-top:12px;">看涨方 5-3 领先 | 基本面强劲但估值不便宜，技术面短期回调但长期支撑明确</p>
+    </div>
+  </section>
+
+  <!-- Slide 10: Final Decision -->
+  <section class="slide title-slide grid-bg">
+    <div class="final-label">Score</div>
+    <div class="final-score">7.4</div>
+    <div class="final-rating"><span class="rating-badge accumulate">ACCUMULATE</span></div>
+    <div class="per-dim-section">
+      <h3>Factor Scorecard &amp; Dimension Breakdown</h3>
+      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:24px;align-items:center;">
+        <div class="chart-container" id="radarChart" style="flex:0 0 auto;width:320px;height:320px;"></div>
+        <div class="per-dim-grid" style="flex:1;min-width:250px;max-width:400px;"><div class="score-item"><div class="score-label">基本面</div><div class="score-value" style="color:#22c55e">8</div></div><div class="score-item"><div class="score-label">技术面</div><div class="score-value" style="color:#facc15">6.5</div></div><div class="score-item"><div class="score-label">情绪面</div><div class="score-value" style="color:#22c55e">8</div></div><div class="score-item"><div class="score-label">宏观</div><div class="score-value" style="color:#facc15">7</div></div><div class="score-item"><div class="score-label">风险</div><div class="score-value" style="color:#facc15">7.5</div></div></div>
+      </div>
+    </div>
+    <div class="data-section" style="margin-top:16px;">
+      <div class="decision-grid"><div class="decision-card"><div class="dc-label">目标价</div><div class="dc-value">$260</div><div class="dc-sub">基准 ~$310</div></div><div class="decision-card"><div class="dc-label">止损位</div><div class="dc-value" style="color:var(--accent-2)">$185</div><div class="dc-sub">最大回撤 29%</div></div><div class="decision-card"><div class="dc-label">仓位建议</div><div class="dc-value" style="font-size:20px;font-family:var(--font-body);font-weight:700">核心仓位5-8% 建议分批建仓</div></div></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">评级触发条件</h4><ul class="trigger-list" style="margin:0 auto;"><li class="trigger-item"><span class="tr-icon">⬆</span><span class="tr-dir up">上调条件：</span>AI功能带动iPhone出货量超预期→上调至BUY; 服务收入占比超30%</li><li class="trigger-item"><span class="tr-icon">⬇</span><span class="tr-dir down">下调条件：</span>跌破$185支撑→下调至REDUCE; 毛利率连续两季低于52%</li></ul>
+    </div>
+  </section>
+</div>
+
+<div class="nav-dots" id="navDots"></div>
+<div class="slide-indicator" id="slideIndicator">1 / 10</div>
+
+<script>
+function SlidePresentation(){
+  'use strict';
+  var c = document.getElementById('slidesContainer'), sl = c.querySelectorAll('.slide'),
+      nd = document.getElementById('navDots'), si = document.getElementById('slideIndicator'),
+      total = sl.length, cur = 0, sc = false;
+  sl.forEach(function(_,i){var d=document.createElement('div');d.className='nav-dot'+(i===0?' active':'');d.setAttribute('data-index',i);d.addEventListener('click',function(){go(parseInt(this.getAttribute('data-index')))});nd.appendChild(d)});
+  function ua(i){nd.querySelectorAll('.nav-dot').forEach(function(d,j){d.classList.toggle('active',j===i)})}
+  function ui(i){si.textContent=(i+1)+' / '+total}
+  function go(i){if(i<0||i>=total||sc)return;sc=true;cur=i;sl[i].scrollIntoView({behavior:'smooth'});ua(i);ui(i);setTimeout(function(){sc=false},400)}
+  sl.forEach(function(s){new IntersectionObserver(function(e){e.forEach(function(e){if(e.isIntersecting&&!sc){var i=Array.prototype.indexOf.call(sl,e.target);if(i!==-1){cur=i;ua(i);ui(i)}}})},{root:c,threshold:0.5}).observe(s)});
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(cur+1)}else if(e.key==='ArrowUp'||e.key==='ArrowLeft'){e.preventDefault();go(cur-1)}});
+  var ty=0;c.addEventListener('touchstart',function(e){ty=e.changedTouches[0].screenY},{passive:true});c.addEventListener('touchend',function(e){var d=ty-e.changedTouches[0].screenY;if(Math.abs(d)>50){if(d>0)go(cur+1);else go(cur-1)}},{passive:true});
+
+  function initRadar(){
+    var dom=document.getElementById('radarChart');if(!dom)return;var s;
+    try{s=JSON.parse('[8,6.5,8,7,7.5]')}catch(e){return}
+    if(!s||!Array.isArray(s))return;
+    var chart=echarts.init(dom,null),labels=['基本面','技术面','情绪面','宏观','风险'];
+    chart.setOption({radar:{indicator:labels.map(function(d){return{name:d,max:10}}),radius:'65%',center:['50%','50%'],axisName:{color:'#475569',fontSize:12},splitLine:{lineStyle:{color:'rgba(30,58,95,0.08)'}},splitArea:{areaStyle:{color:['rgba(30,58,95,0.02)','rgba(30,58,95,0.04)']}}},series:[{type:'radar',data:[{value:s}],areaStyle:{color:'rgba(30,58,95,0.08)'},lineStyle:{color:'#1e3a5f',width:2},symbol:'circle'}]});
+    new ResizeObserver(function(){chart.resize()}).observe(dom);
+  }
+
+  function initKline(){
+    var dom=document.getElementById('klineChart');if(!dom)return;
+    try{var dates=JSON.parse('["2026-02-02","2026-02-03","2026-02-04","2026-02-05","2026-02-06","2026-02-09","2026-02-10","2026-02-11","2026-02-12","2026-02-13","2026-02-16","2026-02-17","2026-02-18","2026-02-19","2026-02-20","2026-02-23","2026-02-24","2026-02-25","2026-02-26","2026-02-27","2026-03-02","2026-03-03","2026-03-04","2026-03-05","2026-03-06","2026-03-09","2026-03-10","2026-03-11","2026-03-12","2026-03-13","2026-03-16","2026-03-17","2026-03-18","2026-03-19","2026-03-20","2026-03-23","2026-03-24","2026-03-25","2026-03-26","2026-03-27","2026-03-30","2026-03-31","2026-04-01","2026-04-02","2026-04-03","2026-04-06","2026-04-07","2026-04-08","2026-04-09","2026-04-10","2026-04-13","2026-04-14","2026-04-15","2026-04-16","2026-04-17","2026-04-20","2026-04-21","2026-04-22","2026-04-23","2026-04-24","2026-04-27","2026-04-28","2026-04-29","2026-04-30","2026-05-01","2026-05-04","2026-05-05","2026-05-06","2026-05-07","2026-05-08","2026-05-11","2026-05-12","2026-05-13","2026-05-14","2026-05-15","2026-05-18","2026-05-19","2026-05-20","2026-05-21","2026-05-22","2026-05-25","2026-05-26","2026-05-27","2026-05-28","2026-05-29","2026-06-01","2026-06-02","2026-06-03","2026-06-04","2026-06-05"]'),values=JSON.parse('[[207.82,214.34,205.33,212.06],[204.43,215.23,204.43,208.54],[209.18,216.14,207.61,213.44],[203.27,210.86,202.27,207.42],[197.5,204.75,197.4,201.53],[198.03,205.43,197.56,202.07],[202.57,207.92,202.57,205.83],[204.11,212.48,200.91,208.27],[209.71,218.29,206.02,213.99],[204.63,216.21,204.24,208.81],[208.4,219.44,207.57,212.66],[214.32,223.36,213.57,218.69],[219.86,229.38,219.86,223.01],[219.57,231.03,215.4,224.05],[215.98,224.51,212.1,220.39],[212.52,219.68,209.99,216.86],[214.25,223.2,212.31,218.62],[212.26,218.68,212.26,214.81],[212.39,222.85,209.17,216.72],[215.31,222.97,213.41,219.7],[221.63,232.76,220.89,226.15],[224.84,236.73,224.84,228.66],[220.44,227.41,218.07,224.94],[219.21,225.43,219.21,221.81],[222.28,231.23,222.2,226.82],[220.89,233.83,219.48,225.4],[217.77,226.08,217.07,222.22],[216.19,225.08,216.19,219.05],[215.54,221.34,215.54,217.73],[213.5,220.63,209.45,217.85],[209.3,218.88,209.3,212.75],[207.52,214.28,205.71,211.76],[215.69,223.7,215.69,218.06],[218.69,225.09,218.69,222.78],[220.71,231.09,218.01,225.21],[222.57,230.15,220.99,227.12],[223.38,235.23,223.38,226.49],[218.8,228.86,215.54,223.27],[224.22,237.06,221.69,228.8],[226.09,237.23,222.53,230.71],[230.44,240.47,230.44,234.34],[230.07,237.12,227.66,234.77],[224.89,236.63,224.89,228],[227.88,237,223.64,232.53],[233.05,246.94,228.91,237.81],[233.53,240.48,233.53,237.61],[236.57,244.74,235.18,241.4],[238.77,246.47,238.77,242.12],[236.18,244.94,235.26,241],[239.44,248.25,236.84,244.33],[246.56,259.01,244.83,251.59],[246.82,255.28,243.48,251.85],[244.42,256.3,241.15,249.41],[240.31,248.19,240.05,245.22],[237.8,250.2,237.8,241.23],[230.34,239.05,230.34,235.02],[228.23,234.22,228.23,230.99],[228.16,237.58,228.16,231.97],[231.53,239.97,227.49,236.25],[230.57,240.62,229.16,235.28],[236.01,245.71,236.01,238.51],[228.11,237.9,225.82,232.76],[233.06,241.97,229.66,237.81],[232.34,242.45,229.58,237.08],[228.85,242.33,227.29,233.52],[233.81,244.91,229.4,238.59],[243.05,254.35,243.05,245.73],[246.98,260.96,243.2,252.02],[246.77,255.93,244.76,251.8],[242.57,250.37,242.57,245.13],[236.85,249.78,235.31,241.68],[238.13,249.88,238.13,240.56],[236.54,248.98,232.83,241.37],[233.66,247.74,233.03,238.42],[234.25,246.78,229.88,239.03],[236.77,246.26,236.77,240.24],[230.59,244.43,226.45,235.3],[226.3,237.29,226.3,230.86],[224.17,230.28,224.17,227.19],[219.26,229.96,218.94,223.73],[218.2,228.78,217.24,222.65],[224.23,232.14,224.23,228.46],[220.41,229.79,220.41,224.88],[218.3,226.51,218.3,222.18],[214.3,221.62,214.3,216.48],[218.46,225.64,215.43,222.92],[216.8,228.13,216.8,219.78],[220.29,229.52,216.86,224.78],[224.7,236.42,224.32,229.28],[231.27,242.98,226.6,235.99]]'),volumes=JSON.parse('[58365607,21500645,36501759,33392644,64188272,60601969,73530774,25216329,45315309,21787833,33118278,50321317,21592158,31930259,58993066,52696488,33226437,55355941,68565827,20389925,68349155,61888363,40415030,29328769,77432784,40195672,25564750,25802982,70849661,56223561,68427696,63783907,52173685,78386945,42712062,53122437,69764279,57111185,71702414,54641128,62274310,22749463,33673896,37363277,24787518,33967453,26060085,36678416,58141066,41889930,42210858,32570421,36018669,76199275,58882123,56547860,30268318,63747607,29804149,42767326,79371401,58399985,53416984,61076855,70571115,66559994,33742884,21926014,38927182,36064452,32658970,76574582,72582057,38880672,59326319,43737914,74872855,47531111,35892809,34797650,53682088,35764496,55075159,73869373,43964030,33159245,79852256,50571577,25454564,22826982]'),ma20=JSON.parse('[206.14,205.85,205.53,205.32,205.95,205.75,205.76,206.27,206.54,207.47,207.66,207.74,208.14,207.87,208.75,208.75,208.77,209.28,208.91,209.39,210.18,210.12,211.08,211.34,212.02,212.18,212.22,212.05,211.42,211.13,212.17,212.44,212.59,213.48,213.88,214.91,214.88,214.6,215.54,215.17,215.89,216.27,217.32,218.31,218.81,218.22,217.6,217.77,218.55,218.03,218.12,217.62,217.5,216.86,216.78,217.04,216.74,217.45,216.9,216.61,216.41,216.46,217.13,217.1,217.65,218.6,218.18,219.03,219.43,220.08,220.49,220.55,220.06,219.65,219.3,218.95,218.55,218.25,218.58,219.27,220.01,220.84,220.39,221.18,220.84,220.31,220.15,220.52,219.95,219.67]'),support=parseFloat('195.58'),resistance=parseFloat('227.12')}catch(e){return}
+    if(!dates||!values||!dates.length)return;
+    var chart=echarts.init(dom,null);
+    chart.setOption({tooltip:{trigger:'axis',axisPointer:{type:'cross'}},grid:[{left:'8%',right:'8%',top:'8%',height:'55%'},{left:'8%',right:'8%',top:'72%',height:'20%'}],xAxis:[{type:'category',data:dates,gridIndex:0,axisLabel:{color:'#475569',fontSize:10,rotate:45,interval:Math.max(1,Math.floor(dates.length/15))}},{type:'category',gridIndex:1,data:dates,axisLabel:{show:false},axisLine:{show:false}}],yAxis:[{type:'value',gridIndex:0,scale:true,splitLine:{lineStyle:{color:'rgba(30,58,95,0.06)'}}},{type:'value',gridIndex:1,scale:true,splitNumber:2,axisLabel:{show:false},splitLine:{show:false}}],dataZoom:[{type:'inside',xAxisIndex:[0,1],start:50,end:100},{type:'slider',xAxisIndex:[0,1],start:50,end:100,bottom:2,height:12}],series:[{name:'K-Line',type:'candlestick',xAxisIndex:0,yAxisIndex:0,data:values,itemStyle:{color:'#0f766e',color0:'#b91c1c',borderColor:'#0f766e',borderColor0:'#b91c1c'}},{name:'MA20',type:'line',xAxisIndex:0,yAxisIndex:0,data:ma20,smooth:true,symbol:'none',lineStyle:{color:'#1e3a5f',width:1.5,type:'dashed'}},{name:'Support',type:'line',xAxisIndex:0,yAxisIndex:0,markLine:{silent:true,data:[{yAxis:support,label:{formatter:'S '+support,color:'#0f766e',fontSize:10},lineStyle:{color:'#0f766e',type:'dotted',width:1}}]},data:[]},{name:'Resistance',type:'line',xAxisIndex:0,yAxisIndex:0,markLine:{silent:true,data:[{yAxis:resistance,label:{formatter:'R '+resistance,color:'#b91c1c',fontSize:10},lineStyle:{color:'#b91c1c',type:'dotted',width:1}}]},data:[]},{name:'Volume',type:'bar',xAxisIndex:1,yAxisIndex:1,data:volumes.map(function(v,i){var up=values[i][0]<=values[i][3];return{value:v,itemStyle:{color:up?'#0f766e':'#b91c1c'}}})}]});
+    new ResizeObserver(function(){chart.resize()}).observe(dom);
+  }
+
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){initRadar();initKline()})}else{initRadar();initKline()}
+  ui(0);
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

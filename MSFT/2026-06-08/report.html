@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MSFT — Corporate Analysis Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js" integrity="sha384-BQKzmHvQLMCAnL3UtDBA1Al5tFjsCz1wrMlIUA1wkzo14DYkRWjywW+p9pCj0cwd" crossorigin="anonymous"></script>
+<style>
+:root{--bg-primary:#ffffff;--bg-secondary:#f8fafc;--bg-card:#ffffff;--text-primary:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;--accent-1:#1e3a5f;--accent-2:#b91c1c;--accent-green:#0f766e;--accent-amber:#b45309;--border-color:#e2e8f0;--font-display:'DM Serif Display',serif;--font-body:'DM Sans',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-primary);overflow:hidden;height:100vh;width:100vw;-webkit-font-smoothing:antialiased}
+.slides-container{height:100vh;width:100vw;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;scroll-behavior:smooth}
+.slide{min-height:100vh;width:100%;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:48px 64px;background:var(--bg-primary);position:relative}
+.grid-bg{background-image:linear-gradient(rgba(30,58,95,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,95,0.04) 1px,transparent 1px);background-size:60px 60px}
+.nav-dots{position:fixed;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;z-index:1000}
+.nav-dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--accent-1);background:transparent;cursor:pointer;transition:all .15s ease;padding:0}
+.nav-dot.active{background:var(--accent-1);transform:scale(1.2)}
+.nav-dot:hover{background:var(--accent-1);opacity:.5}
+.slide-indicator{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-secondary);z-index:1000;background:var(--bg-primary);padding:6px 16px;border:1px solid var(--border-color);border-radius:20px}
+.title-slide{text-align:center}
+.rating-badge{display:inline-block;padding:10px 28px;border-radius:4px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px}
+.rating-badge.buy{background:#0f766e;color:#fff}
+.rating-badge.accumulate{background:#4f772d;color:#fff}
+.rating-badge.hold{background:var(--accent-amber);color:#fff}
+.rating-badge.reduce{background:#c2410c;color:#fff}
+.rating-badge.sell{background:var(--accent-2);color:#fff}
+.ticker-gradient{font-family:var(--font-display);font-size:96px;font-weight:400;letter-spacing:-1px;line-height:1;margin-bottom:4px;color:var(--accent-1)}
+.company-name{font-size:22px;font-weight:500;color:var(--text-secondary);margin-bottom:24px}
+.title-meta{font-size:13px;color:var(--text-secondary);letter-spacing:1px;text-transform:uppercase}
+.title-meta .sep{color:var(--border-color);margin:0 8px}
+.slide-title{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--text-muted);margin-bottom:24px;text-align:center}
+.slide-subtitle{font-family:var(--font-display);font-size:28px;font-weight:400;color:var(--accent-1);margin-bottom:24px;text-align:center;line-height:1.3}
+.metrics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:800px;width:100%}
+.metric-card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:6px;padding:24px;text-align:center}
+.metric-value{font-family:var(--font-display);font-size:32px;font-weight:400;color:var(--accent-1);line-height:1.2;margin-bottom:4px}
+.metric-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-secondary);font-weight:500}
+.metric-change{font-size:13px;font-weight:600;margin-top:8px}
+.metric-change.positive{color:var(--accent-green)}
+.metric-change.negative{color:var(--accent-2)}
+.chart-container{width:100%;max-width:600px;height:460px}
+.kline-container{width:100%;max-width:1000px;margin:0 auto}
+.kline-container .chart-container{width:100%;max-width:none}
+.kline-info{display:flex;gap:24px;justify-content:center;align-items:center;margin-top:12px;font-size:13px;color:var(--text-secondary)}
+.kline-level strong{color:var(--text-primary)}
+.data-section{max-width:1000px;width:100%}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px}
+.data-table th,.data-table td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border-color)}
+.data-table thead th{background:var(--accent-1);color:#fff;font-weight:600;letter-spacing:.5px;font-size:11px;text-transform:uppercase}
+.data-table tbody tr:hover{background:var(--bg-secondary)}
+.data-table .label-col{font-weight:600;color:var(--text-primary);white-space:nowrap}
+.data-table .val-col{font-family:var(--font-display);font-size:14px;color:var(--accent-1)}
+.data-table .sig-up{color:var(--accent-green);font-weight:600}
+.data-table .sig-down{color:var(--accent-2);font-weight:600}
+.data-table .sig-neutral{color:var(--text-secondary)}
+.data-table .trend-up{color:var(--accent-green)}
+.data-table .trend-down{color:var(--accent-2)}
+.table-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.table-grid .data-table{margin-bottom:0}
+.data-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.data-card{border:1px solid var(--border-color);border-radius:6px;padding:16px;text-align:center;background:var(--bg-card)}
+.data-card .dc-value{font-family:var(--font-display);font-size:24px;color:var(--accent-1);line-height:1.2}
+.data-card .dc-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-top:4px}
+.data-card .dc-sub{font-size:11px;color:var(--text-secondary);margin-top:2px}
+.news-list{list-style:none;margin-bottom:16px}
+.news-item{padding:10px 0;border-bottom:1px solid var(--border-color);display:flex;gap:12px;align-items:flex-start;font-size:13px;line-height:1.5}
+.news-date{white-space:nowrap;color:var(--text-muted);font-size:11px;font-weight:600;min-width:60px}
+.news-tag{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:600;margin-right:8px}
+.news-tag.bull{background:rgba(15,118,110,.1);color:var(--accent-green)}
+.news-tag.bear{background:rgba(185,28,28,.1);color:var(--accent-2)}
+.news-tag.neutral{background:rgba(100,116,139,.1);color:var(--text-secondary)}
+.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.scenario-card{border:1px solid var(--border-color);border-radius:6px;padding:16px;text-align:center;background:var(--bg-card)}
+.scenario-card.optimistic{border-top:3px solid var(--accent-green)}
+.scenario-card.base{border-top:3px solid var(--accent-amber)}
+.scenario-card.pessimistic{border-top:3px solid var(--accent-2)}
+.scenario-card .sc-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px}
+.scenario-card .sc-value{font-family:var(--font-display);font-size:20px;color:var(--accent-1);margin-bottom:4px}
+.scenario-card .sc-desc{font-size:11px;color:var(--text-secondary);line-height:1.5}
+.debate-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:1000px;width:100%}
+.debate-panel{border:1px solid var(--border-color);border-radius:6px;padding:24px;background:var(--bg-secondary)}
+.debate-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--accent-1)}
+.debate-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700}
+.debate-icon.bull{background:var(--accent-green);color:#fff}
+.debate-icon.bear{background:var(--accent-2);color:#fff}
+.debate-title{font-family:var(--font-display);font-size:18px;text-transform:uppercase;letter-spacing:1px;color:var(--accent-1)}
+.arg-item{padding:10px 0;border-bottom:1px solid var(--border-color)}
+.arg-item:last-child{border-bottom:none}
+.arg-item .arg-title{font-weight:700;font-size:14px;color:var(--text-primary);display:block;margin-bottom:4px}
+.arg-item .arg-detail{font-size:12px;color:var(--text-secondary);line-height:1.6;display:block}
+.arg-item .arg-data{font-size:10px;color:var(--text-muted);margin-top:4px;padding:4px 8px;background:rgba(30,58,95,.05);border-radius:3px;display:inline-block}
+.rebuttal-panel{border:1px solid var(--border-color);border-radius:6px;padding:20px;background:var(--bg-secondary);margin-bottom:12px}
+.rebuttal-panel .rp-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.rebuttal-panel .rp-side{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.rebuttal-panel .rp-side.bull-side{color:var(--accent-green)}
+.rebuttal-panel .rp-side.bear-side{color:var(--accent-2)}
+.rebuttal-item{padding:6px 0;font-size:12px;line-height:1.6;color:var(--text-primary)}
+.rebuttal-item strong{color:var(--accent-1)}
+.core-compare-table{width:100%;margin-top:12px}
+.core-compare-table th,.core-compare-table td{padding:8px 12px;border-bottom:1px solid var(--border-color);font-size:11px;text-align:center}
+.core-compare-table th{background:var(--accent-1);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:1px}
+.core-compare-table .dim-col{text-align:left;font-weight:600;color:var(--text-primary);font-size:12px}
+.core-compare-table .cell-bull{color:var(--accent-green);font-size:11px}
+.core-compare-table .cell-bear{color:var(--accent-2);font-size:11px}
+.final-score{font-family:var(--font-display);font-size:80px;font-weight:400;line-height:1;margin-bottom:8px;color:var(--accent-1)}
+.final-label{font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-secondary);margin-bottom:8px}
+.final-rating{margin-bottom:24px}
+.per-dim-section{margin-top:24px;max-width:700px;width:100%}
+.per-dim-section h3{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:12px;text-align:center}
+.per-dim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.score-item{background:var(--bg-card);border:1px solid var(--border-color);border-radius:6px;padding:14px;text-align:center;font-size:12px;color:var(--text-secondary)}
+.score-item .score-value{font-family:var(--font-display);font-size:18px;font-weight:400;margin-bottom:2px}
+.decision-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;max-width:800px;width:100%;margin-bottom:20px}
+.decision-card{border:1px solid var(--border-color);border-radius:6px;padding:20px;text-align:center;background:var(--bg-card)}
+.decision-card .dc-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:6px}
+.decision-card .dc-value{font-family:var(--font-display);font-size:28px;color:var(--accent-1)}
+.decision-card .dc-sub{font-size:11px;color:var(--text-secondary);margin-top:4px}
+.trigger-list{list-style:none;max-width:600px;width:100%}
+.trigger-item{padding:8px 0;display:flex;align-items:center;gap:10px;font-size:13px;border-bottom:1px solid var(--border-color);color:var(--text-primary)}
+.trigger-item:last-child{border-bottom:none}
+.trigger-item .tr-icon{font-size:16px}
+.trigger-item .tr-dir.up{color:var(--accent-green);font-weight:600}
+.trigger-item .tr-dir.down{color:var(--accent-2);font-weight:600}
+.conclusion-text{max-width:700px;text-align:center;font-size:14px;line-height:1.8;color:var(--text-secondary);margin-top:8px}
+@media(max-width:768px){
+.slide{padding:32px 20px}
+.ticker-gradient{font-size:56px}
+.metrics-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+.metric-value{font-size:24px}
+.data-cards{grid-template-columns:1fr 1fr}
+.table-grid,.scenario-grid,.decision-grid{grid-template-columns:1fr}
+.debate-grid{grid-template-columns:1fr;gap:14px}
+.final-score{font-size:56px}
+.nav-dots{right:12px;gap:8px}
+.nav-dot{width:8px;height:8px}
+.chart-container{height:360px}
+}
+</style>
+</head>
+<body>
+
+<div class="slides-container" id="slidesContainer">
+  <!-- Slide 1: Title -->
+  <section class="slide title-slide grid-bg">
+    <div class="rating-badge accumulate">ACCUMULATE</div>
+    <div class="ticker-gradient">MSFT</div>
+    <div class="company-name">Microsoft Corp</div>
+    <div class="title-meta"><span>全新深度研究</span><span class="sep">|</span><span>2026-06-08</span></div>
+  </section>
+
+  <!-- Slide 2: Key Metrics -->
+  <section class="slide grid-bg">
+    <h2 class="slide-title">Key Metrics</h2>
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="metric-value">450.20</div><div class="metric-label">Price</div></div>
+      <div class="metric-card"><div class="metric-value">55</div><div class="metric-label">RSI (14)</div></div>
+      <div class="metric-card"><div class="metric-value">35.8</div><div class="metric-label">P / E</div></div>
+      <div class="metric-card"><div class="metric-value">2.1%</div><div class="metric-label">Short % Float</div></div>
+      <div class="metric-card"><div class="metric-value"><span class="metric-change positive">+12.3%</span></div><div class="metric-label">YTD Return</div></div>
+      <div class="metric-card"><div class="metric-value"><span class="metric-change positive">多头状态 (Bullish)</span></div><div class="metric-label">MACD Signal</div></div>
+    </div>
+  </section>
+
+  <!-- Slide 3: Fundamental Analysis -->
+  <section class="slide grid-bg">
+    <h2 class="slide-title">Fundamental Analysis</h2>
+    <h3 class="slide-subtitle">财务三表 &amp; 估值深度拆解</h3>
+    <div class="data-section">
+      <p style="font-size:13px;line-height:1.7;color:var(--text-secondary);margin-bottom:16px;text-align:center;max-width:800px;margin-left:auto;margin-right:auto;">Microsoft基本面极为扎实，Azure云+AI双引擎驱动营收增长。PE 35.8x虽偏高，但PEG 1.5x合理反映增长支撑。EPS $12.58 (+15%)增长稳健，FCF $50B支撑持续回购。最大看点：Azure AI与Copilot生态变现加速，企业级AI订阅渗透率提升推动续费收入。</p><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;">损益表摘要</h4><table class="data-table"><thead><tr><th>指标</th><th>TTM</th><th>YoY</th></tr></thead><tbody><tr><td class="label-col">营收</td><td class="val-col">100B</td><td class="sig-up">+12%</td></tr><tr><td class="label-col">毛利率</td><td class="val-col">55%</td><td class="sig-up">+2pp</td></tr><tr><td class="label-col">净利润率</td><td class="val-col">22%</td><td class="sig-neutral">持平</td></tr><tr><td class="label-col">EPS</td><td class="val-col">$12.58</td><td class="sig-up">+15%</td></tr></tbody></table><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">估值指标</h4><table class="data-table"><thead><tr><th>指标</th><th>当前</th><th>评价</th></tr></thead><tbody><tr><td class="label-col">PE</td><td class="val-col">35.8</td><td>偏高—但Azure AI增速支撑溢价</td></tr><tr><td class="label-col">PEG</td><td class="val-col">1.5</td><td>合理—增长与估值匹配</td></tr><tr><td class="label-col">FCF Yield</td><td class="val-col">2.8%</td><td>稳健—支持回购+分红</td></tr></tbody></table><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">EPS &amp; 股价情景</h4><div class="scenario-grid"><div class="scenario-card optimistic"><div class="sc-title">乐观</div><div class="sc-value">$15.50</div><div class="sc-value" style="font-size:16px">$620</div><div class="sc-desc">Azure AI超预期+Copilot全面渗透</div></div><div class="scenario-card base"><div class="sc-title">基准</div><div class="sc-value">$14.20</div><div class="sc-value" style="font-size:16px">$540</div><div class="sc-desc">Azure稳步增长+AI变现逐步兑现</div></div><div class="scenario-card pessimistic"><div class="sc-title">悲观</div><div class="sc-value">$11.50</div><div class="sc-value" style="font-size:16px">$420</div><div class="sc-desc">云竞争加剧+CapEx挤压利润</div></div></div>
+    </div>
+  </section>
+
+  <!-- Slide 4: Technical Analysis -->
+  <section class="slide grid-bg">
+    <h2 class="slide-title">Technical Analysis</h2>
+    <h3 class="slide-subtitle">多时间框架技术指标全景</h3>
+    <div class="data-section">
+      <div class="table-grid"><table class="data-table"><thead><tr><th>指标</th><th>数值</th><th>备注</th></tr></thead><tbody><tr><td class="label-col">当前价</td><td class="val-col">450.20</td><td>52周高$558回落19.3%</td></tr><tr><td class="label-col">52周高/低</td><td class="val-col">558 / 360</td><td></td></tr><tr><td class="label-col">YTD涨幅</td><td class="val-col">+12.3%</td><td>跑赢S&amp;P(+8.5%)</td></tr><tr><td class="label-col">近3月涨幅</td><td class="val-col">-11.5%</td><td>从高点显著回调</td></tr></tbody></table><table class="data-table"><thead><tr><th>均线</th><th>当前值</th><th>价格位置</th><th>方向</th><th>评价</th></tr></thead><tbody><tr><td class="label-col">20 SMA</td><td class="val-col">470.25</td><td>下方</td><td class="sig-down">↓</td><td>短期偏空</td></tr><tr><td class="label-col">50 SMA</td><td class="val-col">464.83</td><td>下方</td><td class="sig-neutral">→</td><td>中期中性</td></tr><tr><td class="label-col">200 SMA</td><td class="val-col">401.00</td><td>上方</td><td class="sig-up">↑</td><td>长期支撑强</td></tr></tbody></table></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">动量指标</h4><table class="data-table"><thead><tr><th>指标</th><th>数值</th><th>信号</th></tr></thead><tbody><tr><td class="label-col">RSI(14)</td><td class="val-col">55</td><td class="sig-neutral">中性</td></tr><tr><td class="label-col">MACD</td><td class="val-col">Bullish</td><td class="sig-neutral">维持多头</td></tr><tr><td class="label-col">布林带宽</td><td class="val-col">8%</td><td class="sig-neutral">窄幅盘整</td></tr><tr><td class="label-col">ATR</td><td class="val-col">11.26</td><td class="sig-neutral">正常波动</td></tr></tbody></table><div class="kline-info" style="margin-top:8px;">支撑位 $418.69 (前期低点+200日线) | 阻力位 $486.22 (布林上轨) | 从$558高点回落19%后处于关键支撑区</div>
+    </div>
+  </section>
+
+  <!-- Slide 5: K-line Chart -->
+  <section class="slide grid-bg">
+    <h2 class="slide-title">Price History &amp; Technical Levels</h2>
+    <div class="kline-container">
+      <div class="chart-container" id="klineChart" style="height:520px;"></div>
+    </div>
+    <div class="kline-info">
+      <span>2026-02-02 ~ 2026-06-05</span>
+      <span>Support: <strong>418.69</strong></span>
+      <span>Resistance: <strong>486.22</strong></span>
+    </div>
+  </section>
+
+  <!-- Slide 6: Sentiment Analysis -->
+  <section class="slide grid-bg">
+    <h2 class="slide-title">Sentiment Analysis</h2>
+    <h3 class="slide-subtitle">情绪面综合信号监测</h3>
+    <div class="data-section">
+      <div class="data-cards"><div class="data-card"><div class="dc-value">2.1%</div><div class="dc-label">Short Float</div><div class="dc-sub">空头比例</div></div><div class="data-card"><div class="dc-value">$540.24</div><div class="dc-label">共识目标价</div><div class="dc-sub">vs 当前价</div></div><div class="data-card"><div class="dc-value">58</div><div class="dc-label">Fear &amp; Greed</div><div class="dc-sub">市场情绪</div></div><div class="data-card"><div class="dc-value">18</div><div class="dc-label">VIX</div><div class="dc-sub">波动率指数</div></div></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">分析师评级分布</h4><div style="display:flex;gap:12px;max-width:500px;margin:0 auto 12px;"><div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-card)"><div style="font-size:24px;font-weight:700;color:var(--accent-1)">30</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-muted)">buy</div></div><div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-card)"><div style="font-size:24px;font-weight:700;color:var(--accent-1)">10</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-muted)">hold</div></div><div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-card)"><div style="font-size:24px;font-weight:700;color:var(--accent-1)">2</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-muted)">sell</div></div></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">情绪信号汇总</h4><table class="data-table"><thead><tr><th>指标</th><th>数值</th><th>评价</th><th>信号</th></tr></thead><tbody><tr><td class="label-col">Short Float</td><td>2.1%</td><td>极低</td><td>🟢</td></tr><tr><td class="label-col">机构持仓</td><td>70%</td><td>稳定</td><td>🟢</td></tr><tr><td class="label-col">分析师Buy%</td><td>71%</td><td>强烈看多</td><td>🟢</td></tr></tbody></table>
+    </div>
+  </section>
+
+  <!-- Slide 7: Macro & News Analysis -->
+  <section class="slide grid-bg">
+    <h2 class="slide-title">Macro &amp; News</h2>
+    <h3 class="slide-subtitle">宏观环境与行业动态全景</h3>
+    <div class="data-section">
+      <h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;">宏观经济快照</h4><table class="data-table"><thead><tr><th>指标</th><th>当前值</th><th>3M前</th><th>变化</th><th>评价</th></tr></thead><tbody><tr><td class="label-col">SPY YTD</td><td class="val-col">+8.5%</td><td>+6.0%</td><td class="sig-up">↑</td><td>市场向好</td></tr><tr><td class="label-col">QQQ YTD</td><td class="val-col">+10.2%</td><td>+7.5%</td><td class="sig-up">↑</td><td>科技领涨</td></tr><tr><td class="label-col">10Y收益率</td><td class="val-col">4.35%</td><td>4.10%</td><td class="sig-up">↑</td><td>高估值承压</td></tr></tbody></table><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">重大新闻事件</h4><ul class="news-list"><li class="news-item"><span class="news-date">2026-06-03</span><span><span class="news-tag bull">利好</span><strong>Azure AI企业客户增速超预期</strong><br><span style="color:var(--text-secondary);font-size:11px;">Azure AI新增企业客户同比+40%，Copilot渗透率提升至35%</span></span></li><li class="news-item"><span class="news-date">2026-05-15</span><span><span class="news-tag bull">利好</span><strong>Microsoft Q3财报超预期</strong><br><span style="color:var(--text-secondary);font-size:11px;">智能云收入$28B超预期，Azure增速33%</span></span></li><li class="news-item"><span class="news-date">2026-04-20</span><span><span class="news-tag bull">利好</span><strong>欧盟批准Activision交易后续整合</strong><br><span style="color:var(--text-secondary);font-size:11px;">游戏业务贡献持续提升，Game Pass用户破4000万</span></span></li></ul><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">宏观情景分析</h4><div class="scenario-grid"><div class="scenario-card optimistic"><div class="sc-title">乐观</div><div class="sc-value"></div><div class="sc-value" style="font-size:16px">$</div><div class="sc-desc">AI驱动企业支出增长+降息利好</div></div><div class="scenario-card base"><div class="sc-title">基准</div><div class="sc-value"></div><div class="sc-value" style="font-size:16px">$</div><div class="sc-desc">缓慢降息—结构性行情</div></div><div class="scenario-card pessimistic"><div class="sc-title">悲观</div><div class="sc-value"></div><div class="sc-value" style="font-size:16px">$</div><div class="sc-desc">CapEx投入压制利润率</div></div></div>
+    </div>
+  </section>
+
+  <!-- Slide 8: Bull vs Bear - Round 1 -->
+  <section class="slide grid-bg">
+    <h2 class="slide-title">Bull vs Bear Debate</h2>
+    <h3 class="slide-subtitle">第一轮 — 多空观点陈述</h3>
+    <div class="debate-grid">
+      <div class="debate-panel"><div class="debate-header"><div class="debate-icon bull">B</div><div class="debate-title">Bull Case</div></div><div class="arg-item"><span class="arg-title">Azure AI领跑企业级AI市场</span><span class="arg-detail">Azure AI企业客户+40%，GitHub Copilot收入年化$2B+，凭借OpenAI深度合作构筑竞争壁垒</span><span class="arg-data">📊 Azure增速33% | Copilot收入$2B+ | AI客户+40%</span></div><div class="arg-item"><span class="arg-title">多元化业务结构降低风险</span><span class="arg-detail">云(42%)+办公(25%)+游戏(10%)+LinkedIn(6%)四大支柱，单一业务波动不影响整体</span><span class="arg-data">📊 Azure 42% | Office 25% | Gaming 10%</span></div><div class="arg-item"><span class="arg-title">强劲现金流+持续回购支撑估值</span><span class="arg-detail">FCF $50B+，年回购$80B+，连续20+年股息增长，净现金$100B+</span><span class="arg-data">📊 FCF $50B | 年回购$80B | 净现金$100B+</span></div></div><div class="debate-panel"><div class="debate-header"><div class="debate-icon bear">B</div><div class="debate-title">Bear Case</div></div><div class="arg-item"><span class="arg-title">PE 35.8x估值处于历史高位</span><span class="arg-detail">PE 35.8x远高于5年均值30x，在4.35%利率环境下估值回调风险显著</span><span class="arg-data">📊 PE 35.8x vs 5年均值30x</span></div><div class="arg-item"><span class="arg-title">从$558高位回落19%—技术面预警</span><span class="arg-detail">股价从$558高点回落至$450(-19.3%)，跌破所有短期均线支撑，RSI 55中性偏弱</span><span class="arg-data">📊 高点回落-19.3% | RSI 55 | 跌破MA20/50</span></div><div class="arg-item"><span class="arg-title">AI CapEx投入高企压缩利润空间</span><span class="arg-detail">AI基建年均CapEx$50B+，若AI变现不及预期将导致ROIC下降和利润压缩</span><span class="arg-data">📊 AI CapEx $50B+ | ROIC下行风险</span></div></div>
+    </div>
+  </section>
+
+  <!-- Slide 9: Rebuttals & Scorecard -->
+  <section class="slide grid-bg">
+    <h2 class="slide-title">Debate</h2>
+    <h3 class="slide-subtitle">第二轮反驳 &amp; 辩论记分卡</h3>
+    <div class="data-section">
+      <div class="rebuttal-panel"><div class="rp-header"><div class="debate-icon bull" style="width:24px;height:24px;font-size:12px;">B</div><div class="rp-side bull-side">Bull Rebuttals</div></div><div class="rebuttal-item">↪ <strong>估值过高问题</strong> — MSFT历史上PE范围25-40x，当前35.8x对应的Azure AI增速(33%)和Copilot变现(年化$2B+)支撑这一溢价</div><div class="rebuttal-item">↪ <strong>技术面恶化</strong> — 从$558回落主要是宏观利率调整而非基本面恶化，200日线$401构成强支撑，距离当前仅12%</div></div><div class="rebuttal-panel"><div class="rp-header"><div class="debate-icon bear" style="width:24px;height:24px;font-size:12px;">B</div><div class="rp-side bear-side">Bear Rebuttals</div></div><div class="rebuttal-item">↪ <strong>Azure AI增长</strong> — Azure增速33%基数效应明显，在$200B+规模上持续高增难度大，AWS+Google竞争加剧</div><div class="rebuttal-item">↪ <strong>多元化结构</strong> — Office和Windows收入增速已降至个位数，游戏业务亏损尚在，真正增长引擎只有Azure</div></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;text-align:center;">核心论点对照</h4><table class="core-compare-table"><thead><tr><th>维度</th><th>看涨观点</th><th>看跌观点</th></tr></thead><tbody><tr><td class="dim-col">估值</td><td class="cell-bull">PEG 1.5x合理—AI溢价支撑</td><td class="cell-bear">PE 35.8x偏高—利率敏感</td></tr><tr><td class="dim-col">增长</td><td class="cell-bull">Azure+AI+Copilot三引擎</td><td class="cell-bear">Azure增速放缓+Office见顶</td></tr><tr><td class="dim-col">技术</td><td class="cell-bull">200日线$401强支撑</td><td class="cell-bear">RSI 55偏弱—从高点回落-19%</td></tr></tbody></table><p style="font-size:12px;color:var(--text-secondary);text-align:center;margin-top:12px;">看涨方 5-4 略胜 | 基本面强劲但估值偏高，AI变现是关键变量，技术面中期偏弱</p>
+    </div>
+  </section>
+
+  <!-- Slide 10: Final Decision -->
+  <section class="slide title-slide grid-bg">
+    <div class="final-label">Score</div>
+    <div class="final-score">7.6</div>
+    <div class="final-rating"><span class="rating-badge accumulate">ACCUMULATE</span></div>
+    <div class="per-dim-section">
+      <h3>Factor Scorecard &amp; Dimension Breakdown</h3>
+      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:24px;align-items:center;">
+        <div class="chart-container" id="radarChart" style="flex:0 0 auto;width:320px;height:320px;"></div>
+        <div class="per-dim-grid" style="flex:1;min-width:250px;max-width:400px;"><div class="score-item"><div class="score-label">基本面</div><div class="score-value" style="color:#22c55e">8.5</div></div><div class="score-item"><div class="score-label">技术面</div><div class="score-value" style="color:#facc15">7</div></div><div class="score-item"><div class="score-label">情绪面</div><div class="score-value" style="color:#facc15">7.5</div></div><div class="score-item"><div class="score-label">宏观</div><div class="score-value" style="color:#facc15">7.5</div></div><div class="score-item"><div class="score-label">风险</div><div class="score-value" style="color:#facc15">7</div></div></div>
+      </div>
+    </div>
+    <div class="data-section" style="margin-top:16px;">
+      <div class="decision-grid"><div class="decision-card"><div class="dc-label">目标价</div><div class="dc-value">$540</div><div class="dc-sub">基准 ~$620</div></div><div class="decision-card"><div class="dc-label">止损位</div><div class="dc-value" style="color:var(--accent-2)">$390</div><div class="dc-sub">最大回撤 28%</div></div><div class="decision-card"><div class="dc-label">仓位建议</div><div class="dc-value" style="font-size:20px;font-family:var(--font-body);font-weight:700">核心仓位5-8% 建议分批建仓</div></div></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">评级触发条件</h4><ul class="trigger-list" style="margin:0 auto;"><li class="trigger-item"><span class="tr-icon">⬆</span><span class="tr-dir up">上调条件：</span>Azure增速连续两季&gt;35%—上调至BUY; Copilot收入年化&gt;$5B</li><li class="trigger-item"><span class="tr-icon">⬇</span><span class="tr-dir down">下调条件：</span>跌破$390支撑—下调至REDUCE; Azure增速降至&lt;25%</li></ul>
+    </div>
+  </section>
+</div>
+
+<div class="nav-dots" id="navDots"></div>
+<div class="slide-indicator" id="slideIndicator">1 / 10</div>
+
+<script>
+function SlidePresentation(){
+  'use strict';
+  var c = document.getElementById('slidesContainer'), sl = c.querySelectorAll('.slide'),
+      nd = document.getElementById('navDots'), si = document.getElementById('slideIndicator'),
+      total = sl.length, cur = 0, sc = false;
+  sl.forEach(function(_,i){var d=document.createElement('div');d.className='nav-dot'+(i===0?' active':'');d.setAttribute('data-index',i);d.addEventListener('click',function(){go(parseInt(this.getAttribute('data-index')))});nd.appendChild(d)});
+  function ua(i){nd.querySelectorAll('.nav-dot').forEach(function(d,j){d.classList.toggle('active',j===i)})}
+  function ui(i){si.textContent=(i+1)+' / '+total}
+  function go(i){if(i<0||i>=total||sc)return;sc=true;cur=i;sl[i].scrollIntoView({behavior:'smooth'});ua(i);ui(i);setTimeout(function(){sc=false},400)}
+  sl.forEach(function(s){new IntersectionObserver(function(e){e.forEach(function(e){if(e.isIntersecting&&!sc){var i=Array.prototype.indexOf.call(sl,e.target);if(i!==-1){cur=i;ua(i);ui(i)}}})},{root:c,threshold:0.5}).observe(s)});
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(cur+1)}else if(e.key==='ArrowUp'||e.key==='ArrowLeft'){e.preventDefault();go(cur-1)}});
+  var ty=0;c.addEventListener('touchstart',function(e){ty=e.changedTouches[0].screenY},{passive:true});c.addEventListener('touchend',function(e){var d=ty-e.changedTouches[0].screenY;if(Math.abs(d)>50){if(d>0)go(cur+1);else go(cur-1)}},{passive:true});
+
+  function initRadar(){
+    var dom=document.getElementById('radarChart');if(!dom)return;var s;
+    try{s=JSON.parse('[8.5,7,7.5,7.5,7]')}catch(e){return}
+    if(!s||!Array.isArray(s))return;
+    var chart=echarts.init(dom,null),labels=['基本面','技术面','情绪面','宏观','风险'];
+    chart.setOption({radar:{indicator:labels.map(function(d){return{name:d,max:10}}),radius:'65%',center:['50%','50%'],axisName:{color:'#475569',fontSize:12},splitLine:{lineStyle:{color:'rgba(30,58,95,0.08)'}},splitArea:{areaStyle:{color:['rgba(30,58,95,0.02)','rgba(30,58,95,0.04)']}}},series:[{type:'radar',data:[{value:s}],areaStyle:{color:'rgba(30,58,95,0.08)'},lineStyle:{color:'#1e3a5f',width:2},symbol:'circle'}]});
+    new ResizeObserver(function(){chart.resize()}).observe(dom);
+  }
+
+  function initKline(){
+    var dom=document.getElementById('klineChart');if(!dom)return;
+    try{var dates=JSON.parse('["2026-02-02","2026-02-03","2026-02-04","2026-02-05","2026-02-06","2026-02-09","2026-02-10","2026-02-11","2026-02-12","2026-02-13","2026-02-16","2026-02-17","2026-02-18","2026-02-19","2026-02-20","2026-02-23","2026-02-24","2026-02-25","2026-02-26","2026-02-27","2026-03-02","2026-03-03","2026-03-04","2026-03-05","2026-03-06","2026-03-09","2026-03-10","2026-03-11","2026-03-12","2026-03-13","2026-03-16","2026-03-17","2026-03-18","2026-03-19","2026-03-20","2026-03-23","2026-03-24","2026-03-25","2026-03-26","2026-03-27","2026-03-30","2026-03-31","2026-04-01","2026-04-02","2026-04-03","2026-04-06","2026-04-07","2026-04-08","2026-04-09","2026-04-10","2026-04-13","2026-04-14","2026-04-15","2026-04-16","2026-04-17","2026-04-20","2026-04-21","2026-04-22","2026-04-23","2026-04-24","2026-04-27","2026-04-28","2026-04-29","2026-04-30","2026-05-01","2026-05-04","2026-05-05","2026-05-06","2026-05-07","2026-05-08","2026-05-11","2026-05-12","2026-05-13","2026-05-14","2026-05-15","2026-05-18","2026-05-19","2026-05-20","2026-05-21","2026-05-22","2026-05-25","2026-05-26","2026-05-27","2026-05-28","2026-05-29","2026-06-01","2026-06-02","2026-06-03","2026-06-04","2026-06-05"]'),values=JSON.parse('[[444.89,458.85,439.55,453.97],[437.63,460.75,437.63,446.43],[447.79,462.69,444.44,456.93],[435.16,451.39,433.01,444.04],[422.8,438.31,422.58,431.43],[423.94,439.78,422.93,432.59],[433.65,445.11,433.65,440.62],[436.94,454.87,430.1,445.86],[448.93,467.3,441.04,458.09],[438.07,462.84,437.22,447.01],[446.14,469.76,444.36,455.24],[458.8,478.16,457.19,468.17],[470.66,491.05,470.66,477.42],[470.04,494.57,461.11,479.64],[462.37,480.62,454.06,471.8],[454.96,470.29,449.54,464.24],[458.66,477.82,454.5,468.02],[454.39,468.14,454.39,459.86],[454.67,477.06,447.77,463.95],[460.92,477.33,456.87,470.33],[474.46,498.28,472.86,484.14],[481.32,506.77,481.32,489.5],[471.91,486.82,466.84,481.54],[469.27,482.59,469.27,474.83],[475.85,495,475.68,485.56],[472.87,500.58,469.86,482.52],[466.19,483.99,464.69,475.71],[462.81,481.85,462.81,468.94],[461.41,473.83,461.41,466.11],[457.05,472.31,448.38,466.37],[448.05,468.58,448.05,455.45],[444.26,458.72,440.38,453.32],[461.74,478.89,461.74,466.82],[468.16,481.86,468.16,476.92],[472.48,494.71,466.7,482.12],[476.48,492.69,473.09,486.2],[478.2,503.57,478.2,484.85],[468.41,489.92,461.41,477.97],[480,507.49,474.59,489.8],[484.01,507.84,476.39,493.88],[493.31,514.8,493.31,501.66],[492.52,507.61,487.36,502.58],[481.43,506.57,481.43,488.09],[487.84,507.37,478.75,497.8],[498.91,528.64,490.03,509.09],[499.92,514.8,499.92,508.66],[506.44,523.93,503.47,516.77],[511.15,527.62,511.15,518.32],[505.61,524.37,503.64,515.93],[512.58,531.43,507.01,523.05],[527.81,554.47,524.12,538.58],[528.37,546.5,521.22,539.15],[523.24,548.68,516.24,533.91],[514.45,531.32,513.89,524.95],[509.08,535.61,509.08,516.41],[493.09,511.74,493.09,503.12],[488.59,501.4,488.59,494.49],[488.42,508.61,488.42,496.6],[495.65,513.71,487,505.76],[493.6,515.11,490.58,503.67],[505.24,526.01,505.24,510.59],[488.32,509.29,483.43,498.29],[498.92,517.99,491.64,509.1],[497.38,519.03,491.47,507.53],[489.92,518.76,486.56,499.91],[500.54,524.29,491.1,510.75],[520.3,544.51,520.3,526.05],[528.72,558.64,520.62,539.51],[528.26,547.89,523.97,539.05],[519.29,535.98,519.29,524.77],[507.03,534.72,503.74,517.38],[509.77,534.93,509.77,514.99],[506.38,533.01,498.44,516.71],[500.2,530.35,498.86,510.41],[501.47,528.3,492.11,511.7],[506.87,527.19,506.87,514.28],[493.64,523.27,484.78,503.71],[484.46,507.98,484.46,494.22],[479.9,492.98,479.9,486.37],[469.38,492.29,468.7,478.96],[467.11,489.75,465.05,476.64],[480.02,496.96,480.02,489.07],[471.85,491.93,471.85,481.4],[467.33,484.89,467.33,475.63],[458.77,474.43,458.77,463.43],[467.68,483.04,461.18,477.22],[464.11,488.38,464.11,470.5],[471.58,491.35,464.23,481.21],[481.02,506.11,480.22,490.84],[495.09,520.15,485.1,505.19]]'),volumes=JSON.parse('[58365607,21500645,36501759,33392644,64188272,60601969,73530774,25216329,45315309,21787833,33118278,50321317,21592158,31930259,58993066,52696488,33226437,55355941,68565827,20389925,68349155,61888363,40415030,29328769,77432784,40195672,25564750,25802982,70849661,56223561,68427696,63783907,52173685,78386945,42712062,53122437,69764279,57111185,71702414,54641128,62274310,22749463,33673896,37363277,24787518,33967453,26060085,36678416,58141066,41889930,42210858,32570421,36018669,76199275,58882123,56547860,30268318,63747607,29804149,42767326,79371401,58399985,53416984,61076855,70571115,66559994,33742884,21926014,38927182,36064452,32658970,76574582,72582057,38880672,59326319,43737914,74872855,47531111,35892809,34797650,53682088,35764496,55075159,73869373,43964030,33159245,79852256,50571577,25454564,22826982]'),ma20=JSON.parse('[441.3,440.68,439.99,439.54,440.9,440.46,440.49,441.58,442.16,444.15,444.56,444.72,445.57,445,446.88,446.88,446.92,448.02,447.22,448.25,449.95,449.82,451.88,452.43,453.88,454.22,454.32,453.94,452.6,451.98,454.2,454.78,455.1,457.01,457.86,460.06,460,459.41,461.42,460.62,462.16,462.98,465.23,467.34,468.41,467.14,465.83,466.2,467.86,466.76,466.95,465.87,465.62,464.25,464.08,464.63,463.98,465.51,464.32,463.71,463.28,463.39,464.83,464.75,465.94,467.98,467.06,468.89,469.73,471.13,472.01,472.14,471.09,470.21,469.46,468.72,467.86,467.23,467.92,469.41,470.99,472.77,471.79,473.48,472.77,471.62,471.29,472.09,470.85,470.25]'),support=parseFloat('418.69'),resistance=parseFloat('486.22')}catch(e){return}
+    if(!dates||!values||!dates.length)return;
+    var chart=echarts.init(dom,null);
+    chart.setOption({tooltip:{trigger:'axis',axisPointer:{type:'cross'}},grid:[{left:'8%',right:'8%',top:'8%',height:'55%'},{left:'8%',right:'8%',top:'72%',height:'20%'}],xAxis:[{type:'category',data:dates,gridIndex:0,axisLabel:{color:'#475569',fontSize:10,rotate:45,interval:Math.max(1,Math.floor(dates.length/15))}},{type:'category',gridIndex:1,data:dates,axisLabel:{show:false},axisLine:{show:false}}],yAxis:[{type:'value',gridIndex:0,scale:true,splitLine:{lineStyle:{color:'rgba(30,58,95,0.06)'}}},{type:'value',gridIndex:1,scale:true,splitNumber:2,axisLabel:{show:false},splitLine:{show:false}}],dataZoom:[{type:'inside',xAxisIndex:[0,1],start:50,end:100},{type:'slider',xAxisIndex:[0,1],start:50,end:100,bottom:2,height:12}],series:[{name:'K-Line',type:'candlestick',xAxisIndex:0,yAxisIndex:0,data:values,itemStyle:{color:'#0f766e',color0:'#b91c1c',borderColor:'#0f766e',borderColor0:'#b91c1c'}},{name:'MA20',type:'line',xAxisIndex:0,yAxisIndex:0,data:ma20,smooth:true,symbol:'none',lineStyle:{color:'#1e3a5f',width:1.5,type:'dashed'}},{name:'Support',type:'line',xAxisIndex:0,yAxisIndex:0,markLine:{silent:true,data:[{yAxis:support,label:{formatter:'S '+support,color:'#0f766e',fontSize:10},lineStyle:{color:'#0f766e',type:'dotted',width:1}}]},data:[]},{name:'Resistance',type:'line',xAxisIndex:0,yAxisIndex:0,markLine:{silent:true,data:[{yAxis:resistance,label:{formatter:'R '+resistance,color:'#b91c1c',fontSize:10},lineStyle:{color:'#b91c1c',type:'dotted',width:1}}]},data:[]},{name:'Volume',type:'bar',xAxisIndex:1,yAxisIndex:1,data:volumes.map(function(v,i){var up=values[i][0]<=values[i][3];return{value:v,itemStyle:{color:up?'#0f766e':'#b91c1c'}}})}]});
+    new ResizeObserver(function(){chart.resize()}).observe(dom);
+  }
+
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){initRadar();initKline()})}else{initRadar();initKline()}
+  ui(0);
+}
+new SlidePresentation();
+</script>
+</body>
+</html>
