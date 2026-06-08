@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Reports Archive</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0f1c; color: #e2e8f0; min-height: 100vh; display: flex; flex-direction: column; }
+.header { background: linear-gradient(135deg, #0f172a, #1e293b); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 24px 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; background: linear-gradient(135deg, #00f0ff, #ff00aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-left: auto; }
+.controls label { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
+.controls select { background: #1e293b; color: #e2e8f0; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 12px; font-size: 14px; min-width: 120px; cursor: pointer; }
+.controls select:focus { outline: none; border-color: #00f0ff; }
+.meta-bar { padding: 12px 32px; background: rgba(15,23,42,0.8); border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; color: #94a3b8; display: flex; gap: 24px; }
+.empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; color: #475569; }
+.empty-state .icon { font-size: 48px; opacity: 0.3; }
+.empty-state h2 { font-size: 18px; font-weight: 600; }
+.empty-state p { font-size: 14px; max-width: 400px; text-align: center; line-height: 1.6; }
+.viewport { flex: 1; position: relative; min-height: 400px; }
+.viewport iframe { width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; }
+@media (max-width: 640px) {
+  .header { padding: 16px; flex-direction: column; align-items: stretch; }
+  .controls { margin-left: 0; }
+  .controls select { flex: 1; }
+  .meta-bar { padding: 10px 16px; flex-wrap: wrap; gap: 12px; }
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>📊 Stock Reports</h1>
+  <div class="controls">
+    <label for="stockSelect">Stock</label>
+    <select id="stockSelect"><option value="">— Select —</option></select>
+    <label for="dateSelect">Date</label>
+    <select id="dateSelect"><option value="">— Select —</option></select>
+  </div>
+</div>
+<div class="meta-bar" id="metaBar" style="display:none;"></div>
+<div class="viewport" id="viewport">
+  <div class="empty-state" id="emptyState">
+    <div class="icon">📈</div>
+    <h2>Stock Reports Archive</h2>
+    <p>Select a stock and date from the dropdowns above to view the analysis report. Reports are auto-archived every time you run <code>/SA</code>.</p>
+  </div>
+</div>
+<script>
+async function init() {
+  const stockSelect = document.getElementById('stockSelect');
+  const dateSelect = document.getElementById('dateSelect');
+  const metaBar = document.getElementById('metaBar');
+  const viewport = document.getElementById('viewport');
+  const emptyState = document.getElementById('emptyState');
+
+  let data = null;
+  try {
+    const res = await fetch('manifest.json?_=' + Date.now());
+    data = await res.json();
+  } catch (e) {
+    emptyState.innerHTML = '<div class="icon">⚠️</div><h2>No Reports Found</h2><p>Run <code>/SA AAPL</code> in Claude Code to generate your first report, then refresh this page.</p>';
+    return;
+  }
+
+  const stocks = Object.keys(data.reports || {}).sort();
+  if (stocks.length === 0) {
+    emptyState.innerHTML = '<div class="icon">📭</div><h2>No Reports Yet</h2><p>Run <code>/SA AAPL</code> in Claude Code to generate your first report.</p>';
+    return;
+  }
+
+  stocks.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s; opt.textContent = s;
+    stockSelect.appendChild(opt);
+  });
+
+  function updateDates() {
+    const symbol = stockSelect.value;
+    dateSelect.innerHTML = '<option value="">— Select —</option>';
+    if (!symbol || !data.reports[symbol]) return;
+    const entries = data.reports[symbol].sort((a, b) => b.date.localeCompare(a.date));
+    entries.forEach(e => {
+      const opt = document.createElement('option');
+      opt.value = e.date;
+      opt.textContent = e.date;
+      opt.dataset.path = e.path;
+      opt.dataset.mode = e.mode;
+      opt.dataset.preset = e.preset;
+      dateSelect.appendChild(opt);
+    });
+    if (entries.length === 1) {
+      dateSelect.value = entries[0].date;
+      loadReport();
+    }
+  }
+
+  function loadReport() {
+    const symbol = stockSelect.value;
+    const date = dateSelect.value;
+    if (!symbol || !date) {
+      metaBar.style.display = 'none';
+      emptyState.style.display = 'flex';
+      return;
+    }
+    const entry = data.reports[symbol].find(e => e.date === date);
+    if (!entry) return;
+
+    emptyState.style.display = 'none';
+    metaBar.style.display = 'flex';
+    const modeMap = { '1': '全新深度研究', '2': '增量跟进', '3': '日内诊断' };
+    metaBar.innerHTML = '<span>' + symbol + ' · ' + date + '</span><span>模式: ' + (modeMap[entry.mode] || '模式' + entry.mode) + '</span><span>预设: ' + entry.preset + '</span>';
+
+    const existing = viewport.querySelector('iframe');
+    if (existing) existing.remove();
+
+    const iframe = document.createElement('iframe');
+    iframe.src = entry.path;
+    iframe.title = symbol + ' report ' + date;
+    viewport.appendChild(iframe);
+  }
+
+  stockSelect.addEventListener('change', function() {
+    updateDates();
+    if (dateSelect.value) loadReport();
+  });
+  dateSelect.addEventListener('change', loadReport);
+
+  // Auto-select first stock + latest date
+  stockSelect.value = stocks[0];
+  updateDates();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

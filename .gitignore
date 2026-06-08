@@ -1,0 +1,2 @@
+# No ignores needed — we want all reports committed
+# This file ensures the .git directory doesn't get polluted
