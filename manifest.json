@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-08T21:02:00+08:00",
+  "updated": "2026-06-10T21:30:00+08:00",
   "reports": {
     "AAPL": [
       { "date": "2026-06-08", "path": "AAPL/2026-06-08/report.html", "mode": "1", "preset": "corporate-light" }
@@ -14,9 +14,14 @@
       { "date": "2026-06-08", "path": "LEU/2026-06-08/report.html", "mode": "1", "preset": "warm-light" }
     ],
     "MSFT": [
+      { "date": "2026-06-10", "path": "MSFT/2026-06-10/report.html", "mode": "1", "preset": "corporate-light" },
       { "date": "2026-06-08", "path": "MSFT/2026-06-08/report.html", "mode": "1", "preset": "corporate-light" }
     ],
+    "NVDA": [
+      { "date": "2026-06-10", "path": "NVDA/2026-06-10/report.html", "mode": "1", "preset": "corporate-light" }
+    ],
     "TSLA": [
+      { "date": "2026-06-10", "path": "TSLA/2026-06-10/report.html", "mode": "1", "preset": "corporate-light" },
       { "date": "2026-06-08", "path": "TSLA/2026-06-08/report.html", "mode": "1", "preset": "corporate-light" }
     ]
   }
