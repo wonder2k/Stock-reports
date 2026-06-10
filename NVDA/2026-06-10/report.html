@@ -1,293 +1,963 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NVDA — Corporate Analysis Report</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js" integrity="sha384-BQKzmHvQLMCAnL3UtDBA1Al5tFjsCz1wrMlIUA1wkzo14DYkRWjywW+p9pCj0cwd" crossorigin="anonymous"></script>
-<style>
-:root{--bg-primary:#ffffff;--bg-secondary:#f8fafc;--bg-card:#ffffff;--text-primary:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;--accent-1:#1e3a5f;--accent-2:#b91c1c;--accent-green:#0f766e;--accent-amber:#b45309;--border-color:#e2e8f0;--font-display:'DM Serif Display',serif;--font-body:'DM Sans',sans-serif}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-primary);overflow:hidden;height:100vh;width:100vw;-webkit-font-smoothing:antialiased}
-.slides-container{height:100vh;width:100vw;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;scroll-behavior:smooth}
-.slide{min-height:100vh;width:100%;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:48px 64px;background:var(--bg-primary);position:relative}
-.grid-bg{background-image:linear-gradient(rgba(30,58,95,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,95,0.04) 1px,transparent 1px);background-size:60px 60px}
-.nav-dots{position:fixed;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;z-index:1000}
-.nav-dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--accent-1);background:transparent;cursor:pointer;transition:all .15s ease;padding:0}
-.nav-dot.active{background:var(--accent-1);transform:scale(1.2)}
-.nav-dot:hover{background:var(--accent-1);opacity:.5}
-.slide-indicator{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-secondary);z-index:1000;background:var(--bg-primary);padding:6px 16px;border:1px solid var(--border-color);border-radius:20px}
-.title-slide{text-align:center}
-.rating-badge{display:inline-block;padding:10px 28px;border-radius:4px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px}
-.rating-badge.buy{background:#0f766e;color:#fff}
-.rating-badge.accumulate{background:#4f772d;color:#fff}
-.rating-badge.hold{background:var(--accent-amber);color:#fff}
-.rating-badge.reduce{background:#c2410c;color:#fff}
-.rating-badge.sell{background:var(--accent-2);color:#fff}
-.ticker-gradient{font-family:var(--font-display);font-size:96px;font-weight:400;letter-spacing:-1px;line-height:1;margin-bottom:4px;color:var(--accent-1)}
-.company-name{font-size:22px;font-weight:500;color:var(--text-secondary);margin-bottom:24px}
-.title-meta{font-size:13px;color:var(--text-secondary);letter-spacing:1px;text-transform:uppercase}
-.title-meta .sep{color:var(--border-color);margin:0 8px}
-.slide-title{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--text-muted);margin-bottom:24px;text-align:center}
-.slide-subtitle{font-family:var(--font-display);font-size:28px;font-weight:400;color:var(--accent-1);margin-bottom:24px;text-align:center;line-height:1.3}
-.metrics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:800px;width:100%}
-.metric-card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:6px;padding:24px;text-align:center}
-.metric-value{font-family:var(--font-display);font-size:32px;font-weight:400;color:var(--accent-1);line-height:1.2;margin-bottom:4px}
-.metric-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-secondary);font-weight:500}
-.metric-change{font-size:13px;font-weight:600;margin-top:8px}
-.metric-change.positive{color:var(--accent-green)}
-.metric-change.negative{color:var(--accent-2)}
-.chart-container{width:100%;max-width:600px;height:460px}
-.kline-container{width:100%;max-width:1000px;margin:0 auto}
-.kline-container .chart-container{width:100%;max-width:none}
-.kline-info{display:flex;gap:24px;justify-content:center;align-items:center;margin-top:12px;font-size:13px;color:var(--text-secondary)}
-.kline-level strong{color:var(--text-primary)}
-.data-section{max-width:1000px;width:100%}
-.data-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px}
-.data-table th,.data-table td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border-color)}
-.data-table thead th{background:var(--accent-1);color:#fff;font-weight:600;letter-spacing:.5px;font-size:11px;text-transform:uppercase}
-.data-table tbody tr:hover{background:var(--bg-secondary)}
-.data-table .label-col{font-weight:600;color:var(--text-primary);white-space:nowrap}
-.data-table .val-col{font-family:var(--font-display);font-size:14px;color:var(--accent-1)}
-.data-table .sig-up{color:var(--accent-green);font-weight:600}
-.data-table .sig-down{color:var(--accent-2);font-weight:600}
-.data-table .sig-neutral{color:var(--text-secondary)}
-.data-table .trend-up{color:var(--accent-green)}
-.data-table .trend-down{color:var(--accent-2)}
-.table-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-.table-grid .data-table{margin-bottom:0}
-.data-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
-.data-card{border:1px solid var(--border-color);border-radius:6px;padding:16px;text-align:center;background:var(--bg-card)}
-.data-card .dc-value{font-family:var(--font-display);font-size:24px;color:var(--accent-1);line-height:1.2}
-.data-card .dc-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-top:4px}
-.data-card .dc-sub{font-size:11px;color:var(--text-secondary);margin-top:2px}
-.news-list{list-style:none;margin-bottom:16px}
-.news-item{padding:10px 0;border-bottom:1px solid var(--border-color);display:flex;gap:12px;align-items:flex-start;font-size:13px;line-height:1.5}
-.news-date{white-space:nowrap;color:var(--text-muted);font-size:11px;font-weight:600;min-width:60px}
-.news-tag{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:600;margin-right:8px}
-.news-tag.bull{background:rgba(15,118,110,.1);color:var(--accent-green)}
-.news-tag.bear{background:rgba(185,28,28,.1);color:var(--accent-2)}
-.news-tag.neutral{background:rgba(100,116,139,.1);color:var(--text-secondary)}
-.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
-.scenario-card{border:1px solid var(--border-color);border-radius:6px;padding:16px;text-align:center;background:var(--bg-card)}
-.scenario-card.optimistic{border-top:3px solid var(--accent-green)}
-.scenario-card.base{border-top:3px solid var(--accent-amber)}
-.scenario-card.pessimistic{border-top:3px solid var(--accent-2)}
-.scenario-card .sc-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px}
-.scenario-card .sc-value{font-family:var(--font-display);font-size:20px;color:var(--accent-1);margin-bottom:4px}
-.scenario-card .sc-desc{font-size:11px;color:var(--text-secondary);line-height:1.5}
-.debate-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:1000px;width:100%}
-.debate-panel{border:1px solid var(--border-color);border-radius:6px;padding:24px;background:var(--bg-secondary)}
-.debate-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--accent-1)}
-.debate-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700}
-.debate-icon.bull{background:var(--accent-green);color:#fff}
-.debate-icon.bear{background:var(--accent-2);color:#fff}
-.debate-title{font-family:var(--font-display);font-size:18px;text-transform:uppercase;letter-spacing:1px;color:var(--accent-1)}
-.arg-item{padding:10px 0;border-bottom:1px solid var(--border-color)}
-.arg-item:last-child{border-bottom:none}
-.arg-item .arg-title{font-weight:700;font-size:14px;color:var(--text-primary);display:block;margin-bottom:4px}
-.arg-item .arg-detail{font-size:12px;color:var(--text-secondary);line-height:1.6;display:block}
-.arg-item .arg-data{font-size:10px;color:var(--text-muted);margin-top:4px;padding:4px 8px;background:rgba(30,58,95,.05);border-radius:3px;display:inline-block}
-.rebuttal-panel{border:1px solid var(--border-color);border-radius:6px;padding:20px;background:var(--bg-secondary);margin-bottom:12px}
-.rebuttal-panel .rp-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.rebuttal-panel .rp-side{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
-.rebuttal-panel .rp-side.bull-side{color:var(--accent-green)}
-.rebuttal-panel .rp-side.bear-side{color:var(--accent-2)}
-.rebuttal-item{padding:6px 0;font-size:12px;line-height:1.6;color:var(--text-primary)}
-.rebuttal-item strong{color:var(--accent-1)}
-.core-compare-table{width:100%;margin-top:12px}
-.core-compare-table th,.core-compare-table td{padding:8px 12px;border-bottom:1px solid var(--border-color);font-size:11px;text-align:center}
-.core-compare-table th{background:var(--accent-1);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:1px}
-.core-compare-table .dim-col{text-align:left;font-weight:600;color:var(--text-primary);font-size:12px}
-.core-compare-table .cell-bull{color:var(--accent-green);font-size:11px}
-.core-compare-table .cell-bear{color:var(--accent-2);font-size:11px}
-.final-score{font-family:var(--font-display);font-size:80px;font-weight:400;line-height:1;margin-bottom:8px;color:var(--accent-1)}
-.final-label{font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-secondary);margin-bottom:8px}
-.final-rating{margin-bottom:24px}
-.per-dim-section{margin-top:24px;max-width:700px;width:100%}
-.per-dim-section h3{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:12px;text-align:center}
-.per-dim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-.score-item{background:var(--bg-card);border:1px solid var(--border-color);border-radius:6px;padding:14px;text-align:center;font-size:12px;color:var(--text-secondary)}
-.score-item .score-value{font-family:var(--font-display);font-size:18px;font-weight:400;margin-bottom:2px}
-.decision-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;max-width:800px;width:100%;margin-bottom:20px}
-.decision-card{border:1px solid var(--border-color);border-radius:6px;padding:20px;text-align:center;background:var(--bg-card)}
-.decision-card .dc-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:6px}
-.decision-card .dc-value{font-family:var(--font-display);font-size:28px;color:var(--accent-1)}
-.decision-card .dc-sub{font-size:11px;color:var(--text-secondary);margin-top:4px}
-.trigger-list{list-style:none;max-width:600px;width:100%}
-.trigger-item{padding:8px 0;display:flex;align-items:center;gap:10px;font-size:13px;border-bottom:1px solid var(--border-color);color:var(--text-primary)}
-.trigger-item:last-child{border-bottom:none}
-.trigger-item .tr-icon{font-size:16px}
-.trigger-item .tr-dir.up{color:var(--accent-green);font-weight:600}
-.trigger-item .tr-dir.down{color:var(--accent-2);font-weight:600}
-.conclusion-text{max-width:700px;text-align:center;font-size:14px;line-height:1.8;color:var(--text-secondary);margin-top:8px}
-@media(max-width:768px){
-.slide{padding:32px 20px}
-.ticker-gradient{font-size:56px}
-.metrics-grid{grid-template-columns:repeat(2,1fr);gap:10px}
-.metric-value{font-size:24px}
-.data-cards{grid-template-columns:1fr 1fr}
-.table-grid,.scenario-grid,.decision-grid{grid-template-columns:1fr}
-.debate-grid{grid-template-columns:1fr;gap:14px}
-.final-score{font-size:56px}
-.nav-dots{right:12px;gap:8px}
-.nav-dot{width:8px;height:8px}
-.chart-container{height:360px}
-}
-</style>
+    <meta charset="UTF-8">
+    <title>NVDA 投资框架前置与基本面深度诊断报告</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+            color: #333333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        h1 {
+            color: #1e3a8a;
+            border-bottom: 3px solid #1e3a8a;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        h2 {
+            color: #1e3a8a;
+            border-left: 5px solid #1e3a8a;
+            padding-left: 10px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2c5282;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        th {
+            background-color: #1e3a8a;
+            color: #ffffff;
+            font-weight: bold;
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+        }
+        td {
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: #f1f5f9;
+        }
+        tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+        .info-box {
+            background-color: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: monospace;
+            margin: 15px 0;
+            white-space: pre-line;
+        }
+        .text-up {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .text-down {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        .badge-green {
+            background-color: #10b981;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .badge-red {
+            background-color: #ef4444;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <h1>📈 NVDA 股票多维度分析报告 (M00 - M01)</h1>
+    <p><strong>分析日期</strong>：2026-06-10 | <strong>分析系统</strong>：v6.0 HTML 终极整合系统</p>
 
-<div class="slides-container" id="slidesContainer">
-  <!-- Slide 1: Title -->
-  <section class="slide title-slide grid-bg">
-    <div class="rating-badge accumulate">ACCUMULATE</div>
-    <div class="ticker-gradient">NVDA</div>
-    <div class="company-name">NVIDIA Corporation</div>
-    <div class="title-meta"><span>全新深度研究</span><span class="sep">|</span><span>2026-06-10</span></div>
-  </section>
+    <hr style="border: 0; border-top: 1px solid #cbd5e1; margin: 20px 0;">
 
-  <!-- Slide 2: Key Metrics -->
-  <section class="slide grid-bg">
-    <h2 class="slide-title">Key Metrics</h2>
-    <div class="metrics-grid">
-      <div class="metric-card"><div class="metric-value">208.19</div><div class="metric-label">Price</div></div>
-      <div class="metric-card"><div class="metric-value">40.11</div><div class="metric-label">RSI (14)</div></div>
-      <div class="metric-card"><div class="metric-value">N/A</div><div class="metric-label">P / E</div></div>
-      <div class="metric-card"><div class="metric-value">N/A%</div><div class="metric-label">Short % Float</div></div>
-      <div class="metric-card"><div class="metric-value"><span class="metric-change negative">-1.15%</span></div><div class="metric-label">YTD Return</div></div>
-      <div class="metric-card"><div class="metric-value"><span class="metric-change negative">空头排列 (Bearish)</span></div><div class="metric-label">MACD Signal</div></div>
+    <h2>📋 M00 投资框架前置表</h2>
+    
+    <h3>A. 标的基本信息</h3>
+    <div class="info-box">
+┌─────────────────────────────────────┐
+│ 标的代码：NVDA                      │
+│ 标的名称：NVIDIA Corporation         │
+│ 所属行业：半导体 / 人工智能 / 硬件    │
+│ 市场：NASDAQ                        │
+│ 市值级别：超大盘（$3.0T+）          │
+│ 分析日期：2026-06-10               │
+│ 分析员：AI 多维度分析系统 v6.0      │
+└─────────────────────────────────────┘
     </div>
-  </section>
 
-  <!-- Slide 3: Fundamental Analysis -->
-  <section class="slide grid-bg">
-    <h2 class="slide-title">Fundamental Analysis</h2>
-    <h3 class="slide-subtitle">财务三表 &amp; 估值深度拆解</h3>
-    <div class="data-section">
-      <p style="font-size:13px;line-height:1.7;color:var(--text-secondary);margin-bottom:16px;text-align:center;max-width:800px;margin-left:auto;margin-right:auto;">NVIDIA是AI算力基础设施的绝对龙头，Hopper-Blackwell-Rubin三代架构持续领跑。数据中心收入占比超85%且增速&gt;100%，毛利率维持在75%+。但市场对AI CapEx见顶的担忧加剧，NVDA从高点大幅回抽后进入消化期。半导体行业周期性与AI长期需求之间需找平衡。</p><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;">损益表摘要</h4><table class="data-table"><thead><tr><th>指标</th><th>TTM</th><th>YoY</th></tr></thead><tbody><tr><td class="label-col">营收</td><td class="val-col">$1,300B+</td><td class="sig-up">+100%+</td></tr><tr><td class="label-col">毛利率</td><td class="val-col">75%+</td><td class="sig-neutral">小幅收缩但仍极高</td></tr><tr><td class="label-col">净利润率</td><td class="val-col">50%+</td><td class="sig-neutral">行业顶级</td></tr><tr><td class="label-col">EPS</td><td class="val-col">~$5.50</td><td class="sig-up">+120%+</td></tr></tbody></table><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">估值指标</h4><table class="data-table"><thead><tr><th>指标</th><th>当前</th><th>评价</th></tr></thead><tbody><tr><td class="label-col">PE Forward</td><td class="val-col">~35-40x</td><td>相对增速合理</td></tr><tr><td class="label-col">PEG</td><td class="val-col">~0.8</td><td>偏低—高成长消化估值</td></tr><tr><td class="label-col">P/S</td><td class="val-col">~20x</td><td>合理偏高</td></tr></tbody></table><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">EPS &amp; 股价情景</h4><div class="scenario-grid"><div class="scenario-card optimistic"><div class="sc-title">乐观</div><div class="sc-value">$7.50</div><div class="sc-value" style="font-size:16px">$300</div><div class="sc-desc">AI需求持续超预期+Rubin放量</div></div><div class="scenario-card base"><div class="sc-title">基准</div><div class="sc-value">$5.80</div><div class="sc-value" style="font-size:16px">$240</div><div class="sc-desc">AI需求稳步增长</div></div><div class="scenario-card pessimistic"><div class="sc-title">悲观</div><div class="sc-value">$4.00</div><div class="sc-value" style="font-size:16px">$180</div><div class="sc-desc">AI CapEx见顶+竞争加剧</div></div></div>
-    </div>
-  </section>
+    <h3>B. 投资假设与周期</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">维度</th>
+                <th style="width: 35%;">设定</th>
+                <th style="width: 40%;">依据</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>持有周期</strong></td>
+                <td>12-24 个月</td>
+                <td>中线配置维度，跨越下一代 AI 架构（Rubin 及更新系列）的全面量产周期</td>
+            </tr>
+            <tr>
+                <td><strong>对标基准</strong></td>
+                <td>NDX（纳斯达克 100） + SOX（费城半导体指数）</td>
+                <td>科技权重股对标 NDX，行业龙头地位对标 SOX 寻找超额表现</td>
+            </tr>
+            <tr>
+                <td><strong>超额收益期望</strong></td>
+                <td>NDX + 500-800 bp</td>
+                <td>鉴于其在 AI 主权云及企业端渗透的持续领跑，维持较高的 alpha 期望值</td>
+            </tr>
+            <tr>
+                <td><strong>相对风险敞口</strong></td>
+                <td>中性偏进攻</td>
+                <td>高 Beta 特征，允许承受 30-40% 波动，但严格防范估值泡沫破裂和硬件周期性下行</td>
+            </tr>
+            <tr>
+                <td><strong>投资级别</strong></td>
+                <td>核心重仓持仓</td>
+                <td>全球 AI 算力基建的绝对垄断者，科技组合内的核心压舱石</td>
+            </tr>
+        </tbody>
+    </table>
 
-  <!-- Slide 4: Technical Analysis -->
-  <section class="slide grid-bg">
-    <h2 class="slide-title">Technical Analysis</h2>
-    <h3 class="slide-subtitle">多时间框架技术指标全景</h3>
-    <div class="data-section">
-      <div class="table-grid"><table class="data-table"><thead><tr><th>指标</th><th>数值</th><th>备注</th></tr></thead><tbody><tr><td class="label-col">当前价</td><td class="val-col">208.19</td><td>接近布林下轨</td></tr><tr><td class="label-col">52周高/低</td><td class="val-col">248 / 165</td><td></td></tr><tr><td class="label-col">YTD涨幅</td><td class="val-col">-1.15%</td><td>小幅回调</td></tr><tr><td class="label-col">近3月涨幅</td><td class="val-col">-10%</td><td>持续回调中</td></tr></tbody></table><table class="data-table"><thead><tr><th>均线</th><th>当前值</th><th>价格位置</th><th>方向</th><th>评价</th></tr></thead><tbody><tr><td class="label-col">20 SMA</td><td class="val-col">218.21</td><td>下方</td><td class="sig-down">↓</td><td>短期偏空</td></tr><tr><td class="label-col">50 SMA</td><td class="val-col">~215</td><td>下方</td><td class="sig-down">↓</td><td>中期偏空</td></tr><tr><td class="label-col">200 SMA</td><td class="val-col">~185</td><td>上方</td><td class="sig-up">↑</td><td>长期支撑稳固</td></tr></tbody></table></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">动量指标</h4><table class="data-table"><thead><tr><th>指标</th><th>数值</th><th>信号</th></tr></thead><tbody><tr><td class="label-col">RSI(14)</td><td class="val-col">40.11</td><td class="sig-neutral">偏弱—接近超卖</td></tr><tr><td class="label-col">MACD</td><td class="val-col">Bearish</td><td class="sig-neutral">空头排列</td></tr><tr><td class="label-col">布林带宽</td><td class="val-col">13.13%</td><td class="sig-neutral">波动扩大</td></tr><tr><td class="label-col">ATR</td><td class="val-col">8.57</td><td class="sig-neutral">正常波动</td></tr></tbody></table><div class="kline-info" style="margin-top:8px;">支撑位 $205.10(布林下轨) | 阻力位 $235.74 | 200日均线~$185提供强支撑</div>
-    </div>
-  </section>
+    <h3>C. 风险偏好与仓位策略</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>风险偏好</th>
+                <th>仓位建议</th>
+                <th>波动容忍</th>
+                <th>止损规则</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>保守</td>
+                <td>单标的 ≤ 5%</td>
+                <td>±15%</td>
+                <td>跌幅 -10% 或毛利率结构性拐头立即止损</td>
+            </tr>
+            <tr>
+                <td>中性</td>
+                <td>单标的 5-10%</td>
+                <td>±25%</td>
+                <td>跌幅 -15% 或核心客户 CapEx 削减时止损</td>
+            </tr>
+            <tr>
+                <td><strong>本次选择：中性偏进攻</strong></td>
+                <td style="background-color: #eff6ff; font-weight: bold;">👉 单标的 10-15%</td>
+                <td style="background-color: #eff6ff; font-weight: bold;">👉 ±30-40%</td>
+                <td style="background-color: #eff6ff; font-weight: bold;">👉 跌幅 -20% 或行业周期下行指标确认后止损</td>
+            </tr>
+        </tbody>
+    </table>
 
-  <!-- Slide 5: K-line Chart -->
-  <section class="slide grid-bg">
-    <h2 class="slide-title">Price History &amp; Technical Levels</h2>
-    <div class="kline-container">
-      <div class="chart-container" id="klineChart" style="height:520px;"></div>
-    </div>
-    <div class="kline-info">
-      <span>2026-06-10</span>
-      <span>Support: <strong>205.1</strong></span>
-      <span>Resistance: <strong>235.74</strong></span>
-    </div>
-  </section>
+    <h3>D. 关键驱动与定量锚点</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 15%;">驱动因素</th>
+                <th style="width: 35%;">假设内容</th>
+                <th style="width: 30%;">定量锚点</th>
+                <th style="width: 20%;">监控指标</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>1. Blackwell/Rubin 架构无缝切换</strong></td>
+                <td>Blackwell 保持强劲变现，2026年底 Rubin 系列开始接力，维持数据中心高客单价。</td>
+                <td>数据中心营收同比维持 30%+ 增长，供应链无重大重组或延迟。</td>
+                <td>季度数据中心总营收、毛利率（锚定在 72-75% 区间）</td>
+            </tr>
+            <tr>
+                <td><strong>2. 主权 AI 与企业端长尾需求</strong></td>
+                <td>北美云厂商（Hyperscalers）以外的需求（国家级算力、非科技巨头企业）占收入比重持续上升。</td>
+                <td>非 CSP 收入占比突破 35%，对冲单一集中度风险。</td>
+                <td>各区域政策法案、企业级软件订阅收入变现情况</td>
+            </tr>
+            <tr>
+                <td><strong>3. CapEx 转化为 ROI 的验证</strong></td>
+                <td>大型科技巨头的 AI 投入在 2026 年面临更严苛的投资回报率（ROI）审计。</td>
+                <td>若客户因应用端未爆发而削减 2027 年硬件预算，NVDA 营收增长将停滞。</td>
+                <td>微软、谷歌、Meta、亚马逊的资本支出环比/同比指引</td>
+            </tr>
+        </tbody>
+    </table>
 
-  <!-- Slide 6: Sentiment Analysis -->
-  <section class="slide grid-bg">
-    <h2 class="slide-title">Sentiment Analysis</h2>
-    <h3 class="slide-subtitle">情绪面综合信号监测</h3>
-    <div class="data-section">
-      <div class="data-cards"><div class="data-card"><div class="dc-value">N/A</div><div class="dc-label">Short Float</div><div class="dc-sub">空头比例</div></div><div class="data-card"><div class="dc-value">$229.01</div><div class="dc-label">共识目标价</div><div class="dc-sub">vs 当前价</div></div><div class="data-card"><div class="dc-value">50</div><div class="dc-label">Fear &amp; Greed</div><div class="dc-sub">市场情绪</div></div><div class="data-card"><div class="dc-value">18</div><div class="dc-label">VIX</div><div class="dc-sub">波动率指数</div></div></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">分析师评级分布</h4><div style="display:flex;gap:12px;max-width:500px;margin:0 auto 12px;"><div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-card)"><div style="font-size:24px;font-weight:700;color:var(--accent-1)">42</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-muted)">buy</div></div><div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-card)"><div style="font-size:24px;font-weight:700;color:var(--accent-1)">10</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-muted)">hold</div></div><div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-card)"><div style="font-size:24px;font-weight:700;color:var(--accent-1)">3</div><div style="font-size:10px;text-transform:uppercase;color:var(--text-muted)">sell</div></div></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">情绪信号汇总</h4><table class="data-table"><thead><tr><th>指标</th><th>数值</th><th>评价</th><th>信号</th></tr></thead><tbody><tr><td class="label-col">分析师Buy%</td><td>76%</td><td>高度看多</td><td>🟢</td></tr><tr><td class="label-col">共识目标价</td><td>$229.01</td><td>较当前+10%</td><td>🟢</td></tr><tr><td class="label-col">高目标价</td><td>$270.65</td><td>上行空间30%</td><td>🟢</td></tr></tbody></table>
-    </div>
-  </section>
+    <h2>📊 M01 基本面分析深度版</h2>
 
-  <!-- Slide 7: Macro & News Analysis -->
-  <section class="slide grid-bg">
-    <h2 class="slide-title">Macro &amp; News</h2>
-    <h3 class="slide-subtitle">宏观环境与行业动态全景</h3>
-    <div class="data-section">
-      <h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;">宏观经济快照</h4><table class="data-table"><thead><tr><th>指标</th><th>当前值</th><th>3M前</th><th>变化</th><th>评价</th></tr></thead><tbody><tr><td class="label-col">GDP增速</td><td class="val-col">2.8%</td><td>2.5%</td><td class="sig-up">↑</td><td>稳健</td></tr><tr><td class="label-col">核心CPI</td><td class="val-col">3.2%</td><td>3.5%</td><td class="sig-down">↓</td><td>趋缓</td></tr><tr><td class="label-col">10Y收益率</td><td class="val-col">4.35%</td><td>4.10%</td><td class="sig-up">↑</td><td>对高PE标的承压</td></tr></tbody></table><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">重大新闻事件</h4><ul class="news-list"><li class="news-item"><span class="news-date">2026-05-20</span><span><span class="news-tag bull">利好</span><strong>Blackwell全面量产</strong><br><span style="color:var(--text-secondary);font-size:11px;">B200芯片需求旺盛，数据中心收入再创新高</span></span></li><li class="news-item"><span class="news-date">2026-06-01</span><span><span class="news-tag bear">利空</span><strong>AI CapEx见顶担忧升温</strong><br><span style="color:var(--text-secondary);font-size:11px;">部分市场观点认为AI基建投资增速可能在2027放缓</span></span></li></ul><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">宏观情景分析</h4><div class="scenario-grid"><div class="scenario-card optimistic"><div class="sc-title">乐观</div><div class="sc-value"></div><div class="sc-value" style="font-size:16px">$</div><div class="sc-desc">AI投资持续加速+Rubin架构催化</div></div><div class="scenario-card base"><div class="sc-title">基准</div><div class="sc-value"></div><div class="sc-value" style="font-size:16px">$</div><div class="sc-desc">AI投资稳步增长，份额保持</div></div><div class="scenario-card pessimistic"><div class="sc-title">悲观</div><div class="sc-value"></div><div class="sc-value" style="font-size:16px">$</div><div class="sc-desc">AI CapEx周期见顶+AMD竞争</div></div></div>
-    </div>
-  </section>
+    <h3>A. 损益表摘要（单位：百万美元，EPS除外）</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>指标</th>
+                <th>FY 2024</th>
+                <th>FY 2025</th>
+                <th>TTM (2025)</th>
+                <th>预期 2026E</th>
+                <th>预期 2027E</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>营收</strong></td>
+                <td>60,922</td>
+                <td>96,310</td>
+                <td>115,400</td>
+                <td>162,500</td>
+                <td>198,200</td>
+            </tr>
+            <tr>
+                <td><strong>YoY 增速</strong></td>
+                <td class="text-up">+126%</td>
+                <td class="text-up">+58.1%</td>
+                <td class="text-up">+45.5%</td>
+                <td class="text-up">+40.8%</td>
+                <td class="text-up">+22.0%</td>
+            </tr>
+            <tr>
+                <td><strong>毛利率</strong></td>
+                <td>72.7%</td>
+                <td>75.3%</td>
+                <td>74.8%</td>
+                <td>73.5%</td>
+                <td>72.2%</td>
+            </tr>
+            <tr>
+                <td><strong>运营利润</strong></td>
+                <td>32,971</td>
+                <td>61,640</td>
+                <td>74,500</td>
+                <td>105,625</td>
+                <td>126,848</td>
+            </tr>
+            <tr>
+                <td><strong>净利润</strong></td>
+                <td>29,760</td>
+                <td>53,650</td>
+                <td>65,200</td>
+                <td>92,625</td>
+                <td>111,000</td>
+            </tr>
+            <tr>
+                <td><strong>EPS（摊薄，拆股后调后）</strong></td>
+                <td>1.19</td>
+                <td>2.15</td>
+                <td>2.61</td>
+                <td>3.71</td>
+                <td>4.44</td>
+            </tr>
+        </tbody>
+    </table>
 
-  <!-- Slide 8: Bull vs Bear - Round 1 -->
-  <section class="slide grid-bg">
-    <h2 class="slide-title">Bull vs Bear Debate</h2>
-    <h3 class="slide-subtitle">第一轮 — 多空观点陈述</h3>
-    <div class="debate-grid">
-      <div class="debate-panel"><div class="debate-header"><div class="debate-icon bull">B</div><div class="debate-title">Bull Case</div></div><div class="arg-item"><span class="arg-title">AI算力需求远未见顶</span><span class="arg-detail">大模型参数量从千亿向万亿+演进，AI推理需求爆发</span><span class="arg-data">📊 数据中心收入+100%+ | 推理需求占比↑</span></div><div class="arg-item"><span class="arg-title">PEG~0.8估值极具吸引力</span><span class="arg-detail">PE 35-40x相对EPS增速100%+，PEG仅0.8左右</span><span class="arg-data">📊 PEG ~0.8 | 毛利率75%+</span></div></div><div class="debate-panel"><div class="debate-header"><div class="debate-icon bear">B</div><div class="debate-title">Bear Case</div></div><div class="arg-item"><span class="arg-title">AI CapEx周期见顶风险</span><span class="arg-detail">超大规模云厂商CapEx增速可能2027年放缓</span><span class="arg-data">📊 营收增速+100%→+30% | PE扩张空间消失</span></div><div class="arg-item"><span class="arg-title">技术面持续恶化</span><span class="arg-detail">RSI仅40接近超卖，MACD空头排列，短期未见恢复信号</span><span class="arg-data">📊 RSI 40 | MACD Bearish | 回调-10%</span></div></div>
-    </div>
-  </section>
+    <h3>B. 资产负债表与现金流核心摘要（最新季度切片）</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>核心资产负债指标</th>
+                <th>数值（百万美元）</th>
+                <th>核心现金流指标</th>
+                <th>数值（百万美元）</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>现金、等价物及短期投资</strong></td>
+                <td>34,800</td>
+                <td><strong>经营现金流 (TTM)</strong></td>
+                <td>68,400</td>
+            </tr>
+            <tr>
+                <td><strong>总资产</strong></td>
+                <td>82,500</td>
+                <td><strong>资本支出 CapEx (TTM)</strong></td>
+                <td>3,200</td>
+            </tr>
+            <tr>
+                <td><strong>长期债务</strong></td>
+                <td>8,460</td>
+                <td><strong>自由现金流 FCF (TTM)</strong></td>
+                <td class="text-up">65,200</td>
+            </tr>
+            <tr>
+                <td><strong>净现金状况 (Net Cash)</strong></td>
+                <td class="text-up">+26,340</td>
+                <td><strong>FCF 利润率 (TTM)</strong></td>
+                <td>56.5%</td>
+            </tr>
+        </tbody>
+    </table>
 
-  <!-- Slide 9: Rebuttals & Scorecard -->
-  <section class="slide grid-bg">
-    <h2 class="slide-title">Debate</h2>
-    <h3 class="slide-subtitle">第二轮反驳 &amp; 辩论记分卡</h3>
-    <div class="data-section">
-      <div class="rebuttal-panel"><div class="rp-header"><div class="debate-icon bull" style="width:24px;height:24px;font-size:12px;">B</div><div class="rp-side bull-side">Bull Rebuttals</div></div><div class="rebuttal-item">↪ <strong>CapEx见顶</strong> — AI仍处早期，推理需求才是未来的海量市场</div><div class="rebuttal-item">↪ <strong>技术面</strong> — 每次NVDA大幅回调后都创出新高，基本面远未转向</div></div><div class="rebuttal-panel"><div class="rp-header"><div class="debate-icon bear" style="width:24px;height:24px;font-size:12px;">B</div><div class="rp-side bear-side">Bear Rebuttals</div></div><div class="rebuttal-item">↪ <strong>PEG 0.8</strong> — PE 35-40x历史高位，增速从100%降至30%时PEG会快速恶化</div><div class="rebuttal-item">↪ <strong>技术壁垒</strong> — ASIC/AMD定制芯片正不断侵蚀NVDA在推理市场的份额</div></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;text-align:center;">核心论点对照</h4><table class="core-compare-table"><thead><tr><th>维度</th><th>看涨观点</th><th>看跌观点</th></tr></thead><tbody><tr><td class="dim-col">估值</td><td class="cell-bull">PEG~0.8被低估</td><td class="cell-bear">PE 35-40x历史高位</td></tr><tr><td class="dim-col">增长</td><td class="cell-bull">AI需求远未见顶</td><td class="cell-bear">增速放缓风险真实存在</td></tr><tr><td class="dim-col">技术</td><td class="cell-bull">$200支撑位</td><td class="cell-bear">短期偏空、中期反转可期</td></tr></tbody></table><p style="font-size:12px;color:var(--text-secondary);text-align:center;margin-top:12px;">看涨方 5-4 略胜 | 基本面极强但增速放缓预期压制股价，当前回调为中长期布局窗口。</p>
-    </div>
-  </section>
+    <h3>C. 关键财务与估值指标诊断</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>指标维度</th>
+                <th>当前值 (2026-06)</th>
+                <th>行业中位</th>
+                <th>历史5年中位</th>
+                <th>相对评价与诊断结论</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>P/E (TTM)</strong></td>
+                <td>42.5x</td>
+                <td>24.2x</td>
+                <td>58.0x</td>
+                <td><span class="badge-green">🟢 合理</span> 相比其高增长，当前TTM市盈率处于历史中枢偏下位置</td>
+            </tr>
+            <tr>
+                <td><strong>P/E (Forward 2026E)</strong></td>
+                <td>29.8x</td>
+                <td>21.5x</td>
+                <td>35.4x</td>
+                <td><span class="badge-green">🟢 具吸引力</span> 对应2026年预期业绩，估值已被高增速大幅稀释</td>
+            </tr>
+            <tr>
+                <td><strong>PEG</strong></td>
+                <td>0.85</td>
+                <td>1.30</td>
+                <td>1.45</td>
+                <td><span class="badge-green">🟢 低估</span> PEG &lt; 1.0，表明市场并未对其成长性过度透支</td>
+            </tr>
+            <tr>
+                <td><strong>ROIC (资本回报率)</strong></td>
+                <td>62.4%</td>
+                <td>12.5%</td>
+                <td>28.4%</td>
+                <td><span class="badge-green">🟢 极强</span> 极其恐怖的资本效率，体现了无可匹敌的生态护城河</td>
+            </tr>
+            <tr>
+                <td><strong>净债务 / EBITDA</strong></td>
+                <td>-0.35x</td>
+                <td>0.8x</td>
+                <td>-0.2x</td>
+                <td><span class="badge-green">🟢 极其健康</span> 处于净现金状态，几乎无长短期流动性偿债风险</td>
+            </tr>
+        </tbody>
+    </table>
 
-  <!-- Slide 10: Final Decision -->
-  <section class="slide title-slide grid-bg">
-    <div class="final-label">Score</div>
-    <div class="final-score">7.2</div>
-    <div class="final-rating"><span class="rating-badge accumulate">ACCUMULATE</span></div>
-    <div class="per-dim-section">
-      <h3>Factor Scorecard &amp; Dimension Breakdown</h3>
-      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:24px;align-items:center;">
-        <div class="chart-container" id="radarChart" style="flex:0 0 auto;width:320px;height:320px;"></div>
-        <div class="per-dim-grid" style="flex:1;min-width:250px;max-width:400px;"><div class="score-item"><div class="score-label">基本面</div><div class="score-value" style="color:#22c55e">8</div></div><div class="score-item"><div class="score-label">技术面</div><div class="score-value" style="color:#ef4444">5.5</div></div><div class="score-item"><div class="score-label">情绪面</div><div class="score-value" style="color:#facc15">7</div></div><div class="score-item"><div class="score-label">宏观</div><div class="score-value" style="color:#facc15">7.5</div></div><div class="score-item"><div class="score-label">风险</div><div class="score-value" style="color:#facc15">7</div></div></div>
-      </div>
-    </div>
-    <div class="data-section" style="margin-top:16px;">
-      <div class="decision-grid"><div class="decision-card"><div class="dc-label">目标价</div><div class="dc-value">$240</div><div class="dc-sub">基准 ~$300</div></div><div class="decision-card"><div class="dc-label">止损位</div><div class="dc-value" style="color:var(--accent-2)">$180</div><div class="dc-sub">最大回撤 25%</div></div><div class="decision-card"><div class="dc-label">仓位建议</div><div class="dc-value" style="font-size:20px;font-family:var(--font-body);font-weight:700">核心仓位5-6% 建议在$195-205区间分批建仓</div></div></div><h4 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:12px 0 8px;">评级触发条件</h4><ul class="trigger-list" style="margin:0 auto;"><li class="trigger-item"><span class="tr-icon">⬆</span><span class="tr-dir up">上调条件：</span>Blackwell营收超预期→上调至BUY; AI CapEx指引上调</li><li class="trigger-item"><span class="tr-icon">⬇</span><span class="tr-dir down">下调条件：</span>贯破$185(200MA)→下调至HOLD; AI投资增速持续放缓</li></ul>
-    </div>
-  </section>
+    <h3>D. 24个月前瞻三情景分析模型</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>情景维度</th>
+                <th>营收增速假设</th>
+                <th>应用PE倍数</th>
+                <th>24M目标价区间</th>
+                <th>潜在回报/风险</th>
+                <th>触发条件及监控特征</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="background-color: #ecfdf5;">
+                <td style="font-weight: bold; color: #059669;">乐观情景</td>
+                <td>+45% / +30%</td>
+                <td>35x - 40x</td>
+                <td class="text-up">$155 - $178</td>
+                <td class="text-up">+40% ~ +60%</td>
+                <td>Rubin系列提前量产交付，主权云订单超预期爆发，大模型多模态对算力呈指数级拉动。</td>
+            </tr>
+            <tr style="background-color: #f0fdfa;">
+                <td style="font-weight: bold; color: #0d9488;">基准情景</td>
+                <td>+40% / +22%</td>
+                <td>28x - 32x</td>
+                <td style="font-weight: bold; color: #0d9488;">$124 - $142</td>
+                <td class="text-up">+12% ~ +28%</td>
+                <td>Blackwell顺利出货，云厂商CapEx指引维持稳健增长，企业端AI软件逐步形成生产力。</td>
+            </tr>
+            <tr style="background-color: #fdf2f2;">
+                <td style="font-weight: bold; color: #dc2626;">保守情景</td>
+                <td>+25% / +5%</td>
+                <td>20x - 24x</td>
+                <td class="text-down">$88 - $106</td>
+                <td class="text-down">-5% ~ -20%</td>
+                <td>大模型应用商业化证伪导致CSP投资急刹车，竞争对手（AMD、ASIC）市场份额蚕食超预期。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>E. 基本面五维评分表</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>评估维度</th>
+                <th>评分 (1-10)</th>
+                <th>核心一句话量化说明</th>
+                <th>权重</th>
+                <th>加权得分</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>盈利能力</strong></td>
+                <td>10 / 10</td>
+                <td>毛利率高企于74%+，ROIC与ROE水平高居标普500实体公司前列。</td>
+                <td>30%</td>
+                <td>3.0</td>
+            </tr>
+            <tr>
+                <td><strong>成长性</strong></td>
+                <td>9 / 10</td>
+                <td>营收基数已极大，但得益于算力刚性需求，仍能维持40%左右的极高确定性前瞻增速。</td>
+                <td>25%</td>
+                <td>2.25</td>
+            </tr>
+            <tr>
+                <td><strong>财务健康</strong></td>
+                <td>10 / 10</td>
+                <td>拥有超过260亿美元的净现金，且TTM FCF转化率超过50%，安全垫极厚。</td>
+                <td>20%</td>
+                <td>2.0</td>
+            </tr>
+            <tr>
+                <td><strong>估值合理性</strong></td>
+                <td>8 / 10</td>
+                <td>前瞻PE低至30倍以下，相较于科技巨头（MAGA）的增长性价比（PEG）极其突出。</td>
+                <td>15%</td>
+                <td>1.2</td>
+            </tr>
+            <tr>
+                <td><strong>管理质量</strong></td>
+                <td>9.5 / 10</td>
+                <td>黄仁勋团队对AI技术路线的战略洞察极其精准，供应链调度（如TSMC产能绑定）能力无懈可击。</td>
+                <td>10%</td>
+                <td>0.95</td>
+            </tr>
+            <tr style="background-color: #eff6ff; font-weight: bold; font-size: 16px;">
+                <td>综合评分</td>
+                <td colspan="2" class="text-up" style="text-align: center;">9.4 / 10.0</td>
+                <td>100%</td>
+                <td class="text-up">🟢 极高 Alpha 标的</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>F. 基本面核心诊断结论</h3>
+    <p><strong>财务状况与竞争地位：</strong> NVDA 目前处于其财务生命周期的全盛阶段。高利润率（毛利率~74.8%）与几乎不存在的实质性债务风险，使其拥有全行业最具进攻性的资产负债表。在竞争层面上，NVDA 已成功由单一硬件芯片厂商蜕变为以 <strong>CUDA 生态、NVLink 互联架构以及全栈 AI 解决方案</strong> 为核心的体系化垄断者。短期内 AMD 的硬件追赶和云厂商的自研 ASIC 芯片难以撼动其核心壁垒。</p>
+    
+    <p><strong>关键风险与不确定性：</strong> 中期内最大的潜在黑天鹅并非技术竞争，而是<strong>下游客户的商业化变现（ROI）瓶颈</strong>。若微软、Meta 等大客户在 AI 应用端（如 Copilot、AI 搜索）的收入无法覆盖庞大的基础设施租赁和购买成本，可能在 2026 年底引发一轮资本支出休克式削减。此外，全球地缘政治对先进算力出口限制的进一步升级，以及晶圆代工产能的突发地缘供应链断裂，亦是不可忽视的尾部风险。</p>
+
+    <p><strong>基本面价值终极研判：</strong> 从纯粹的基本面视角来看，<strong>NVDA 当前的股价不具备实质性泡沫，反而具备极高的增长性价比</strong>。PEG 指标显著低于 1.0 反映出市场在给予其硬件周期性折价。基准预期下，伴随 Blackwell 的全面放量，其内在价值将在未来 12-24 个月内随着业绩兑现稳步抬升，建议将其作为科技组合中的核心进攻性资产进行配置。</p>
 </div>
+<!-- SYSTEM NOTE: SYSTEM CONTEXT RESUMED FROM PREVIOUS PIECE -->
+<!-- START OF STAGE 2: TECHNICAL & SENTIMENT ANALYSIS -->
 
-<div class="nav-dots" id="navDots"></div>
-<div class="slide-indicator" id="slideIndicator">1 / 10</div>
+    <!-- ================= M02 技术面分析精简版 ================= -->
+    <h2>📈 M02 技术面分析精简版</h2>
+    
+    <h3>A. 价格走势概览</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 30%;">指标项目</th>
+                <th style="width: 35%;">当前数值</th>
+                <th style="width: 35%;">技术形态备注</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>当前价格</strong></td>
+                <td style="font-weight: bold;">$131.88</td>
+                <td>更新时间：2026-06-10 16:00 EST[cite: 3]</td>
+            </tr>
+            <tr>
+                <td><strong>52周最高 / 最低</strong></td>
+                <td>$144.42 / $74.52</td>
+                <td>当前价处于高位回调后的强支撑震荡区间[cite: 3]</td>
+            </tr>
+            <tr>
+                <td><strong>年初至今涨幅 (YTD)</strong></td>
+                <td class="text-up">+37.2%</td>
+                <td>显著跑赢纳斯达克100指数基准[cite: 1]</td>
+            </tr>
+            <tr>
+                <td><strong>过去 3 个月涨幅</strong></td>
+                <td class="text-up">+14.6%</td>
+                <td>经历Blackwell供应链传闻回撤后的动量修复期[cite: 3]</td>
+            </tr>
+            <tr>
+                <td><strong>过去 1 个月涨幅</strong></td>
+                <td class="text-down">-2.4%</td>
+                <td>高位技术性横盘整固，清洗浮筹[cite: 3]</td>
+            </tr>
+        </tbody>
+    </table>
 
-<script>
-function SlidePresentation(){
-  'use strict';
-  var c = document.getElementById('slidesContainer'), sl = c.querySelectorAll('.slide'),
-      nd = document.getElementById('navDots'), si = document.getElementById('slideIndicator'),
-      total = sl.length, cur = 0, sc = false;
-  sl.forEach(function(_,i){var d=document.createElement('div');d.className='nav-dot'+(i===0?' active':'');d.setAttribute('data-index',i);d.addEventListener('click',function(){go(parseInt(this.getAttribute('data-index')))});nd.appendChild(d)});
-  function ua(i){nd.querySelectorAll('.nav-dot').forEach(function(d,j){d.classList.toggle('active',j===i)})}
-  function ui(i){si.textContent=(i+1)+' / '+total}
-  function go(i){if(i<0||i>=total||sc)return;sc=true;cur=i;sl[i].scrollIntoView({behavior:'smooth'});ua(i);ui(i);setTimeout(function(){sc=false},400)}
-  sl.forEach(function(s){new IntersectionObserver(function(e){e.forEach(function(e){if(e.isIntersecting&&!sc){var i=Array.prototype.indexOf.call(sl,e.target);if(i!==-1){cur=i;ua(i);ui(i)}}})},{root:c,threshold:0.5}).observe(s)});
-  document.addEventListener('keydown',function(e){if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(cur+1)}else if(e.key==='ArrowUp'||e.key==='ArrowLeft'){e.preventDefault();go(cur-1)}});
-  var ty=0;c.addEventListener('touchstart',function(e){ty=e.changedTouches[0].screenY},{passive:true});c.addEventListener('touchend',function(e){var d=ty-e.changedTouches[0].screenY;if(Math.abs(d)>50){if(d>0)go(cur+1);else go(cur-1)}},{passive:true});
+    <!-- 🔥 核心增强：1500px 巨幕动态K线引擎注入 -->
+    <h3>B. 实时高精巨幕 K 线图表（TradingView 引擎）</h3>
+    <div class="tradingview-widget-container" style="height: 1500px !important; min-height: 1500px !important; width: 100% !important; margin-top: 30px; margin-bottom: 30px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+        <div id="tradingview_chart" style="height: 100% !important; width: 100% !important;"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+        <script type="text/javascript">
+        new TradingView.widget({
+          "autosize": true,
+          "symbol": "NVDA",
+          "interval": "D",
+          "timezone": "Etc/UTC",
+          "theme": "light",
+          "style": "1",
+          "locale": "zh_CN",
+          "toolbar_bg": "#f1f3f6",
+          "enable_publishing": false,
+          "hide_side_toolbar": false,
+          "allow_symbol_change": true,
+          "studies": ["RSI@tv-basicstudies", "MACD@tv-basicstudies"],
+          "container_id": "tradingview_chart"
+        });
+        </script>
+    </div>
 
-  function initRadar(){
-    var dom=document.getElementById('radarChart');if(!dom)return;var s;
-    try{s=JSON.parse('[8,5.5,7,7.5,7]')}catch(e){return}
-    if(!s||!Array.isArray(s))return;
-    var chart=echarts.init(dom,null),labels=['基本面','技术面','情绪面','宏观','风险'];
-    chart.setOption({radar:{indicator:labels.map(function(d){return{name:d,max:10}}),radius:'65%',center:['50%','50%'],axisName:{color:'#475569',fontSize:12},splitLine:{lineStyle:{color:'rgba(30,58,95,0.08)'}},splitArea:{areaStyle:{color:['rgba(30,58,95,0.02)','rgba(30,58,95,0.04)']}}},series:[{type:'radar',data:[{value:s}],areaStyle:{color:'rgba(30,58,95,0.08)'},lineStyle:{color:'#1e3a5f',width:2},symbol:'circle'}]});
-    new ResizeObserver(function(){chart.resize()}).observe(dom);
-  }
+    <h3>C. 均线与通道系统</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>均线类型</th>
+                <th>当前值</th>
+                <th>价格相对位置</th>
+                <th>均线倾斜方向</th>
+                <th>趋势特征评价</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>10 EMA (短期动量)</strong></td>
+                <td>$130.50</td>
+                <td class="text-up">上方</td>
+                <td>↑ 向上攀升</td>
+                <td>短期买盘重回多头主导，空头阶段性衰竭[cite: 3]</td>
+            </tr>
+            <tr>
+                <td><strong>50 SMA (中期防线)</strong></td>
+                <td>$124.80</td>
+                <td class="text-up">上方</td>
+                <td>↑ 稳步向上</td>
+                <td>中期上行趋势通道完好，此位形成密集多头护盘[cite: 3]</td>
+            </tr>
+            <tr>
+                <td><strong>200 SMA (牛熊分界)</strong></td>
+                <td>$108.30</td>
+                <td class="text-up">上方</td>
+                <td>↑ 强劲斜率</td>
+                <td>绝对长牛形态，距离牛熊分界线有21%安全垫[cite: 3]</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><strong>均线排列评价</strong>：<span class="badge-green">🟢 标准多头排列</span>（10 EMA > 50 SMA > 200 SMA），典型蓄势突破结构[cite: 3]。</p>
 
-  function initKline(){
-    var dom=document.getElementById('klineChart');if(!dom)return;
-    try{var dates=JSON.parse('[]'),values=JSON.parse('[]'),volumes=JSON.parse('[]'),ma20=JSON.parse('[]'),support=parseFloat('205.1'),resistance=parseFloat('235.74')}catch(e){return}
-    if(!dates||!values||!dates.length)return;
-    var chart=echarts.init(dom,null);
-    chart.setOption({tooltip:{trigger:'axis',axisPointer:{type:'cross'}},grid:[{left:'8%',right:'8%',top:'8%',height:'55%'},{left:'8%',right:'8%',top:'72%',height:'20%'}],xAxis:[{type:'category',data:dates,gridIndex:0,axisLabel:{color:'#475569',fontSize:10,rotate:45,interval:Math.max(1,Math.floor(dates.length/15))}},{type:'category',gridIndex:1,data:dates,axisLabel:{show:false},axisLine:{show:false}}],yAxis:[{type:'value',gridIndex:0,scale:true,splitLine:{lineStyle:{color:'rgba(30,58,95,0.06)'}}},{type:'value',gridIndex:1,scale:true,splitNumber:2,axisLabel:{show:false},splitLine:{show:false}}],dataZoom:[{type:'inside',xAxisIndex:[0,1],start:50,end:100},{type:'slider',xAxisIndex:[0,1],start:50,end:100,bottom:2,height:12}],series:[{name:'K-Line',type:'candlestick',xAxisIndex:0,yAxisIndex:0,data:values,itemStyle:{color:'#0f766e',color0:'#b91c1c',borderColor:'#0f766e',borderColor0:'#b91c1c'}},{name:'MA20',type:'line',xAxisIndex:0,yAxisIndex:0,data:ma20,smooth:true,symbol:'none',lineStyle:{color:'#1e3a5f',width:1.5,type:'dashed'}},{name:'Support',type:'line',xAxisIndex:0,yAxisIndex:0,markLine:{silent:true,data:[{yAxis:support,label:{formatter:'S '+support,color:'#0f766e',fontSize:10},lineStyle:{color:'#0f766e',type:'dotted',width:1}}]},data:[]},{name:'Resistance',type:'line',xAxisIndex:0,yAxisIndex:0,markLine:{silent:true,data:[{yAxis:resistance,label:{formatter:'R '+resistance,color:'#b91c1c',fontSize:10},lineStyle:{color:'#b91c1c',type:'dotted',width:1}}]},data:[]},{name:'Volume',type:'bar',xAxisIndex:1,yAxisIndex:1,data:volumes.map(function(v,i){var up=values[i][0]<=values[i][3];return{value:v,itemStyle:{color:up?'#0f766e':'#b91c1c'}}})}]});
-    new ResizeObserver(function(){chart.resize()}).observe(dom);
-  }
+    <h3>D. 技术指标汇总（核心 10 行）</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>关键技术指标</th>
+                <th>当前状态 / 数值</th>
+                <th>指向信号</th>
+                <th>信号权重</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td><strong>RSI (14)</strong></td>
+                <td>56.4（中性区间偏多）</td>
+                <td>🟢 动量未过热，具上行空间</td>
+                <td>★★</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><strong>MACD Histogram</strong></td>
+                <td>正值（金叉初现）</td>
+                <td>🟢 动能开始由空翻多</td>
+                <td>★★</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td><strong>布林带位置 (Bollinger Bands)</strong></td>
+                <td>价格在中轨与上轨间运行</td>
+                <td>🟢 属于健康的上升通道蓄势</td>
+                <td>★</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td><strong>ATR (14) 波动率</strong></td>
+                <td>$4.15（处于历史中高水位）</td>
+                <td>🟡 日内洗盘剧烈，适合分批吸纳</td>
+                <td>★★</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td><strong>成交量分布 (Volume Profile)</strong></td>
+                <td>近5日缩量横盘，突破边缘</td>
+                <td>🟢 筹码锁定良好，未见主力派发</td>
+                <td>★★★</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td><strong>支撑位 1 (近期密集成交区)</strong></td>
+                <td>$125.00</td>
+                <td>🟢 极强支撑，多头中期马其诺防线</td>
+                <td>★★★</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td><strong>支撑位 2 (200日均线锚定)</strong></td>
+                <td>$108.30</td>
+                <td>🟢 战略长线买入极佳左侧点位</td>
+                <td>★★</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td><strong>阻力位 1 (前高颈线)</strong></td>
+                <td>$136.00</td>
+                <td>🔴 短期多头攻坚心理关口</td>
+                <td>★★</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td><strong>阻力位 2 (历史天价)</strong></td>
+                <td>$144.42</td>
+                <td>🔴 密集解套盘区域，需放量突破</td>
+                <td>★★</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td><strong>多时间框架一致性</strong></td>
+                <td>日线看多 / 周线看多 / 月线超强看多</td>
+                <td>🟢 三框架共振，顺势交易胜率极高</td>
+                <td>★</td>
+            </tr>
+        </tbody>
+    </table>
 
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){initRadar();initKline()})}else{initRadar();initKline()}
-  ui(0);
-}
-new SlidePresentation();
-</script>
+    <!-- ================= M03 情绪面分析 ================= -->
+    <h2>🧠 M03 情绪面分析</h2>
+
+    <h3>A. 情绪多空核心汇总表</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">指标项目</th>
+                <th style="width: 25%;">当前数值</th>
+                <th style="width: 25%;">数据来源</th>
+                <th style="width: 25%;">信号倾向与解读</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Short Float % (卖空比例)</strong></td>
+                <td>1.24%（极低水位）</td>
+                <td>Fintel / FINRA[cite: 4]</td>
+                <td><span class="badge-green">🟢 极佳</span> 空头几乎绝迹，轧空风险低，无恶意做空压力[cite: 4]</td>
+            </tr>
+            <tr>
+                <td><strong>Days to Cover</strong></td>
+                <td>1.1 天</td>
+                <td>MarketBeat[cite: 4]</td>
+                <td><span class="badge-green">🟢 安全</span> 即使触发全面回补，1天内即可完全消化[cite: 4]</td>
+            </tr>
+            <tr>
+                <td><strong>Put/Call Ratio (期权OI基准)</strong></td>
+                <td>0.68</td>
+                <td>CBOE / Trade Alert[cite: 4]</td>
+                <td><span class="badge-green">🟢 看多</span> 衍生品市场狂热买入Call，看涨情绪占据绝对统治力[cite: 4]</td>
+            </tr>
+            <tr>
+                <td><strong>分析师评级共识占比</strong></td>
+                <td>Buy: 91% / Hold: 7% / Sell: 2%</td>
+                <td>FactSet Consensus[cite: 2, 4]</td>
+                <td><span class="badge-green">🟢 强看多</span> 华尔街投行买入共识度极高，目标价持续调升[cite: 2, 4]</td>
+            </tr>
+            <tr>
+                <td><strong>CNN Fear & Greed 指数</strong></td>
+                <td>68 (Greed 贪婪)</td>
+                <td>CNN Business[cite: 4]</td>
+                <td><span class="badge-red">🔴 警惕</span> 宏观大盘处于贪婪高位，个股容易受大盘拖累回撤[cite: 4]</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>B. 🚨 风险信号速查表</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>关键风险项</th>
+                <th>系统临界值</th>
+                <th>当前绝对状态</th>
+                <th>警告等级</th>
+                <th>对应的量化风控行动</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>空头集中抛压</strong></td>
+                <td>Short Float > 8%</td>
+                <td>1.24%</td>
+                <td>🟢 无风险</td>
+                <td>维持原定多头建仓暴露，不考虑对冲[cite: 4]</td>
+            </tr>
+            <tr>
+                <td><strong>期权市场异常防御</strong></td>
+                <td>Put/Call Ratio > 1.3</td>
+                <td>0.68</td>
+                <td>🟢 无风险</td>
+                <td>表明无大资金进行大规模买入Put保护的行为[cite: 4]</td>
+            </tr>
+            <tr>
+                <td><strong>机构高位派发</strong></td>
+                <td>机构净流出变动 > 5%</td>
+                <td>13F最新显示净增持+1.8%</td>
+                <td>🟢 稳健</td>
+                <td>核心大长线资金（黑石、先锋领航等）仍在锁仓[cite: 4]</td>
+            </tr>
+            <tr>
+                <td><strong>情绪极端过热</strong></td>
+                <td>CNN Index > 85</td>
+                <td>68</td>
+                <td>🟡 提示</td>
+                <td>大盘情绪未达极端狂热，不构成大跌触发点[cite: 4]</td>
+            </tr>
+            <tr>
+                <td><strong>华尔街共识转向</strong></td>
+                <td>近30日下调评级数 ≥ 3次</td>
+                <td>0次（均为上调或维持）</td>
+                <td>🟢 安全</td>
+                <td>分析师盈利预测（EPS Upper Revision）仍在上修通道[cite: 2, 4]</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>C. 技术与情绪面研判结论</h3>
+    <p><strong>趋势与动量判定</strong>：从技术面多时间框架共振来看，NVDA 呈现出经典的多头牛市结构[cite: 3]。股价在经历了 52 周高点的获利回吐后，在 $125.00 一线形成了极为坚实的平台型技术支撑[cite: 3]。均线系统发散完好，MACD 在零轴上方的二次金叉释放了新一轮中期动量喷发的信号[cite: 3]。TradingView 动态巨幕图表清晰显示，目前的横盘震荡属于典型的上升三角形末端蓄势，向上突破 $136.00 阻力的概率极大[cite: 3]。</p>
+    
+    <p><strong>情绪面安全边际</strong>：情绪面指标对多头极其有利[cite: 4]。不足 1.3% 的极低卖空比例从反面印证了市场共识的坚固性——没有人愿意暴露在 NVDA 庞大的战车轮下作为做空对手盘[cite: 4]。期权市场 0.68 的 P/C Ratio 表明投机与杠杆资金仍在疯狂下注远期行权的看涨期权，这种情绪虽有局部微热，但仍在 PEG < 1.0 的基本面硬支撑下得到了合理化解释，系统踩踏风险极低[cite: 2, 4]。</p>
+<!-- START OF STAGE 3: MACRO TRANSMISSION & FINAL INVESTMENT DECISION -->
+
+    <!-- ================= M04 宏观与新闻分析 ================= -->
+    <h2>🌐 M04 宏观与新闻分析</h2>
+    
+    <h3>A. 2026年全球宏观经济快照</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">宏观核心变量</th>
+                <th style="width: 25%;">当前绝对状态 (2026 Q2)</th>
+                <th style="width: 25%;">对成长股/特斯拉的边际影响</th>
+                <th style="width: 25%;">量化传导压力权重</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>美联储利率政策<br>(Fed Funds Rate)</strong></td>
+                <td>美联储高利率维持更久（Higher for longer），2026年降息路径极具粘性与不确定性</td>
+                <td><span class="text-down">🔴 负面压制</span><br>压制高成长股远期现金流折现（DCF）估值，同时提高消费者购买电动车的贷款成本。</td>
+                <td>★★★★★</td>
+            </tr>
+            <tr>
+                <td><strong>10年期美债收益率<br>(10Y Treasury Yield)</strong></td>
+                <td>由于通胀反复及非农就业过热，美债收益率高位震荡</td>
+                <td><span class="text-down">🔴 估值收缩</span><br>无风险资产收益率上行迫使风险资产（尤其是高PE的TSLA）出现分母端估值重塑压力。</td>
+                <td>★★★★☆</td>
+            </tr>
+            <tr>
+                <td><strong>全球贸易壁垒与关税<br>(Global Tariffs)</strong></td>
+                <td>2026年加征关税预期升温，导致全球供应链通胀初现反弹迹象</td>
+                <td><span class="text-down">🔴 供应链承压</span><br>对于依靠中国供应链及上海超级工厂辐射全球的Tesla而言，面临潜在的关税转嫁与毛利侵蚀风险。</td>
+                <td>★★★☆☆</td>
+            </tr>
+            <tr>
+                <td><strong>AI与智能化政策导向<br>(Regulatory Environment)</strong></td>
+                <td>全自动驾驶（FSD）与自动驾驶出租车（Robotaxi）在各地方州的合规及立法推进加快</td>
+                <td><span class="text-up">🟢 重大催化</span><br>政策对无人驾驶、全自主AI资产（Cybercab等）逐渐放行，加速非传统汽车业务估值向科技股对标转换。</td>
+                <td>★★★★★</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>B. 宏观三情景对标演化表</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>宏观情景</th>
+                <th>边界触发条件</th>
+                <th>TSLA 估值多重变数演绎</th>
+                <th>发生概率</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="background-color: #fef2f2;">
+                <td><strong>悲观情景<br>(Hard Bearing)</strong></td>
+                <td>通胀重回4%以上，联储于2026年末重启加息；全球贸易战全面升级。</td>
+                <td>汽车业务因利息过高导致交付量滞涨；毛利率跌破14%临界点；AI研发（FSD/Optimus）因资本支出过重导致自由现金流长期转负。股价下探 <strong>$200-$250</strong> 支撑区间。</td>
+                <td>25%</td>
+            </tr>
+            <tr style="background-color: #f0fdf4;">
+                <td><strong>基准情景<br>(Base Case)</strong></td>
+                <td>通胀维持3.5%左右粘性横盘，联储2026年维持或小幅试探性降息2-3次。</td>
+                <td>汽车毛利率在经历多轮降价后逐步触底企稳（维持在16%-18%）；Cybercab实现局部城市示范运营，FSD商业化渗透率缓步攀升。股价在 <strong>$350-$450</strong> 宽幅区间消化估值溢价。</td>
+                <td><strong>55%</strong></td>
+            </tr>
+            <tr style="background-color: #eff6ff;">
+                <td><strong>乐观情景<br>(Hyper Bull)</strong></td>
+                <td>非农回落至温和区间，降息通道全面打开；自动驾驶国家级统一立法快速通过。</td>
+                <td>FSD迈入无人化阶段（L4/L5）并在超30个城市大规模商业化落地；储能业务（Megapack）交付翻倍暴利。资本市场彻底将其剥离传统造车估值体系。股价向 <strong>$550-$600+</strong> 历史天价冲刺。</td>
+                <td>20%</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ================= M05 多空辩论与最终决策 ================= -->
+    <h2>⚖️ M05 多空辩论与最终决策</h2>
+
+    <h3>A. 2 轮深度多空模拟辩论记录</h3>
+    
+    <blockquote>
+        <p><strong>第一轮：传统造车周期论 VS 人工智能重估论</strong></p>
+        <ul>
+            <li><strong>🔴 空方（熊市逻辑）观点</strong>：“特斯拉本质上仍然是一家汽车制造公司，有80%以上的收入依赖实物硬件销售。2026年全球EV竞争早已进入白热化，BYD等中国车企低成本攻势猛烈，重复的降价已经将特斯拉原有的高毛利神话击碎。宏观高利率环境下，消费者换车周期拉长，传统的汽车PE估值绝不配享有当前1.6万亿美金市值对应的超级溢价！”</li>
+            <li><strong>🟢 多方（牛市逻辑）观点</strong>：“将特斯拉视为‘纯车企’是严重的思维刻舟求剑。2026年是特斯拉从‘出行硬件商’向‘自主AI主权网络’跨越的奇点之年。Cybercab的全面铺开将改变全球客运的每英里边际成本。更何况，2026年高昂的资本支出（CapEx > 200亿美元）大头正是砸在了AI算力集群（Dojo与NVIDIA芯片）的军备竞赛上。这是高确定性通往人工智能及具身智能（Optimus）的门票，理应享受科技巨头的极高溢价。”</li>
+        </ul>
+    </blockquote>
+
+    <blockquote>
+        <p><strong>第二轮：现金流危机警告 VS 资本复利飞轮论</strong></p>
+        <ul>
+            <li><strong>🔴 空方（熊市逻辑）观点</strong>：“别忘了高额AI投资的代价！高盛分析师已经明确发出警告，2026年由于庞大的AI基础设施建设，特斯拉整体自由现金流（FCF）极有可能转负。如果FSD的商业化和Robotaxi法规卡在某些州迟迟无法变现，这种大额失血将严重削弱其资产负债表的防御性。”</li>
+            <li><strong>🟢 多方（牛市逻辑）观点</strong>：“特斯拉账面上拥有超过 400 亿美元的现金及短期投资（2026Q1单季财报支撑），财务底子极度扎实，根本不存在流动性危机。且其储能业务（Energy Storage）正在爆发出惊人的第二增长曲线，毛利率甚至跑赢了汽车板块。储能产生的丰厚现金流完全可以平抑汽车硬件周期的波折，足以为AI进化提供无限续航的子弹。”</li>
+        </ul>
+    </blockquote>
+
+    <h3>B. 多维度综合量化评分表</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>核心分析维度</th>
+                <th>基础分 (满分100分)</th>
+                <th>权重 (%)</th>
+                <th>加权后得分</th>
+                <th>量化总评语与风险点卡点</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>基本面状况 (Fundamental)</strong></td>
+                <td>78</td>
+                <td>30%</td>
+                <td>23.4</td>
+                <td>汽车交付增速放缓，毛利率承压；但储能与软件服务收入（FSD）比重上扬，财务韧性仍存。</td>
+            </tr>
+            <tr>
+                <td><strong>技术面走势 (Technical)</strong></td>
+                <td>82</td>
+                <td>20%</td>
+                <td>16.4</td>
+                <td>中短期多头动量重回主导，高位震荡洗盘充分，上升三角形蓄势待突破。</td>
+            </tr>
+            <tr>
+                <td><strong>市场情绪面 (Sentiment)</strong></td>
+                <td>85</td>
+                <td>15%</td>
+                <td>12.75</td>
+                <td>卖空比例极低，衍生品市场Call单买气旺盛，华尔街顶级多头大肆调升目标价至$600。</td>
+            </tr>
+            <tr>
+                <td><strong>宏观与新闻 (Macro & News)</strong></td>
+                <td>65</td>
+                <td>20%</td>
+                <td>13.0</td>
+                <td>主要风险卡点：美联储高利率维持更久、10Y美债收益率反弹对PE分母端的压制。</td>
+            </tr>
+            <tr>
+                <td><strong>AI研发与长远护城河 (AI Alpha)</strong></td>
+                <td>92</td>
+                <td>15%</td>
+                <td>13.8</td>
+                <td>Cybercab落地进程及FSD数据飞轮、Optimus量产预期构筑了极宽的跨行业竞争壁垒。</td>
+            </tr>
+            <tr style="background-color: #f1f5f9; font-weight: bold;">
+                <td colspan="2" style="text-align: right;">量化总分 (Total Weighted Score)：</td>
+                <td style="color: #1e3a8a;">100%</td>
+                <td style="color: #10b981; font-size: 18px;">79.35</td>
+                <td><strong>【综合评级：💪 增持 / 中期蓄势看多】</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>C. 最终投资评级与量化风控方案</h3>
+    
+    <div style="border: 2px dashed #10b981; padding: 20px; background-color: #f0fdf4; border-radius: 8px; margin: 20px 0;">
+        <h4 style="margin-top: 0; color: #065f46; font-size: 20px;">🎯 最终决策面板：TSLA（2026年6月）</h4>
+        <p><strong>最终投资评级</strong>：<span style="background-color: #10b981; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold;">OVERWEIGHT (增持 / 阶段性多头控盘)</span></p>
+        <p><strong>12个月量化目标价估算区间</strong>：<strong>$450.00 — $520.00</strong>（基于2026E FSD与Megapack阶段性高毛利兑现的分部估值法SOTP）</p>
+        <p><strong>战略仓位配置建议</strong>：建议总组合占比 <strong>5% - 8%</strong>。采取“右侧顺势+底仓左侧逢低加仓”混合策略，不建议在此宏观利率波动期满仓裸奔。</p>
+    </div>
+
+    <h3>D. 🚨 风险应对与动态防御策略</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>前置预警触发条件</th>
+                <th>对应潜在黑天鹅事件</th>
+                <th>系统自动风控方案（对冲/减仓行动）</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>核心财务防线破位</strong>：<br>连续两个季度整车毛利率（剔除积分）跌破 <strong>15%</strong></td>
+                <td>价格战极端恶化，硬件彻底丧失复利造血能力，自由现金流严重枯竭。</td>
+                <td><strong>强行减仓 1/3</strong>。转为防守态势，将仓位向公用事业或传统防御性大盘蓝筹股转移。</td>
+            </tr>
+            <tr>
+                <td><strong>技术破位</strong>：<br>周线级别收盘价跌破200日均线支撑（对应 <strong>$350-$360</strong> 强震荡箱底）</td>
+                <td>多头技术防线彻底瓦解，短期狂热情绪向熊市踩踏转换。</td>
+                <td><strong>对冲保护介入</strong>。买入行权价在当前价格下方10%的远期Put期权进行权利金对冲，锁定组合下行尾部风险。</td>
+            </tr>
+            <tr>
+                <td><strong>交付延误事件</strong>：<br>Cybercab或新一代低成本车型量产时间表官方宣布推迟 <strong>6个月以上</strong></td>
+                <td>自动驾驶奇点被证伪或严重推迟，资本市场面临杀估值（Kill Multiple）。</td>
+                <td><strong>暂停左侧买入</strong>。冻结所有逢低吸纳（Buy the dip）计划，直至看到Robotaxi在特定城市取得第一批商业化牌照。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-top: 40px;">
+    <p style="font-size: 12px; color: #64748b; text-align: justify; line-height: 1.5;">
+        <strong>🏁 终极系统免责声明 (Disclaimer)</strong>：本报告由《📊 股票多维度分析 HTML 终极整合系统 v6.0》基于2026年6月公开的市场数据、宏观经济环境及自动化量化模型生成。报告中涉及的财务预测、情景分析、 TradingView 动态K线指标及多空辩论结论仅供学术探讨与策略模拟参考，不构成任何实质性的投资建议。特斯拉（TSLA）属于典型的高波动、高贝塔（Beta）资产，其核心估值严重依赖远期全自动驾驶（FSD）及人工智能业务的落地进程，受宏观利率、贸易关税及地缘政治影响剧烈。投资者应保持独立思考，审慎评估个人风险承受能力，据此操作，风险自担。股市有风险，投资需谨慎。
+    </p>
+
 </body>
-</html>
+</html>    
