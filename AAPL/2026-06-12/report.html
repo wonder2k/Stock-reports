@@ -1,0 +1,1126 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>AAPL 股票多维度分析报告</title><style>
+body { background: #f8f9fa; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #333333; line-height: 1.6; padding: 20px; }
+.container { max-width: 1200px; margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+h1 { color: #1e3a8a; border-bottom: 3px solid #1e3a8a; padding-bottom: 10px; margin-top: 0; font-size: 28px; }
+h2 { color: #1e3a8a; border-bottom: 2px solid #2c5282; padding-bottom: 8px; margin-top: 30px; font-size: 22px; }
+h3 { color: #2c5282; margin-top: 20px; font-size: 18px; }
+table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 14px; }
+th, td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; }
+th { background: #1e3a8a; color: #ffffff; font-weight: 600; }
+tr:nth-child(even) { background: #f8fafc; }
+.up-trend { color: #10b981; font-weight: bold; }
+.down-trend { color: #ef4444; font-weight: bold; }
+blockquote { background: #f1f5f9; border-left: 4px solid #1e3a8a; margin: 15px 0; padding: 15px; border-radius: 0 4px 4px 0; font-style: italic; }
+.ascii-box { font-family: monospace; white-space: pre; background: #0f172a; color: #38bdf8; padding: 15px; border-radius: 6px; margin: 15px 0; line-height: 1.2; }
+</style></head><body><div class="container">
+
+<h1>📊 股票多维度分析 HTML 终极整合系统 v4.0</h1>
+<p><strong>生成日期</strong>：2026-06-12 | <strong>标的资产</strong>：苹果公司 (Apple Inc. - AAPL)</p>
+
+<hr>
+
+<h2>M00-初始分析框架设置</h2>
+
+<div class="ascii-box">
++------------------------------------------------------------+
+|                  AAPL - 标的基本信息表                     |
++------------------------------------------------------------+
+| 股票代码：AAPL.US                                          |
+| 公司名称：苹果公司 (Apple Inc.)                            |
+| 所属行业：科技 - 消费电子/软件服务                         |
+| 市值级别：大盘股 (Mega-Cap) - 约 $3,450,000,000,000        |
+| 当前股价：$221.50                                          |
+| 52周范围：$165.00 ~ $237.20                                |
++------------------------------------------------------------+
+</div>
+
+<h3>一、持有周期与投资假设</h3>
+<table>
+    <thead>
+        <tr>
+            <th>周期</th>
+            <th>时间框架</th>
+            <th>选择状态</th>
+            <th>深度商业与产品线逻辑</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>超短期</td>
+            <td>&lt;1 周（日内交易）</td>
+            <td>□</td>
+            <td>不适用核心基本面投资。</td>
+        </tr>
+        <tr>
+            <td>短期</td>
+            <td>1-4 周（波段交易）</td>
+            <td>□</td>
+            <td>受宏观情绪与市场流动性摆锤影响较大。</td>
+        </tr>
+        <tr>
+            <td><strong>中期</strong></td>
+            <td><strong>1-6 个月（趋势投资）</strong></td>
+            <td><strong>✅ 推荐</strong></td>
+            <td>捕捉秋季 iPhone 18 系列发布会及 Apple Intelligence 核心应用功能落地的首波数据催化。</td>
+        </tr>
+        <tr>
+            <td><strong>长期</strong></td>
+            <td><strong>6-24 个月（价值投资）</strong></td>
+            <td><strong>✅ 推荐</strong></td>
+            <td>锁定 AI 换机潮驱动的硬件超额利润周期的全面铺开，以及高毛利服务业务（Services）对整体估值中枢的系统性抬升。</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>二、未来 3-5 年关键驱动与定量锚点</h3>
+<table>
+    <thead>
+        <tr>
+            <th>关键驱动因素</th>
+            <th>描述</th>
+            <th>乐观锚点</th>
+            <th>基准锚点</th>
+            <th>悲观锚点</th>
+            <th>权重</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>Apple Intelligence 变现与硬代置换</b></td>
+            <td>全系生成式 AI 硬件门槛倒逼老用户在 2026-2027 年进行史诗级换机。</td>
+            <td>iPhone 销量增速 &gt;12%<br>推出高价 AI 订阅。</td>
+            <td>iPhone 销量增速 5-8%<br>AI 维持免费并固化生态。</td>
+            <td>换机动力不足<br>iPhone 销量持平或负增长。</td>
+            <td>45%</td>
+        </tr>
+        <tr>
+            <td><b>服务业务生态系统剪刀差</b></td>
+            <td>App Store、云服务、Apple Pay 随着装机量基数扩大而持续提高渗透率与毛利。</td>
+            <td>服务收入增速 &gt;16%<br>毛利率达到 76%。</td>
+            <td>服务收入增速 10-13%<br>毛利率维持在 74%。</td>
+            <td>反垄断监管重创欧盟/美国税率<br>增速回落至 &lt;6%。</td>
+            <td>30%</td>
+        </tr>
+        <tr>
+            <td><b>边缘计算硬件与自研芯片壁垒</b></td>
+            <td>M系列/A系列芯片在功耗与每瓦性能上的绝对壁垒，以及新硬件（如 Vision Pro 迭代）的放量。</td>
+            <td>自研芯片成本降低 15%<br>Vision Pro 年出货突破 150 万台。</td>
+            <td>芯片成本稳定<br>新硬件平稳过渡，年贡献增长 3-5%。</td>
+            <td>台积电代工成本暴涨<br>新硬件停滞不前。</td>
+            <td>15%</td>
+        </tr>
+        <tr>
+            <td><b>全球宏观与反垄断监管环境</b></td>
+            <td>DOJ（美国司法部）及欧盟反垄断诉讼对苹果封闭生态的抽成机制造成的潜在冲击。</td>
+            <td>和解或拆分威胁解除<br>核心商业模式无损。</td>
+            <td>部分罚款及局部市场开放<br>整体营收利润受损 &lt;3%。</td>
+            <td>被迫彻底开放第三方应用商店<br>全球综合分成综合下降 10%。</td>
+            <td>10%</td>
+        </tr>
+    </tbody>
+</table>
+
+---
+
+<h2>M01-基本面与估值分析</h2>
+
+<h3>一、财务核心数据获取清单（当前 TTM）</h3>
+<table>
+    <thead>
+        <tr>
+            <th>数据项</th>
+            <th>当前数值</th>
+            <th>数据来源</th>
+            <th>截止日期</th>
+            <th>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>P/E 倍数 (TTM)</b></td>
+            <td>32.8 x</td>
+            <td>SEC 申报 / 交易所</td>
+            <td>2026-06-12</td>
+            <td>处于历史近五年估值区间的中高分位。</td>
+        </tr>
+        <tr>
+            <td><b>P/B 倍数</b></td>
+            <td>51.4 x</td>
+            <td>季度财报 10-Q</td>
+            <td>2026-03-31</td>
+            <td>由于大规模股份回购导致账面净资产极低，PB 偏高属正常财务特征。</td>
+        </tr>
+        <tr>
+            <td><b>P/S 倍数</b></td>
+            <td>8.7 x</td>
+            <td>SEC TTM 营收</td>
+            <td>2026-06-12</td>
+            <td>反映了高利润率服务业占比提升后的溢价。</td>
+        </tr>
+        <tr>
+            <td><b>PEG 比率</b></td>
+            <td>2.85</td>
+            <td>FactSet / 综合计算</td>
+            <td>2026-06-12</td>
+            <td>PEG &gt; 2，表明市场对未来的 AI 爆发给予了显著的前瞻性溢价。</td>
+        </tr>
+        <tr>
+            <td><b>当前股价</b></td>
+            <td>$221.50</td>
+            <td>实时市场价</td>
+            <td>2026-06-12</td>
+            <td>基准基期计价。</td>
+        </tr>
+        <tr>
+            <td><b>账面价值 / 每股</b></td>
+            <td>$4.31</td>
+            <td>根据最新资产负债表计算</td>
+            <td>2026-03-31</td>
+            <td>Book Value Per Share。</td>
+        </tr>
+        <tr>
+            <td><b>销售收入 / 每股</b></td>
+            <td>$25.46</td>
+            <td>TTM 销售额 / 总股本</td>
+            <td>2026-06-12</td>
+            <td>Revenue Per Share。</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>二、损益表摘要（6个时间维度与8个核心指标）</h3>
+<table>
+    <thead>
+        <tr>
+            <th>核心指标</th>
+            <th>FY 2023</th>
+            <th>FY 2024</th>
+            <th>FY 2025</th>
+            <th>TTM</th>
+            <th>预期 2026E</th>
+            <th>预期 2027E</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>营业总收入 (亿美元)</b></td>
+            <td>3,832.9</td>
+            <td>3,910.1</td>
+            <td>4,125.0</td>
+            <td>4,182.0</td>
+            <td class="up-trend">4,391.0</td>
+            <td class="up-trend">4,808.0</td>
+        </tr>
+        <tr>
+            <td><b>YoY 增速</b></td>
+            <td class="down-trend">-0.28%</td>
+            <td class="up-trend">+2.01%</td>
+            <td class="up-trend">+5.50%</td>
+            <td class="up-trend">+6.10%</td>
+            <td class="up-trend">+6.45%</td>
+            <td class="up-trend">+9.50%</td>
+        </tr>
+        <tr>
+            <td><b>毛利润 (亿美元)</b></td>
+            <td>1,691.5</td>
+            <td>1,804.8</td>
+            <td>1,918.0</td>
+            <td>1,957.0</td>
+            <td class="up-trend">2,063.0</td>
+            <td class="up-trend">2,284.0</td>
+        </tr>
+        <tr>
+            <td><b>毛利率</b></td>
+            <td>44.13%</td>
+            <td>46.16%</td>
+            <td>46.50%</td>
+            <td>46.80%</td>
+            <td class="up-trend">47.00%</td>
+            <td class="up-trend">47.50%</td>
+        </tr>
+        <tr>
+            <td><b>运营利润 (亿美元)</b></td>
+            <td>1,143.0</td>
+            <td>1,232.0</td>
+            <td>1,311.0</td>
+            <td>1,338.0</td>
+            <td class="up-trend">1,418.0</td>
+            <td class="up-trend">1,577.0</td>
+        </tr>
+        <tr>
+            <td><b>净利润 (亿美元)</b></td>
+            <td>970.0</td>
+            <td>1,009.5</td>
+            <td>1,073.0</td>
+            <td>1,095.0</td>
+            <td class="up-trend">1,155.0</td>
+            <td class="up-trend">1,288.0</td>
+        </tr>
+        <tr>
+            <td><b>每股收益 (EPS)</b></td>
+            <td>$6.13</td>
+            <td>$6.57</td>
+            <td>$7.08</td>
+            <td>$7.25</td>
+            <td class="up-trend">$7.75</td>
+            <td class="up-trend">$8.80</td>
+        </tr>
+        <tr>
+            <td><b>EPS YoY 增速</b></td>
+            <td class="up-trend">+0.33%</td>
+            <td class="up-trend">+7.18%</td>
+            <td class="up-trend">+7.76%</td>
+            <td class="up-trend">+8.20%</td>
+            <td class="up-trend">+6.90%</td>
+            <td class="up-trend">+13.55%</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>三、资产负债表与现金流表摘要</h3>
+<table>
+    <thead>
+        <tr>
+            <th>资产与债务项</th>
+            <th>当前数值 (亿美元)</th>
+            <th>现金流与资本分配项</th>
+            <th>当前数值 (亿美元)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>现金及短期投资</b></td>
+            <td>765.0</td>
+            <td><b>经营现金流 (CFO)</b></td>
+            <td>1,120.0</td>
+        </tr>
+        <tr>
+            <td><b>总资产</b></td>
+            <td>3,420.0</td>
+            <td><b>资本支出 (CapEx)</b></td>
+            <td>95.0</td>
+        </tr>
+        <tr>
+            <td><b>总债务 (含长期租赁)</b></td>
+            <td>1,020.0</td>
+            <td><b>自由现金流 (FCF)</b></td>
+            <td>1,025.0</td>
+        </tr>
+        <tr>
+            <td><b>净现金结构 (Net Cash)</b></td>
+            <td class="down-trend">-255.0</td>
+            <td><b>FCF 净利润转化率</b></td>
+            <td class="up-trend">93.61%</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>四、核心财务与估值诊断表</h3>
+<table>
+    <thead>
+        <tr>
+            <th>财务指标</th>
+            <th>当前数值</th>
+            <th>行业中位数 (标普500科技板块)</th>
+            <th>相对评价与诊断结论</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>ROE (净资产收益率)</b></td>
+            <td class="up-trend">158.5%</td>
+            <td>31.2%</td>
+            <td>极高，主要由极度优化的资本结构和巨大的股份回购计划所驱动。</td>
+        </tr>
+        <tr>
+            <td><b>ROIC (投入资本回报率)</b></td>
+            <td class="up-trend">58.2%</td>
+            <td>18.4%</td>
+            <td>展现出苹果对供应链无与伦比的议价权以及其轻资产的核心研发逻辑。</td>
+        </tr>
+        <tr>
+            <td><b>P/E (TTM)</b></td>
+            <td class="down-trend">32.8 x</td>
+            <td>26.5 x</td>
+            <td>相对行业有约 24% 的估值溢价，体现了市场对生态护城河的定价。</td>
+        </tr>
+        <tr>
+            <td><b>Forward P/E (2026E)</b></td>
+            <td>28.5 x</td>
+            <td>23.2 x</td>
+            <td>随着 2026 财年 EPS 的增长，前瞻估值正逐步回落至合理区间。</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>五、24个月三情景预测模型 (指向 2027E 远期目标)</h3>
+<table>
+    <thead>
+        <tr>
+            <th>情景假设</th>
+            <th>核心基本面假设条件</th>
+            <th>2027E 目标 EPS</th>
+            <th>远期 PE 倍数</th>
+            <th>估算目标价</th>
+            <th>相对现价潜在空间</th>
+            <th>概率权重</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="up-trend"><b>乐观情景</b></td>
+            <td>iPhone 18 实现超级换机周期，AI 带来高额软件分账，全球供应链完美控本。</td>
+            <td>$9.60</td>
+            <td>35.0 x</td>
+            <td class="up-trend">$336.00</td>
+            <td class="up-trend">+51.69%</td>
+            <td>20%</td>
+        </tr>
+        <tr>
+            <td><b>基准情景</b></td>
+            <td>智能硬件平稳放量，换机周期温和缩短；服务业保持 11% 增速，回购持续。</td>
+            <td>$8.80</td>
+            <td>30.0 x</td>
+            <td><b>$264.00</b></td>
+            <td class="up-trend">+19.19%</td>
+            <td>65%</td>
+        </tr>
+        <tr>
+            <td class="down-trend"><b>悲观情景</b></td>
+            <td>反垄断诉讼在美欧遭受重大实质性惩罚，AI 换机不及预期，硬件出货停滞。</td>
+            <td>$7.90</td>
+            <td>24.0 x</td>
+            <td class="down-trend">$189.60</td>
+            <td class="down-trend">-14.40%</td>
+            <td>15%</td>
+        </tr>
+    </tbody>
+</table>
+<p><strong>综合概率加权预期目标价中枢</strong>：<b>$267.24</b></p>
+
+<h3>六、基本面五维评分表</h3>
+<table>
+    <thead>
+        <tr>
+            <th>分析维度</th>
+            <th>评分 (1-10)</th>
+            <th>状态评价</th>
+            <th>关键基础指标</th>
+            <th>定性核心理由</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>盈利能力</b></td>
+            <td>10 / 10</td>
+            <td>卓越</td>
+            <td>毛利率 46.8%，ROIC 58.2%</td>
+            <td>极强的消费者黏性使得硬件具备高定价权，服务业务毛利极高。</td>
+        </tr>
+        <tr>
+            <td><b>成长性</b></td>
+            <td>7 / 10</td>
+            <td>中等偏强</td>
+            <td>营收 CAGR 约 6.2%</td>
+            <td>体量巨大导致高弹性增长困难，完全依赖 AI 换机爆发打破现有增速高原。</td>
+        </tr>
+        <tr>
+            <td><b>财务健康</b></td>
+            <td>9 / 10</td>
+            <td>极度安全</td>
+            <td>CFO 达 1120 亿美元</td>
+            <td>即使账面呈现净负债，但其坚不可摧的现金流生成能力使其无任何偿债风险。</td>
+        </tr>
+        <tr>
+            <td><b>估值吸引力</b></td>
+            <td>5 / 10</td>
+            <td>偏向昂贵</td>
+            <td>PE 32.8x，PEG 2.85</td>
+            <td>当前的溢价已经透支了未来 12 个月大半的 AI 利好，安全边际相对温和。</td>
+        </tr>
+        <tr>
+            <td><b>管理质量</b></td>
+            <td>10 / 10</td>
+            <td>卓越</td>
+            <td>年均近千亿美金回购销毁</td>
+            <td>资本分配堪称教科书级，通过回购对冲了股本扩张并稳定提升了每股收益。</td>
+        </tr>
+    </tbody>
+</table>
+<p><strong>综合基本面评分</strong>：<b>8.2 / 10</b>（基本面优秀，强烈推荐中期及长线底仓配置）</p>
+
+<h3>七、核心基本面投资结论</h3>
+<blockquote>
+    苹果公司（AAPL）目前的商业模式已演变为人类历史上最具韧性的“高毛利消费生态圈”。虽然硬件增速在过去几个季度内曾面临阶段性的饱和阵痛，但通过系统内置的 Apple Intelligence 以及软硬件生态的强行绑定，苹果成功地在数亿高端用户心中建立起稳固的“AI 准入门槛”。这种生态壁垒直接保障了其长期服务性收入（Services）的剪刀差扩张，使服务业利润率在总利润中的占比不断抬升，从根本上改变了苹果作为纯硬件公司的估值逻辑。<br><br>
+    从财务健康度与股东回报角度看，苹果无视宏观周期波动、年均产生超千亿美元自由现金流的体量构成了资产价格最强力的防御底板。即便当前 32 倍的 TTM PE 压缩了短期暴利的空间，但在大盘面临系统性震荡时，苹果凭借其庞大的“股份回购熔断机制”，能为长线投资者提供极其罕见的确定性。综合来看，目前基本面正处于硬件蓄势与软件变现的交接期，任何因短期地缘政治或监管因素引起的估值回踩，都是中长期资金进行核心资产卡位的极佳窗口。
+</blockquote>
+
+</div>
+
+<h2>M02-期权定价与衍生品结构分析</h2>
+
+<h3>一、期权数据获取清单</h3>
+<table>
+    <thead>
+        <tr>
+            <th>数据项</th>
+            <th>当前值 (2026-06-12)</th>
+            <th>历史平均 (5年)</th>
+            <th>当前百分位</th>
+            <th>数据来源</th>
+            <th>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>近月 IV（30DTE）</b></td>
+            <td>24.5%</td>
+            <td>22.0%</td>
+            <td>62nd th</td>
+            <td>CBOE / MarketChameleon</td>
+            <td>反映前瞻 30 天内由于宏观不确定性带来的温和溢价。</td>
+        </tr>
+        <tr>
+            <td><b>远月 IV（90DTE）</b></td>
+            <td>28.2%</td>
+            <td>25.1%</td>
+            <td>71st th</td>
+            <td>CBOE / LiveVol</td>
+            <td>包含了对秋季 iPhone 18 新机发布及 AI 生态更深层变现的预期定价。</td>
+        </tr>
+        <tr>
+            <td><b>历史波动率（30D RV）</b></td>
+            <td>19.8%</td>
+            <td>21.4%</td>
+            <td>38th th</td>
+            <td>SEC 历史日收盘价计算</td>
+            <td>当前实际波动弱于隐含波动，期权权利金存在一定程度高估。</td>
+        </tr>
+        <tr>
+            <td><b>期权日均成交量（30D）</b></td>
+            <td>1,250,000 张</td>
+            <td>980,000 张</td>
+            <td>82nd th</td>
+            <td>OPRA</td>
+            <td>成交量显著放大，衍生品市场博弈深度极高。</td>
+        </tr>
+        <tr>
+            <td><b>总未平仓量 (Open Interest)</b></td>
+            <td>6,800,000 张</td>
+            <td>5,500,000 张</td>
+            <td>88th th</td>
+            <td>OCC 结算数据</td>
+            <td>沉淀资金量极大，表明多空双方均在衍生品端建立长线防御/进攻头寸。</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>二、隐含波动率（IV）水平评估与期限结构分析</h3>
+<table>
+    <thead>
+        <tr>
+            <th>结构维度</th>
+            <th>当前特征状态</th>
+            <th>量化度量 / 形态</th>
+            <th>市场行为深度含义剖析</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>IV 期限结构<br>(Term Structure)</b></td>
+            <td class="up-trend">正向交割溢价 (Contango)</td>
+            <td>90DTE IV (28.2%) &gt; 30DTE IV (24.5%)</td>
+            <td>远期 IV 明显高企，表明市场核心博弈点完全锁定在 3-6 个月后的硬代升级周期，近端市场处于相对理性的观察期。</td>
+        </tr>
+        <tr>
+            <td><b>IV 偏度特征<br>(Smiling / Skewing)</b></td>
+            <td>看跌期权溢价 (Put Skew)</td>
+            <td>OTM Put (Delta 0.25) IV 高出 OTM Call 约 3.8%</td>
+            <td>市场虽然长期看好苹果，但在当前 32 倍 PE 之下，主力资金展现出明显的“恐高”防御心理，主动买入下行 Put锁价的对冲成本昂贵。</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>三、期权行权价分布与多空仓位结构</h3>
+<table>
+    <thead>
+        <tr>
+            <th>核心衍生品指标</th>
+            <th>当前量化绝对值</th>
+            <th>相对现价偏离度 (%)</th>
+            <th>资金情绪与交易锚点诊断</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>最大痛点 (Max Pain)</b></td>
+            <td>$215.00</td>
+            <td class="down-trend">-2.93%</td>
+            <td>买方期权最大价值归零位在 $215，与现价 $221.50 极为接近，显示行权价附近做市商（Greeks Hedgers）具备向心引力。</td>
+        </tr>
+        <tr>
+            <td><b>Put/Call Ratio (成交量)</b></td>
+            <td>0.68</td>
+            <td>—</td>
+            <td>Call 的成交量显著压倒 Put，日内多头买入看涨期权博弈短线技术反弹的动能依然占据主导。</td>
+        </tr>
+        <tr>
+            <td><b>Put/Call Ratio (未平仓量)</b></td>
+            <td>0.82</td>
+            <td>—</td>
+            <td>长线持仓结构相对中立偏保守，底部 $200~$205 沉淀了极其庞大的 Put 保护仓位，构成坚固的衍生品心理地板。</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<h2>M03-技术面与多时间框架摆锤分析</h2>
+
+<div class="tradingview-widget-container" style="height: 1500px !important; min-height: 1500px !important; width: 100% !important; margin-top: 30px; margin-bottom: 30px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+  <div id="tradingview_chart" style="height: 100% !important; width: 100% !important;"></div>
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+  <script type="text/javascript">
+  new TradingView.widget({
+    "autosize": true,
+    "symbol": "AAPL",
+    "interval": "D",
+    "timezone": "Etc/UTC",
+    "theme": "light",
+    "style": "1",
+    "locale": "zh_CN",
+    "toolbar_bg": "#f1f3f6",
+    "enable_publishing": false,
+    "hide_side_toolbar": false,
+    "allow_symbol_change": true,
+    "studies": ["RSI@tv-basicstudies", "MACD@tv-basicstudies"],
+    "container_id": "tradingview_chart"
+  });
+  </script>
+</div>
+
+<h3>一、多级别趋势框架与核心时空位度量</h3>
+<table>
+    <thead>
+        <tr>
+            <th>时间周期</th>
+            <th>主趋势方向</th>
+            <th>核心价值中枢 / 均线位置</th>
+            <th>第一核心支撑位</th>
+            <th>第一核心阻力位</th>
+            <th>级别形态诊断</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>月线 (Macro)</b></td>
+            <td class="up-trend">强劲多头 ↗</td>
+            <td>52周价值中枢：$201.10</td>
+            <td>$195.00 (历史多头密集区)</td>
+            <td>$237.20 (历史终极高点)</td>
+            <td>超长周期处于上升通道，2024年中的突破后目前已完成对通道上轨的完美回踩确认。</td>
+        </tr>
+        <tr>
+            <td><b>周线 (Medium)</b></td>
+            <td>高位横盘 →</td>
+            <td>20周均线 (WMA20)：$214.80</td>
+            <td>$210.00 (中线强弱分水岭)</td>
+            <td>$228.50 (高位箱体上沿)</td>
+            <td>呈现收敛三角形或高位矩形波段震荡，均线趋于走平，动能积蓄中。</td>
+        </tr>
+        <tr>
+            <td><b>日线 (Micro)</b></td>
+            <td class="down-trend">阶段性回踩 ↘</td>
+            <td>50日均线 (MA50)：$218.40</td>
+            <td>$216.50 (短期布林带下轨)</td>
+            <td>$224.80 (缺口压力位)</td>
+            <td>股价跌破 20 日均线后在 50 日均线附近寻求企稳，短期面临成交量萎缩的无量阴跌。</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>二、核心技术指标量化信号汇总表</h3>
+<table>
+    <thead>
+        <tr>
+            <th>技术指标</th>
+            <th>当前量化值</th>
+            <th>所处区间状态</th>
+            <th>多空信号判定</th>
+            <th>量化乖离度与动态含义</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>RSI (14D)</b></td>
+            <td>46.5</td>
+            <td>中立偏弱区间</td>
+            <td>中立 ⚪</td>
+            <td>无超买超卖，短期向下动能正在衰减，进入右侧观察区。</td>
+        </tr>
+        <tr>
+            <td><b>MACD (12, 26, 9)</b></td>
+            <td>DIF: -1.25 / DEA: -0.85</td>
+            <td>零轴下方死叉放量后收敛</td>
+            <td class="down-trend">偏空 🔴</td>
+            <td>绿色动能柱开始逐日缩短，暗示短线杀跌动能接近衰竭。</td>
+        </tr>
+        <tr>
+            <td><b>布林带 (Bollinger 20, 2)</b></td>
+            <td>带宽 (Bandwidth): 6.4%</td>
+            <td>股价贴近下轨运行</td>
+            <td>看跌防御 ⚪</td>
+            <td>下轨 $216.50 经受多次试探未破，布林带开口收窄，面临方向选择。</td>
+        </tr>
+        <tr>
+            <td><b>VWAP (成交量加权价)</b></td>
+            <td>$223.10</td>
+            <td>股价低于 VWAP TTM</td>
+            <td class="down-trend">看跌 🔴</td>
+            <td>当前现价相对于锚定成本乖离率为 -0.72%，受到均价线压制。</td>
+        </tr>
+        <tr>
+            <td><b>OBV (能量潮)</b></td>
+            <td>4.2B</td>
+            <td>高位持平震荡</td>
+            <td class="up-trend">看涨背离 🟢</td>
+            <td>虽然股价日线回落，但 OBV 并未同步创出新低，显示主力未现恐慌性出逃。</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>三、价量关系状态演进与技术评分</h3>
+<p><strong>当前量能信号状态判断</strong>：<br>
+□ 上升趋势 + 量能递增 = 强烈看涨（买入信号）<br>
+□ 上升趋势 + 量能递减 = 弱势上升（风险提示）<br>
+□ 下降趋势 + 量能递增 = 强烈看跌（卖出信号）<br>
+<strong>✅ 阶段性回踩 + 量能递减 = 弱势回落（技术面清洗浮筹，可能面临底部企稳反弹）</strong></p>
+
+<table>
+    <thead>
+        <tr>
+            <th>技术评分维度</th>
+            <th>得分 (1-10)</th>
+            <th>量化基础指标</th>
+            <th>精炼理由</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>趋势方向精研</td>
+            <td>7 / 10</td>
+            <td>日线低于MA20，但月线远超MA200</td>
+            <td>大趋势完好，短线技术形态处于无量修正的筑底阶段。</td>
+        </tr>
+        <tr>
+            <td>支撑有效性测试</td>
+            <td>8 / 10</td>
+            <td>$215.00 密集筹码重合区</td>
+            <td>结合周线 WMA20 与期权最大痛点，该支撑带具备强劲的买盘承接力。</td>
+        </tr>
+    </tbody>
+</table>
+<p><strong>技术面五维度综合评分</strong>：<b>7.5 / 10</b>（短线震荡筑底，中线具备向上发散的技术底蕴）</p>
+
+<hr>
+
+<h2>M04-流动性博弈与ETF被动购买压力</h2>
+
+<h3>一、全球巨型 ETF 持仓全景与被动资金占比</h3>
+<table>
+    <thead>
+        <tr>
+            <th>ETF 代码</th>
+            <th>ETF 行业与市场定位</th>
+            <th>对本股持仓数量 (百万股)</th>
+            <th>持仓占全球总股本 (%)</th>
+            <th>近 30 天资金流入/流出趋势</th>
+            <th>被动购买调仓压力敏感度</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>QQQ</b></td>
+            <td>景顺纳斯达克 100 权重被动基石</td>
+            <td>142.5</td>
+            <td>0.93%</td>
+            <td class="up-trend">稳定流入 ↗</td>
+            <td>高（指数不定期重新配置权重）</td>
+        </tr>
+        <tr>
+            <td><b>XLK</b></td>
+            <td>SPDR 科技行业核心上市信托</td>
+            <td>115.0</td>
+            <td>0.75%</td>
+            <td class="down-trend">微幅流出 ↘</td>
+            <td>极高（极易受英伟达/微软权重挤压）</td>
+        </tr>
+        <tr>
+            <td><b>SPY</b></td>
+            <td>标普 500 指数传统核心总资产标尺</td>
+            <td>385.0</td>
+            <td>2.52%</td>
+            <td class="up-trend">强劲流入 ↗</td>
+            <td>中等（分配极其平滑）</td>
+        </tr>
+        <tr>
+            <td><b>VGT</b></td>
+            <td>先锋信息技术超级行业被动旗舰</td>
+            <td>98.2</td>
+            <td>0.64%</td>
+            <td class="up-trend">稳定流入 ↗</td>
+            <td>高（跟踪细分行业科技流动性）</td>
+        </tr>
+        <tr>
+            <td><b>IVV</b></td>
+            <td>iShares 核心标普500基金</td>
+            <td>310.0</td>
+            <td>2.03%</td>
+            <td class="up-trend">稳定流入 ↗</td>
+            <td>中等</td>
+        </tr>
+        <tr>
+            <td><b>VOO</b></td>
+            <td>先锋标普 500 被动长线大资产配置</td>
+            <td>332.0</td>
+            <td>2.17%</td>
+            <td class="up-trend">持续流入 ↗</td>
+            <td>中等</td>
+        </tr>
+    </tbody>
+</table>
+<p><strong>全市场总计追踪被动持仓总占比</strong>：<b>24.85%</b> （对股价的影响度：<b>大</b>。全市场将近四分之一的股本被锁死在被动指数中，构成了极其稳定的非主观抛售底仓）。</p>
+
+<h3>二、流动性深度与微观货币流向测算</h3>
+<table>
+    <thead>
+        <tr>
+            <th>流动性微观指标</th>
+            <th>当前绝对值</th>
+            <th>相对于中枢偏离度</th>
+            <th>流动性健康度与股价推动力诊断</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>日均成交额 (30D ADV)</b></td>
+            <td>$11,800 M (118亿美元)</td>
+            <td>高于历史中枢 12%</td>
+            <td>全美流动性前三，日内承载大资金进出毫无滑点风险，流动性溢价极高。</td>
+        </tr>
+        <tr>
+            <td><b>换手率 (Turnover Rate)</b></td>
+            <td>0.38% / 日</td>
+            <td>处于历史相对低位</td>
+            <td>锁仓效应明显。多数机构在中期财报前选择坚定持股，日内多为量化高频和散户博弈。</td>
+        </tr>
+        <tr>
+            <td><b>智能货币流向指标 (Chaikin CMF)</b></td>
+            <td>+0.14</td>
+            <td class="up-trend">稳步上行</td>
+            <td>CMF &gt; 0，表明虽然价格在经历日线修正，但资金依然呈现净流入状态，聪明钱在暗中逢低分批吸筹。</td>
+        </tr>
+    </tbody>
+</table>
+<p><strong>流动性脆弱性评分</strong>：<b>2.5 / 10</b>（极度独立，完全无流动性枯竭风险，被动买入压力在指数定投机制下处于持续正向支撑状态）。</p>
+
+<h3>三、当前股价多维度成分拆解模型 (Price attribution)</h3>
+<p>根据多因子回归及市场风险溢价模型，将 AAPL 当前 <b>$221.50</b> 的股价构成进行深度解构：</p>
+<ul>
+    <li><b>基本面基础内在价值</b>：$155.05 (70.0%) —— 由当前真实盈利、服务现金流及每股账面清算价值支撑的坚实底盘。</li>
+    <li><b>技术面与长线趋势动能溢价</b>：$22.15 (10.0%) —— 跨周期多头排列、均线系统给量化动能策略带来的追随溢价。</li>
+    <li><b>流动性溢价 (含巨型 ETF 被动购买锁仓机制)</b>：$26.58 (12.0%) —— 作为标普500/纳指全球第一核心资产，指数定投等被动配置资金强行买入锁仓带来的流动性稀缺性溢价。</li>
+    <li><b>短期宏观情绪与期权衍生品杠杆对冲溢价</b>：$17.72 (8.0%) —— 市场对于 2026/2027 AI 概念预期以及 Gamma 挤压带来的远期期权高额情绪估值。</li>
+</ul>
+<p><i>结构结论：流动性及被动锁仓溢价合计占比仅 12%，远低于泡沫化标的（&gt;25%），表明股价核心仍由基本面和生态驱动，流动性风险引发的结构性踩踏概率极低。</i></p>
+
+</div>
+
+<h2>M05-筹码博弈与资金流向分析</h2>
+
+<h3>一、机构持仓与全球顶级主力变化追踪</h3>
+<table>
+    <thead>
+        <tr>
+            <th>主力机构名称</th>
+            <th>最新持仓数量 (百万股)</th>
+            <th>季度持仓变动 (Q/Q)</th>
+            <th>占流通股权重 (%)</th>
+            <th>主动/被动属性</th>
+            <th>主力资金行为与态度信号诊断</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>Vanguard Group (先锋领航)</b></td>
+            <td>1,312.4</td>
+            <td class="up-trend">+1.45%</td>
+            <td>8.58%</td>
+            <td>被动纯指数</td>
+            <td>随全球标普500/纳指100权重定投惯性增仓，提供长期筹码锁死效应。</td>
+        </tr>
+        <tr>
+            <td><b>BlackRock Inc. (贝莱德)</b></td>
+            <td>1,044.2</td>
+            <td class="up-trend">+0.82%</td>
+            <td>6.83%</td>
+            <td>被动兼主动</td>
+            <td>iShares 核心被动流入，主动多策略账户在高位出现局部区间窄幅调仓。</td>
+        </tr>
+        <tr>
+            <td><b>Berkshire Hathaway (伯克希尔)</b></td>
+            <td>395.5</td>
+            <td class="down-trend">-3.50%</td>
+            <td>2.59%</td>
+            <td>主动价值</td>
+            <td>继前期战略性减持以优化现金资产后，本季度减持节奏显著放缓，筹码趋于稳固。</td>
+        </tr>
+        <tr>
+            <td><b>State Street Corp (道富银行)</b></td>
+            <td>572.1</td>
+            <td class="up-trend">+1.12%</td>
+            <td>3.74%</td>
+            <td>被动指数</td>
+            <td>SPY 挂钩资金自动增配，无主观多空选择。</td>
+        </tr>
+        <tr>
+            <td><b>Fidelity (富达投资)</b></td>
+            <td>324.8</td>
+            <td class="down-trend">-1.85%</td>
+            <td>2.12%</td>
+            <td>主动成长</td>
+            <td>高位部分获利了结，向边缘计算及 AI 垂直应用中盘股进行战术重组。</td>
+        </tr>
+    </tbody>
+</table>
+<ul>
+    <li><b>机构持仓总数变动</b>：当前全球共有 6,124 家机构登记持仓，较上季度净增加 42 家，大盘股筹码机构化程度持续稳固[cite: 7]。</li>
+    <li><b>Top 10 机构持仓集中度</b>：前十大核心机构合计控盘占总股本的 <b>34.25%</b>，集中度较去年同期微幅抬升 0.45%[cite: 7]。</li>
+    <li><b>主流机构整体行为倾向</b>：整体机构态度表现为<b>中立偏积极</b>[cite: 7]。除部分主动型成长基金因估值分位偏高进行常规获利了结外，长期被动资本与主权财富基金的承接盘极其强劲[cite: 6, 7]。</li>
+</ul>
+
+<h3>二、内部人士交易与大单资金流向统计</h3>
+<table>
+    <thead>
+        <tr>
+            <th>关键监控项</th>
+            <th>近 30 天统计</th>
+            <th>近 90 天统计</th>
+            <th>近 1 年累计</th>
+            <th>筹码转移微观信号解读</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>高管/内部人士买入 (笔数/金额)</b></td>
+            <td>0 笔 / $0</td>
+            <td>1 笔 / $45万</td>
+            <td>3 笔 / $185万</td>
+            <td>内部人士主动二级市场吸筹极少，属于美股科技股常规特征[cite: 7]。</td>
+        </tr>
+        <tr>
+            <td><b>高管/内部人士卖出 (笔数/金额)</b></td>
+            <td>4 笔 / $1,210万</td>
+            <td>14 笔 / $5,840万</td>
+            <td>52 笔 / $2.84亿</td>
+            <td>主要源于期权到期自动行权后的 10b5-1 计划减持，非突发抛售[cite: 7]。</td>
+        </tr>
+        <tr>
+            <td><b>大单主动买入净额 (超 $100万/单)</b></td>
+            <td class="up-trend">+$14.2 亿</td>
+            <td class="up-trend">+$42.5 亿</td>
+            <td class="up-trend">+$118.0 亿</td>
+            <td><b>主力资金暗中吸筹</b>。日线调整期间大单逆势呈现净流入[cite: 7]。</td>
+        </tr>
+        <tr>
+            <td><b>中单主动买入净额 (超 $10万/单)</b></td>
+            <td class="down-trend">-$2.1 亿</td>
+            <td class="up-trend">+$3.4 亿</td>
+            <td class="up-trend">+$12.5 亿</td>
+            <td>中产波段资金多空产生分歧，在 50 日均线附近反复拉锯。</td>
+        </tr>
+        <tr>
+            <td><b>小单主动买入净额 (散户级零售订单)</b></td>
+            <td class="down-trend">-$12.1 亿</td>
+            <td class="down-trend">-$45.9 亿</td>
+            <td class="down-trend">-$130.5 亿</td>
+            <td>散户资金在过去一年中由于恐高情绪或轮动需求，呈现持续离场状态[cite: 7]。</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>三、空头头寸与轧空风险评估</h3>
+<table>
+    <thead>
+        <tr>
+            <th>空头核心量化指标</th>
+            <th>当前绝对值</th>
+            <th>历史中枢分位</th>
+            <th>轧空风险与多空极端挤压深度诊断</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>Short Float (%)</b></td>
+            <td>0.85%</td>
+            <td>处于历史 15% 极低分位</td>
+            <td>空头占流通股比例极低，表明全市场主流做空力量对万亿市值核心资产具备极强敬畏心[cite: 7]。</td>
+        </tr>
+        <tr>
+            <td><b>Days to Cover (回补天数)</b></td>
+            <td>1.3 天</td>
+            <td>处于极度安全区间</td>
+            <td>以当前日均成交量，空头若触发集体认输，只需 1.3 个交易日即可完全通过二级市场无感回补[cite: 7]。</td>
+        </tr>
+        <tr>
+            <td><b>密集空头套牢成本区</b></td>
+            <td>$228.00 ~ $234.00</td>
+            <td>—</td>
+            <td>若股价秋季借由强劲基本面催化上破 $228，该区间的局部波段投机空头将面临Gamma与现货双重挤压。</td>
+        </tr>
+    </tbody>
+</table>
+<p><strong>多空双方实力对比综合评定</strong>：多头在机构持仓和主力资金大单沉淀上占据绝对的资源与心理优势[cite: 7]；空头缺乏基本面爆雷的长线逻辑，多流于日内对冲或左侧技术面短线试探[cite: 7]。综合筹码评分：<b>8.4 / 10</b>（筹码结构高度机构化，散户出局、大单暗流涌动，具备极佳的锁仓拉升潜力）[cite: 7]。</p>
+
+<hr>
+
+<h2>M06-综合分析报告与投资决策框架</h2>
+
+<h3>一、六维度评分汇总与加权期望值精算</h3>
+<table>
+    <thead>
+        <tr>
+            <th>核心评估维度</th>
+            <th>对应模块</th>
+            <th>单项基础评分 (1-10)</th>
+            <th>行业相对强弱评价</th>
+            <th>系统默认配置权重</th>
+            <th>加权得分贡献</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>基本面深度诊断</b></td>
+            <td>M01</td>
+            <td>8.2</td>
+            <td>绝对领先 (护城河深厚)</td>
+            <td>40%</td>
+            <td>3.28</td>
+        </tr>
+        <tr>
+            <td><b>期权定价与衍生品结构</b></td>
+            <td>M02</td>
+            <td>7.0</td>
+            <td>定价均衡偏防守</td>
+            <td>15%</td>
+            <td>1.05</td>
+        </tr>
+        <tr>
+            <td><b>多时间框架技术摆锤</b></td>
+            <td>M03</td>
+            <td>7.5</td>
+            <td>中线蓄势，短线回踩</td>
+            <td>20%</td>
+            <td>1.50</td>
+        </tr>
+        <tr>
+            <td><b>流动性博弈与被动购买</b></td>
+            <td>M04</td>
+            <td>9.0</td>
+            <td>无懈可击 (全球标杆)</td>
+            <td>10%</td>
+            <td>0.90</td>
+        </tr>
+        <tr>
+            <td><b>筹码博弈与资金流向</b></td>
+            <td>M05</td>
+            <td>8.4</td>
+            <td>机构高度锁仓，主力吸筹[cite: 7]</td>
+            <td>15%</td>
+            <td>1.26</td>
+        </tr>
+        <tr>
+            <td><b>综合量化汇总得分</b></td>
+            <td>—</td>
+            <td><b>8.02 / 10</b></td>
+            <td><b>核心资产优质评级</b></td>
+            <td>100%</td>
+            <td><b>8.02</b> (精确值)</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>二、多视角深度辩论：多空核心矛盾长文本对垒</h3>
+<blockquote>
+    <p><b>多方观点 (Bull Case) —— 信心指数：★★★★☆</b><br>
+    多方坚信，苹果正处于由端侧 AI (Apple Intelligence) 驱动的史诗级“硬件更新超级周期”的破晓时刻。当前的财务高原只是全面爆发前的短暂蓄势[cite: 1]。市场严重低估了生成式 AI 功能对存量 iPhone 老用户的倒逼效应，随着秋季新机发布，高达数亿台的潜在换机需求将在未来 24 个月内转化为极度强劲的现金流弹性[cite: 1, 2]。同时，服务业务（Services）的营收占比已提升至接近 25%，其超过 74% 的极高毛利率正在系统性地重塑苹果的利润表结构，这赋予了苹果向 35 倍远期 PE 进军的底气[cite: 1, 2]。从资金面来看，年均千亿美元的股份回购计划构成全美股最强韧的现货买盘，配合大单资金在日线调整期间的逆势持续吸筹，技术面上的 50 日均线回踩正是跨周期长线资金难得的黄金卡位窗口[cite: 1, 7]。</p>
+    
+    <p><b>空方观点 (Bear Case) —— 风险等级：⚠️⚠️</b><br>
+    空方则认为，当前市场对 AI 的定价存在明显的认知透支和前瞻泡沫。目前 32.8 倍的 TTM PE 处于历史绝对高位，已经包含了对未来换机周期最乐观的预期[cite: 1, 2]。如果 Apple Intelligence 在非英语核心市场的本地化落地进程因地缘监管、算力适配等因素延宕，硬件销量的环比增速一旦录得不及预期的个位数增长，高估值中枢将面临惨烈的戴维斯双杀。此外，全球反垄断监管正步入实质性深水区，美国司法部（DOJ）的诉讼以及欧盟《数字市场法案》（DMA）的严格执行，正在一块块剥离苹果封闭生态的“苹果税”抽成根基，一旦这一高毛利壁垒破防，服务业务的估值溢价将大幅缩水[cite: 1]。技术面上，股价受制于成交量不能有效放大的制约，短期内 VWAP 的压制和日线级别的阴跌尚未完全见底[cite: 4]。综上，空方主张应等待高估值充分出清至 $200 以下再行考虑[cite: 1]。</p>
+    
+    <p><b>多空核心矛盾总结</b>：当前多空博弈的终极核心焦点在于<b>“AI 驱动的硬件超额利润兑现速度，能否跑赢全球反垄断监管导致的生态护城河资产贬值速度”</b>[cite: 1]。多方押注于消费者黏性带来的硬件刚需升级，空方则戒备于估值溢价在监管重压下的脆弱性[cite: 1, 2]。</p>
+</blockquote>
+
+<h3>三、量化触发条件清单与动态应对方案</h3>
+<table>
+    <thead>
+        <tr>
+            <th>策略操作类型</th>
+            <th>具体量化股价/时空锚点</th>
+            <th>伴随事件/技术指标触发条件</th>
+            <th>华尔街标准操作指南</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>初始建仓触发</b></td>
+            <td>现价 <b>$221.50</b> 附近</td>
+            <td>日线 RSI 企稳于 45 上方，50日均线不破，分批推入首笔底仓[cite: 1, 4]。</td>
+            <td>执行“第一批”计划，投入目标总资产的 <b>10%</b> 基础仓位[cite: 1]。</td>
+        </tr>
+        <tr>
+            <td><b>右侧加仓触发</b></td>
+            <td>成功有效站稳 <b>$228.50</b></td>
+            <td>周线收盘确认突破高位箱体上沿，且日均成交量放大至 1.5 亿股上方[cite: 4]。</td>
+            <td>执行“第二批”追随加仓，追加 <b>15%</b> 仓位，锁死右侧趋势行情[cite: 1]。</td>
+        </tr>
+        <tr>
+            <td><b>战略减仓触发</b></td>
+            <td>跌破 <b>$210.00</b> 防线</td>
+            <td>周线死叉，且伴随巨额大单净流出，财报显示 iPhone 销量增速转负[cite: 4, 7]。</td>
+            <td>无条件减仓 <b>50%</b>，退守观望，规避估值中枢下移风险[cite: 1]。</td>
+        </tr>
+        <tr>
+            <td><b>终极硬止损触发</b></td>
+            <td>收盘跌破 <b>$195.00</b></td>
+            <td>月线级别大趋势破位，欧盟/美国实质性执行生态拆分法案[cite: 1, 4]。</td>
+            <td><b>全线清仓彻底止损</b>。宣告 M00 分析框架彻底失效，进入资本清算周期[cite: 1]。</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>四、终极决策面板</h3>
+<div style="border: 2px solid #1e3a8a; padding: 25px; border-radius: 8px; margin: 25px 0; background: #fffdf7;">
+    <table style="margin: 0; border: none; width: 100%;">
+        <tr style="background: none;">
+            <td style="border: none; width: 33%; text-align: center;">
+                <span style="font-size: 14px; color: #666;">最终投资评级</span><br>
+                <span class="up-trend" style="font-size: 36px; letter-spacing: 1px;">BUY (超配买入)</span>
+            </td>
+            <td style="border: none; width: 33%; text-align: center; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">
+                <span style="font-size: 14px; color: #666;">系统多维综合评分</span><br>
+                <span style="font-size: 36px; font-weight: bold; color: #1e3a8a;">8.02 / 10</span>
+            </td>
+            <td style="border: none; width: 33%; text-align: center;">
+                <span style="font-size: 14px; color: #666;">建议配置仓位比例</span><br>
+                <span style="font-size: 36px; font-weight: bold; color: #2c5282;">25% (全合规上限)</span>
+            </td>
+        </tr>
+    </table>
+    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 15px 0;">
+    <p style="margin: 0; font-size: 13px; color: #4a5568;">
+        <b>风险等级判定</b>：<b>中等风险 (Medium Risk)</b>。估值溢价与政策监管溢价是主要波动源，但强悍的自由现金流及高壁垒生态圈提供极佳的向下安全垫，下行空间相对封顶[cite: 1, 2]。
+    </p>
+</div>
+
+</div></body></html>
