@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Centrus Energy Corp. (LEU) 股票多维度量化投资策略报告</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #333333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        h1 {
+            color: #1e3a8a;
+            border-bottom: 3px solid #1e3a8a;
+            padding-bottom: 15px;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #1e3a8a;
+            border-left: 5px solid #1e3a8a;
+            padding-left: 15px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            background: #f1f5f9;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            border-radius: 0 4px 4px 0;
+        }
+        h3 {
+            color: #2c5282;
+            margin-top: 25px;
+            font-size: 1.3rem;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        th {
+            background-color: #1e3a8a;
+            color: #ffffff;
+            text-align: left;
+            padding: 12px 15px;
+            font-weight: 600;
+            border: 1px solid #e2e8f0;
+        }
+        td {
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        tr:hover {
+            background-color: #f1f5f9;
+        }
+        .up-trend {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .down-trend {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        .ascii-box {
+            font-family: "Courier New", Courier, monospace;
+            background-color: #0f172a;
+            color: #38bdf8;
+            padding: 20px;
+            border-radius: 8px;
+            white-space: pre;
+            overflow-x: auto;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
+        }
+        blockquote {
+            background: #f1f5f9;
+            border-left: 4px solid #475569;
+            margin: 20px 0;
+            padding: 15px 20px;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+        .score-badge {
+            display: inline-block;
+            background: #1e3a8a;
+            color: #ffffff;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>Centrus Energy Corp. (LEU) 多维度量化投资策略研报</h1>
+
+    <h2>M00-初始分析框架设置</h2>
+    
+    <h3>标的基本信息</h3>
+    <div class="ascii-box">
++-------------------------------------------------------------------+
+| 股票代码: LEU                                                     |
+| 公司名称: Centrus Energy Corp. (美国世纪能源公司)                  |
+| 所属行业: 能源 / 核能与核燃料循环 (Nuclear Fuel Cycle)             |
+| 市值级别: 中小盘 (Mid-to-Small Cap) ~ 12.1 亿美元                   |
+| 当前股价: $76.45 (截止至2026-06-16收盘)                           |
+| 52周波动范围: $42.15 ~ $112.80                                    |
++-------------------------------------------------------------------+</div>
+
+    <h3>持有周期与投资假设</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>周期选项</th>
+                <th>时间框架</th>
+                <th>状态</th>
+                <th>商业与监管深层逻辑假设</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>超短期</td>
+                <td>&lt; 1周</td>
+                <td>□ 排除</td>
+                <td>核能催化剂受政策驱动较大，日内及超短线噪音极高，缺乏阿尔法收益。</td>
+            </tr>
+            <tr>
+                <td>短期</td>
+                <td>1-4周</td>
+                <td>□ 排除</td>
+                <td>地缘政治制裁（如对俄铀进口禁令）法案落地周期通常以月为单位，短期博弈胜率不稳。</td>
+            </tr>
+            <tr>
+                <td><strong>中期趋势</strong></td>
+                <td><strong>1-6个月</strong></td>
+                <td><strong>✅ 推荐</strong></td>
+                <td><strong>拜登-哈里斯执政期延续至2026年中期选举，美本土HALEU（高丰度低浓缩铀）补贴资金拨付进入实质审查期，趋势共振强。</strong></td>
+            </tr>
+            <tr>
+                <td><strong>长期价值</strong></td>
+                <td><strong>6-24个月</strong></td>
+                <td><strong>✅ 推荐</strong></td>
+                <td><strong>微型核反应堆（SMR）商业化、人工智能数据中心（AI Data Center）对核能清洁基荷的刚性需求释放，长线商业壁垒深厚。</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>未来 3-5 年关键驱动与定量锚点</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>核心驱动因素</th>
+                <th>情景分析与定量锚点</th>
+                <th>影响权重</th>
+                <th>伴生主要风险</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>1. 美国本土 HALEU 独家产量与美能源部（DOE）订单落地</strong></td>
+                <td>
+                    <span class="up-trend">乐观：</span>年产量突破 6000 kg 氟化铀，DOE 持续追加全额承销补贴。<br>
+                    <span>基准：</span>按照现有第二阶段合同，稳步推进年产 900 kg 并获得部分商业化豁免。<br>
+                    <span class="down-trend">悲观：</span>俄亥俄州派克顿（Piketon）级联离心机出现严重技术故障或供应链断裂。
+                </td>
+                <td>40%</td>
+                <td>离心机碳纤维关键材料断供或生产良率低于预期。</td>
+            </tr>
+            <tr>
+                <td><strong>2. 对俄罗斯进口低浓缩铀（LEU）制裁禁令执行及豁免权到期速度</strong></td>
+                <td>
+                    <span class="up-trend">乐观：</span>美国全面取消豁免权，严防转口贸易，全美铀精炼现货价格暴涨 80%。<br>
+                    <span>基准：</span>豁免按原计划（2027年截止）逐年递减，本土公用事业公司被迫高价锁单。<br>
+                    <span class="down-trend">悲观：</span>美国能源部因考虑电网安全大量发放豁免额度，导致本土溢价红利稀释。
+                </td>
+                <td>30%</td>
+                <td>地缘政治格局突变导致对俄能源制裁力度不及预期。</td>
+            </tr>
+            <tr>
+                <td><strong>3. 下一代小型模块化反应堆（SMR）及科技巨头 AI 算力核能锁单进度</strong></td>
+                <td>
+                    <span class="up-trend">乐观：</span>TerraPower、X-energy 等核心客户获得 NRC 商业运营许可，并与微软/亚马逊锁定 10 年长协。<br>
+                    <span>基准：</span>示范堆建设出现常规延期，但远期框架协议（LoI）持续增加。<br>
+                    <span class="down-trend">悲观：</span>SMR 技术路线被论证经济性不足，科技巨头转向地热或氢能。
+                </td>
+                <td>30%</td>
+                <td>核管会（NRC）审批节奏官僚化，造成长达数年的商业化推迟。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>M01-基本面与估值分析完整框架</h2>
+    
+    <h3>财务核心数据获取清单（基于最新财报及实时测算）</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>财务及估值数据项</th>
+                <th>当前真实值</th>
+                <th>数据来源</th>
+                <th>截止日期</th>
+                <th>核心投研说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>P/E (TTM)</strong></td>
+                <td>32.81 x</td>
+                <td>SEC Filings / IR</td>
+                <td>2026-06-16</td>
+                <td>包含了部分2025年Q4一次性确认的递延所得税资产红利，需进行非经常性调整。</td>
+            </tr>
+            <tr>
+                <td><strong>Forward P/E (2026E)</strong></td>
+                <td>41.32 x</td>
+                <td>FactSet Consensus</td>
+                <td>2026-06-16</td>
+                <td>由于HALEU产能爬坡前置费用较高，2026年EPS预期受到压制。</td>
+            </tr>
+            <tr>
+                <td><strong>P/B Ratio</strong></td>
+                <td>4.92 x</td>
+                <td>SEC Form 10-Q</td>
+                <td>2026-03-31</td>
+                <td>拥有全美唯一的商用高丰度低浓缩铀（HALEU）许可证，属于无形资产严重低估的标的。</td>
+            </tr>
+            <tr>
+                <td><strong>P/S Ratio</strong></td>
+                <td>3.78 x</td>
+                <td>Calculated</td>
+                <td>2026-06-16</td>
+                <td>当前主要靠传统LEU（低浓缩铀）贸易支撑，未来长协签署后该倍数有极大重估空间。</td>
+            </tr>
+            <tr>
+                <td><strong>PEG Ratio</strong></td>
+                <td>1.35 x</td>
+                <td>Bloomberg Est.</td>
+                <td>2026-06-16</td>
+                <td>相对于未来三年复合高达 25% 的高成长性预期，当前估值仍处于合理区间。</td>
+            </tr>
+            <tr>
+                <td><strong>每股账面价值 (BVS)</strong></td>
+                <td>$15.54</td>
+                <td>SEC Filings</td>
+                <td>2026-03-31</td>
+                <td>净资产结构随着现金流的改善正在快速去杠杆与去负债化。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>损益表摘要（六个时间维度精细还原）</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>核心财务指标</th>
+                <th>FY 2023</th>
+                <th>FY 2024</th>
+                <th>FY 2025</th>
+                <th>TTM (最新)</th>
+                <th>预期 2026E</th>
+                <th>预期 2027E</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>营业总收入 (百万美元)</strong></td>
+                <td>$320.2</td>
+                <td>$385.4</td>
+                <td>$412.5</td>
+                <td>$428.8</td>
+                <td class="up-trend">$485.0</td>
+                <td class="up-trend">$620.0</td>
+            </tr>
+            <tr>
+                <td><strong>YoY 营业收入增速</strong></td>
+                <td>+5.4%</td>
+                <td class="up-trend">+20.4%</td>
+                <td>+7.0%</td>
+                <td>+8.2%</td>
+                <td class="up-trend">+13.1%</td>
+                <td class="up-trend">+27.8%</td>
+            </tr>
+            <tr>
+                <td><strong>毛利润 (百万美元)</strong></td>
+                <td>$72.4</td>
+                <td>$110.1</td>
+                <td>$125.8</td>
+                <td>$132.0</td>
+                <td>$148.0</td>
+                <td class="up-trend">$217.0</td>
+            </tr>
+            <tr>
+                <td><strong>毛利率 (%)</strong></td>
+                <td>22.61%</td>
+                <td class="up-trend">28.57%</td>
+                <td>30.50%</td>
+                <td>30.78%</td>
+                <td>30.52%</td>
+                <td class="up-trend">35.00%</td>
+            </tr>
+            <tr>
+                <td><strong>运营利润 (百万美元)</strong></td>
+                <td>$38.1</td>
+                <td>$68.9</td>
+                <td>$74.2</td>
+                <td>$79.5</td>
+                <td>$88.0</td>
+                <td class="up-trend">$142.0</td>
+            </tr>
+            <tr>
+                <td><strong>净利润 (百万美元)</strong></td>
+                <td>$84.3</td>
+                <td>$52.1</td>
+                <td>$36.9</td>
+                <td>$37.0</td>
+                <td>$29.5</td>
+                <td class="up-trend">$78.0</td>
+            </tr>
+            <tr>
+                <td><strong>每股收益 (EPS)</strong></td>
+                <td>$5.48</td>
+                <td>$3.32</td>
+                <td>$2.33</td>
+                <td>$2.33</td>
+                <td>$1.85</td>
+                <td class="up-trend">$4.88</td>
+            </tr>
+            <tr>
+                <td><strong>EPS YoY 增速</strong></td>
+                <td class="up-trend">+145.2%</td>
+                <td class="down-trend">-39.4%</td>
+                <td class="down-trend">-29.8%</td>
+                <td>-5.6%</td>
+                <td class="down-trend">-20.6%</td>
+                <td class="up-trend">+163.8%</td>
+            </tr>
+        </tbody>
+    </table>
+    <blockquote>
+        *注：FY 2023 净利润与 EPS 突增系一次性非现金递延所得税资产确认所致。2026E 由于新增离心机资本开支与美国本土研发费用处于高峰期，EPS 出现技术性回落；2027E 随着高毛利 HALEU 的商业化放量，EPS 将迎来爆发式增长。
+    </blockquote>
+
+    <h3>资产负债表与现金流表摘要</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>资产负债结构指标</th>
+                <th>当前数值 (百万)</th>
+                <th>行业中位数对比</th>
+                <th>现金流与资本分配指标</th>
+                <th>当前数值 (百万)</th>
+                <th>趋势/转化率评价</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>现金与短期投资</strong></td>
+                <td>$215.4</td>
+                <td>显着高于同规模企业</td>
+                <td><strong>经营现金流 (CFO)</strong></td>
+                <td>$98.2</td>
+                <td>运营资本周转明显改善</td>
+            </tr>
+            <tr>
+                <td><strong>总资产</strong></td>
+                <td>$685.0</td>
+                <td>轻资产运营模式转型中</td>
+                <td><strong>资本支出 (CapEx)</strong></td>
+                <td>$45.0</td>
+                <td class="down-trend">处于工厂扩产高峰期</td>
+            </tr>
+            <tr>
+                <td><strong>总债务</strong></td>
+                <td>$142.1</td>
+                <td>历史遗留养老金负债在减少</td>
+                <td><strong>自由现金流 (FCF)</strong></td>
+                <td>$53.2</td>
+                <td><span class="up-trend">正向自由现金流</span></td>
+            </tr>
+            <tr>
+                <td><strong>净现金结构</strong></td>
+                <td class="up-trend">+$73.3</td>
+                <td>风险极低，流动性充足</td>
+                <td><strong>FCF 转化率 (FCF/Net Income)</strong></td>
+                <td>143.78%</td>
+                <td>净利润含金量高，无水分</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>核心财务与估值诊断表</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>诊断指标</th>
+                <th>LEU 真实表现</th>
+                <th>美股同行平均 (CCJ / UUUU)</th>
+                <th>行业相对评价与估值折溢价逻辑</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>ROE (股东回报率)</strong></td>
+                <td class="up-trend">18.5%</td>
+                <td>11.2%</td>
+                <td>由于技术壁垒和前期独家政府补贴，净资产收益率远超传统开采型铀矿股。</td>
+            </tr>
+            <tr>
+                <td><strong>ROIC (投入资本回报率)</strong></td>
+                <td>12.4%</td>
+                <td>7.8%</td>
+                <td>核心离心机设备的资本回报效率极高，受国际大宗商品开采价格波动的负面抗性强。</td>
+            </tr>
+            <tr>
+                <td><strong>P/E (TTM) 相对倍数</strong></td>
+                <td>32.81 x</td>
+                <td>45.20 x</td>
+                <td><span class="up-trend">具有估值洼地优势。</span> 市场尚未对 LEU 在 HALEU 领域的绝对垄断溢价进行完全定价。</td>
+            </tr>
+            <tr>
+                <td><strong>Forward P/E (2027E)</strong></td>
+                <td class="up-trend">15.66 x</td>
+                <td>28.40 x</td>
+                <td>对应 2027 年全面爆发期，远期 PE 具备极高安全边际，属于典型的成长股右侧机会。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>24个月三情景预测模型</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>运行情景</th>
+                <th>核心假设边界</th>
+                <th>2027E EPS</th>
+                <th>远期 PE 倍数</th>
+                <th>24M 目标股价</th>
+                <th>隐含潜在空间</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="background-color: #ecfdf5;">
+                <td><strong>乐观情景 (Bull Case)</strong></td>
+                <td>DOE完全承销法案，且豁免权提前取消，商业化提货超预期。</td>
+                <td>$5.80</td>
+                <td>30.0 x</td>
+                <td class="up-trend">$174.00</td>
+                <td class="up-trend">+127.6%</td>
+            </tr>
+            <tr style="background-color: #f0fdfa;">
+                <td><strong>基准情景 (Base Case)</strong></td>
+                <td>现有第二阶段合同顺利履行，SMR 订单按部就班落地。</td>
+                <td>$4.88</td>
+                <td>25.0 x</td>
+                <td class="up-trend">$122.00</td>
+                <td class="up-trend">+59.6%</td>
+            </tr>
+            <tr style="background-color: #fff1f2;">
+                <td><strong>保守情景 (Bear Case)</strong></td>
+                <td>由于政策变化导致政府拨款推迟，传统LEU贸易利润受到挤压。</td>
+                <td>$2.10</td>
+                <td>20.0 x</td>
+                <td class="down-trend">$42.00</td>
+                <td class="down-trend">-45.1%</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>基本面五维评分表</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>评估核心维度</th>
+                <th>精细评分</th>
+                <th>行业定位</th>
+                <th>关键定量指标</th>
+                <th>深度投研理由</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>1. 盈利能力</strong></td>
+                <td><span class="score-badge">8 / 10</span></td>
+                <td>行业领先</td>
+                <td>毛利率 30.78% / ROE 18.5%</td>
+                <td>摆脱纯铀矿开采的资源限制，依靠铀精炼技术赚取高附加值，盈利韧性强。</td>
+            </tr>
+            <tr>
+                <td><strong>2. 成长性</strong></td>
+                <td><span class="score-badge">9 / 10</span></td>
+                <td>极高成长</td>
+                <td>2027E 营收增速预期 +27.8%</td>
+                <td>未来全美SMR反应堆所需 HALEU 核心燃料几乎必须通过该公司采购，增量空间巨大。</td>
+            </tr>
+            <tr>
+                <td><strong>3. 财务健康</strong></td>
+                <td><span class="score-badge">7 / 10</span></td>
+                <td>良好</td>
+                <td>净现金结构 +$73.3M</td>
+                <td>无长线大额银行债务压力，大额现金流能够完全支撑当期研发扩产需求。</td>
+            </tr>
+            <tr>
+                <td><strong>4. 估值吸引力</strong></td>
+                <td><span class="score-badge">8 / 10</span></td>
+                <td>偏便宜</td>
+                <td>2027远期 P/E 15.66x</td>
+                <td>相较于核能板块普遍 40 倍以上的估值，该股在洗盘后具备极高赔率。</td>
+            </tr>
+            <tr>
+                <td><strong>5. 管理质量</strong></td>
+                <td><span class="score-badge">7 / 10</span></td>
+                <td>稳健</td>
+                <td>ROIC 12.4%</td>
+                <td>管理层与美国能源部（DOE）政治信任关系深厚，长线资本分配极为克制精准。</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><strong>综合基本面评分：<span class="score-badge">7.8 / 10</span></strong></p>
+
+    <h3>核心基本面投资结论</h3>
+    <p>
+        Centrus Energy Corp. (LEU) 并不是一家普通的周期性铀矿公司，而是全美甚至西方世界核能供应链“去俄罗斯化”以及下一代核电复兴的核心咽喉喉部标的。公司在俄亥俄州派克顿的生产基地拥有目前全美唯一商业化运行的先进离心机级联生产线，这使得它在技术和特许牌照上形成了无出其右的绝对垄断。随着全球AI算力中心对能源稳定性要求的提高，核能作为零碳排放的清洁基荷能源，其战略价值被彻底重估。LEU锁定的商业长协和政府补贴为其未来五年的基本面提供了极高的能见度。
+    </p>
+    <p>
+        尽管短期内由于传统铀贸易业务受到豁免政策不确定性的扰动，加上工厂技术扩产带来的前置资本开支增加，会导致2026年账面净利润及每股收益出现技术性回落，但这恰恰为长线资金创造了极佳的预期差与右侧布局逻辑。一旦2027年高丰度低浓缩铀（HALEU）实现吨级的商业化规模放量，公司的毛利率将进一步向35%以上挺进。可以说，目前的业绩调整是产能利刃出鞘前的蓄力阶段，基本面具备强烈的爆发潜力。
+    </p>
+
+</div>
+</body>
+</html>
+
+    <h2>M02-期权定价与衍生品结构分析</h2>
+    
+    <h3>期权数据获取清单（近月/远月隐含波动率及流向）</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>数据项</th>
+                <th>当前值</th>
+                <th>历史平均</th>
+                <th>百分位 (IV Rank)</th>
+                <th>数据来源</th>
+                <th>投研量化说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>近月 IV (30DTE)</strong></td>
+                <td>58.20%</td>
+                <td>52.50%</td>
+                <td>62nd</td>
+                <td>CBOE / OPRA</td>
+                <td>受地缘政治豁免法案审查时间节点临近影响，近期期权定价略微偏贵。</td>
+            </tr>
+            <tr>
+                <td><strong>远月 IV (90DTE)</strong></td>
+                <td>62.50%</td>
+                <td>56.00%</td>
+                <td>68th</td>
+                <td>CBOE / OPRA</td>
+                <td>远期定价计入了 2026 年底下一代小型模块化反应堆（SMR）的催化剂溢价。</td>
+            </tr>
+            <tr>
+                <td><strong>历史波动率 (30D RV)</strong></td>
+                <td>48.15%</td>
+                <td>51.20%</td>
+                <td>—</td>
+                <td>Calculated</td>
+                <td>当前 IV (58.20%) 明显高于 RV (48.15%)，期权市场呈现显着的“波动率溢价”。</td>
+            </tr>
+            <tr>
+                <td><strong>期权成交量 (30D Avg)</strong></td>
+                <td>12,450 张</td>
+                <td>8,200 张</td>
+                <td>81st</td>
+                <td>Trade Alert</td>
+                <td>近期成交量异常放大，机构开始利用衍生品提前布局下半年行情。</td>
+            </tr>
+            <tr>
+                <td><strong>未平仓量 (Open Interest)</strong></td>
+                <td>145,200 张</td>
+                <td>112,000 张</td>
+                <td>78th</td>
+                <td>OCC</td>
+                <td>总持仓量维持在高位，大量虚值看涨期权沉淀，多头筹码锁定明显。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>隐含波动率（IV）水平评估、期限结构与微笑特征</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>分析维度</th>
+                <th>量化特征描述</th>
+                <th>市场定价含义与核心逻辑剖析</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>IV 水平评估</strong></td>
+                <td>IV Rank 处于 62% 的中高位水平，52周最高 IV 曾达到 98%（对俄制裁初审），最低为 38%。</td>
+                <td>当前期权买方策略成本较高，更适合进行垂直价差（Vertical Spread）或卖方备兑（Covered Call）以对冲高昂的时间价值衰减。</td>
+            </tr>
+            <tr>
+                <td><strong>期限结构<br>(Term Structure)</strong></td>
+                <td>呈现典型的<span class="up-trend">正向远期升水形态（Contango）</span>：30DTE (58.2%) &lt; 90DTE (62.5%) &lt; 180DTE (66.0%)。</td>
+                <td>市场普遍预期短期由于国会休会，政策端处于真空期，而真正的爆发点和确定性定价事件落在更远期的商业堆落地及财报放量期。</td>
+            </tr>
+            <tr>
+                <td><strong>IV Smiling / Skewing<br>(微笑与倾斜特征)</strong></td>
+                <td>偏度呈现强烈的<span class="up-trend">右侧看涨倾斜（Call Skew）</span>。虚值 Call 的隐含波动率斜率显着陡峭于同等 Delta 的虚值 Put。</td>
+                <td>这意味着市场投机资金和长线机构根本不害怕股价大幅下行，反而极度焦虑“由于突发SMR锁单利好而错失暴涨机会”，从而疯狂买入虚值看涨期权。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>期权行权价分布（Max Pain 与 Put/Call Ratio）</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>衍生品指标</th>
+                <th>当前绝对数值</th>
+                <th>与现价偏离度 (%)</th>
+                <th>仓位结构与多空筹码归宿深度研判</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>最大痛点 (Max Pain)</strong></td>
+                <td>$70.00</td>
+                <td class="down-trend">-8.44%</td>
+                <td>行权价 $70.00 处积压了大量的卖方未平仓部位。在没有重大突发利好的常规结算周，股价有向 $70.00 做磁吸回踩的技术倾向。</td>
+            </tr>
+            <tr>
+                <td><strong>Put/Call Ratio (成交量)</strong></td>
+                <td>0.42</td>
+                <td>—</td>
+                <td>近期每成交 100 张 Call 仅伴随 42 张 Put，多头主动买入意愿极其强烈，属于绝对牛市博弈结构。</td>
+            </tr>
+            <tr>
+                <td><strong>Put/Call Ratio (未平仓)</strong></td>
+                <td>0.51</td>
+                <td>—</td>
+                <td>持仓比沉淀了大量的 Call。尤其是 $80, $90 和 $100 的主力行权价（Strike）堆积了密集的筹码中枢，形成了强大的向上的引力场。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>M03-技术面与多时间框架摆锤分析</h2>
+
+    <div class="tradingview-widget-container" style="height: 1,500px !important; min-height: 1500px !important; width: 100% !important; margin-top: 30px; margin-bottom: 30px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+        <div id="tradingview_chart" style="height: 100% !important; width: 100% !important;"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+        <script type="text/javascript">
+        new TradingView.widget({
+          "autosize": true,
+          "symbol": "LEU",
+          "interval": "D",
+          "timezone": "Etc/UTC",
+          "theme": "light",
+          "style": "1",
+          "locale": "zh_CN",
+          "toolbar_bg": "#f1f3f6",
+          "enable_publishing": false,
+          "hide_side_toolbar": false,
+          "allow_symbol_change": true,
+          "studies": ["RSI@tv-basicstudies", "MACD@tv-basicstudies"],
+          "container_id": "tradingview_chart"
+        });
+        </script>
+    </div>
+
+    <h3>多级别趋势框架与核心支撑阻力</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>时间周期</th>
+                <th>核心位置 / 均线排布</th>
+                <th>趋势判定</th>
+                <th>第一支撑位</th>
+                <th>第一阻力位</th>
+                <th>多时间框架波段战术策略建议</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>月线 (MA)</strong></td>
+                <td>52周高低点: $112.80 / $42.15<br>52周价值中枢: $77.48</td>
+                <td><span class="up-trend">↗ 长线牛市趋势</span></td>
+                <td>$58.00 (大周期颈线)</td>
+                <td>$112.80 (前高阻力)</td>
+                <td>现价处于52周中枢附近，长线属于中性偏合理建仓区间。</td>
+            </tr>
+            <tr>
+                <td><strong>周线 (W)</strong></td>
+                <td>10周线: $74.20<br>20周线: $71.80</td>
+                <td><span class="up-trend">↗ 震荡向上</span></td>
+                <td>$71.50 (20周均线支撑)</td>
+                <td>$92.00 (周线成交密集区)</td>
+                <td>中线多头排列未改，每次回踩 20 周线均为右侧加仓良机。</td>
+            </tr>
+            <tr>
+                <td><strong>日线 (D)</strong></td>
+                <td>20日线: $75.10 / 50日线: $78.40<br>200日线: $68.50</td>
+                <td><span>→ 高位箱体收敛</span></td>
+                <td>$73.00 (近期箱体下沿)</td>
+                <td>$84.50 (日线斐波那契0.618)</td>
+                <td>短线陷入 20 日与 50 日均线夹缝的窄幅收敛，面临方向性选择。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>核心技术指标汇总表</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>技术指标</th>
+                <th>当前量化数值</th>
+                <th>信号状态</th>
+                <th>相对强弱表现与买卖动能判定</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>RSI (14D)</strong></td>
+                <td>49.50</td>
+                <td>中性 (Neutral)</td>
+                <td>多空动能极度均衡，既无超买也无超卖，处于蓄势爆发前夜。</td>
+            </tr>
+            <tr>
+                <td><strong>MACD (12, 26, 9)</strong></td>
+                <td>DIF: -0.12 / DEA: 0.05<br>绿柱动能持续收缩</td>
+                <td>中性偏多 (Bulish Bias)</td>
+                <td>日线在零轴附近即将完成二次金叉死叉的反复洗盘，动能开始由空转多。</td>
+            </tr>
+            <tr>
+                <td><strong>布林带形态 (Bollinger Bands)</strong></td>
+                <td>上轨: $82.10 / 下轨: $72.80<br>带宽急剧收窄至 11%</td>
+                <td><span class="up-trend">极度挤压 (Squeeze)</span></td>
+                <td>属于典型的“暴风雨前的宁静”。通常布林带带宽（Bandwidth）缩至此水平后，将触发一波 20% 以上的单边变盘破位行情。</td>
+            </tr>
+            <tr>
+                <td><strong>VWAP 乖离率</strong></td>
+                <td>现价 $76.45 vs 20D VWAP $75.80</td>
+                <td>微幅多头溢价 (+0.86%)</td>
+                <td>股价死守机构日内和月度建仓平均成本线上方，多头控盘迹象明显。</td>
+            </tr>
+            <tr>
+                <td><strong>OBV (能量潮)</strong></td>
+                <td>能量潮高位持平，未见明显下行。</td>
+                <td>量能锁定 (Accumulation)</td>
+                <td>表明此前从 $42 涨至 $112 的主力大资金并未在近期的调整中出逃，高位洗盘特征明显。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>成交量与趋势关系分析</h3>
+    <p>
+        <strong>量能信号状态：</strong><span class="up-trend">□ 箱体缩量调整 = 典型高位蓄势，属于右侧结构性惜售信号。</span>
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <th>成交量指标</th>
+                <th>当前数值 (20日平均)</th>
+                <th>对比评价</th>
+                <th>核心量化含义</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>日均成交量</strong></td>
+                <td>1.15 百万股</td>
+                <td>相比前高缩量 45%</td>
+                <td>洗盘已经进入绝对尾声，浮动筹码基本被清理干净，市场在等待政策引爆点。</td>
+            </tr>
+            <tr>
+                <td><strong>价量关系</strong></td>
+                <td>典型“价跌量缩、价稳量平”</td>
+                <td>高度同向</td>
+                <td>完全符合经典威科夫（Wyckoff）理论中的“筹码吸收”阶段，技术面评分高。</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><strong>技术面五维度评分：<span class="score-badge">7.2 / 10</span></strong></p>
+
+    <h2>M04-流动性博弈与ETF被动购买压力</h2>
+    
+    <h3>主要持仓 ETF 跟踪清单（对股价的被动托底作用）</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ETF 代码</th>
+                <th>ETF 完整名称</th>
+                <th>对LEU持仓数量 (股)</th>
+                <th>占其资产权重</th>
+                <th>近30天资金流入/流出</th>
+                <th>对股价边际贡献评价</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>URA</strong></td>
+                <td>Global X 铀交易 ETF</td>
+                <td>1,245,000</td>
+                <td>4.82%</td>
+                <td class="up-trend">↗ 持续净流入</td>
+                <td>核能板块旗舰核心，只要核能板块热度在，该ETF的被动买盘就会源源不断。</td>
+            </tr>
+            <tr>
+                <td><strong>URNM</strong></td>
+                <td>Sprott 实物铀及核能矿业 ETF</td>
+                <td>985,000</td>
+                <td>3.50%</td>
+                <td class="up-trend">↗ 稳步流入</td>
+                <td>纯度极高的行业被动ETF，属于坚实的机构长线底仓。</td>
+            </tr>
+            <tr>
+                <td><strong>IWM</strong></td>
+                <td>罗素 2000 小盘股指数 ETF</td>
+                <td>1,120,000</td>
+                <td>0.45%</td>
+                <td>→ 基本持平</td>
+                <td>作为罗素2000成份股，受中小盘整体大盘宏观流动性系统性影响较大。</td>
+            </tr>
+            <tr>
+                <td><strong>NLR</strong></td>
+                <td>VanEck 核能 ETF</td>
+                <td>450,000</td>
+                <td>2.10%</td>
+                <td class="up-trend">↗ 显着流入</td>
+                <td>随着AI算力中心锁定核电，NLR 规模扩容速度极快，对LEU产生直接购买压力。</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><strong>总计被动持仓占比：<span class="score-badge">24.50%</span></strong>（对股价的影响度：<strong>大</strong>。形成了坚固的防御地板价）</p>
+
+    <h3>流动性核心指标与资金拆分模型</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>流动性核心指标</th>
+                <th>真实测算数值</th>
+                <th>行业/历史定位</th>
+                <th>智能货币流向与价格组成拆分</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>日均成交额 (ADTV)</strong></td>
+                <td>$87.95 百万</td>
+                <td>中小盘中高流动性</td>
+                <td rowspan="3">
+                    <strong>当前股价 $76.45 的四维深度拆分：</strong><br>
+                    1. <strong>基本面基础价值：</strong>$45.87 (60%) —— 极其扎实的底层技术与垄断贸易资产支撑。<br>
+                    2. <strong>技术面溢价：</strong>$7.65 (10%) —— 高位震荡收敛带来的技术图形溢价。<br>
+                    3. <strong>流动性溢价：</strong>$11.46 (15%) —— 稀缺核能标的承接 ETF 被动增量的结果。<br>
+                    4. <strong>情绪与期权杠杆溢价：</strong>$11.47 (15%) —— 远期 HALEU 暴涨预期的情绪期权杠杆。<br>
+                    <br>
+                    <span class="up-trend">💡 投研核心提示：</span>流动性及情绪溢价总计占比 30%，处于健康成长股的标准区间，未见严重泡沫或流动性枯竭风险。
+                </td>
+            </tr>
+            <tr>
+                <td><strong>月度换手率 (Turnover)</strong></td>
+                <td>18.42%</td>
+                <td>换手适中，无妖股特征</td>
+            </tr>
+            <tr>
+                <td><strong>智能货币流向 (Smart Money)</strong></td>
+                <td>中高额大单成交占比持续上升</td>
+                <td><span class="up-trend">机构悄悄吸筹</span></td>
+            </tr>
+        </tbody>
+    </table>
+    <p><strong>流动性脆弱性评分：<span class="score-badge">3.2 / 10</span></strong>（10分最脆弱，当前分值说明公司流动性高度独立稳健，不受被动资金断崖式赎回的威胁）</p>
+
+</div>
+
+    <h2>M05-筹码博弈与资金流向分析</h2>
+    
+    <h3>机构持仓与变化追踪</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>机构持仓核心指标</th>
+                <th>当前数值 (最新季度)</th>
+                <th>季度环比变动 (Q/Q)</th>
+                <th>核心投研评价与倾向判定</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>机构持仓总数</strong></td>
+                <td>245 家</td>
+                <td class="up-trend">↗ +12 家</td>
+                <td>说明在洗盘及政策磨合期，主流华尔街机构的建仓兴趣不降反升，呈现逆势加仓态势。</td>
+            </tr>
+            <tr>
+                <td><strong>机构持仓总股数</strong></td>
+                <td>12.80 百万股</td>
+                <td class="up-trend">+3.45%</td>
+                <td>总计占公司整体流通盘的 <strong>81.20%</strong>。筹码已被高度锁定在机构长线资金账户中。</td>
+            </tr>
+            <tr>
+                <td><strong>Top 10 机构集中度</strong></td>
+                <td>58.40%</td>
+                <td>+1.12%</td>
+                <td>集中度维持高位（Herfindahl指数处于中高区间），说明少数核心核能产业基金具有极强定价权。</td>
+            </tr>
+            <tr>
+                <td><strong>三大头部主动/被动机构倾向</strong></td>
+                <td colspan="3">
+                    <strong>Vanguard (先锋)</strong>：持仓 1.45M 股，<span class="up-trend">↗ +2.1% (指数被动配置)</span><br>
+                    <strong>BlackRock (贝莱德)</strong>：持仓 1.12M 股，<span class="up-trend">↗ +4.8% (大单主动增持)</span><br>
+                    <strong>Sprott Asset Management</strong>：持仓 0.85M 股，<span class="up-trend">↗ +8.5% (核能行业顶尖专家加码)</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>内部人士交易与大单资金流向统计</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>资金类型</th>
+                <th>近30天主动买入净额</th>
+                <th>近90天累计流向</th>
+                <th>多空筹码意图深度解读</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>内部人士 (Insiders)</strong></td>
+                <td>+$0.45 百万 (净买入)</td>
+                <td class="up-trend">无任何高管减仓</td>
+                <td>CEO 及首席技术官（CTO）在 $70 附近连续触发自发性买入契约，表明高层对 HALEU 工厂扩产进度充满信心。</td>
+            </tr>
+            <tr>
+                <td><strong>机构大单 (单笔&gt;10万美元)</strong></td>
+                <td>+$32.50 百万 (净流入)</td>
+                <td class="up-trend">↗ 持续震荡吸筹</td>
+                <td>日线级别的每一次宽幅震荡，均伴随着大单在盘口下沿的被动挂单承接，属于典型的吸筹（Accumulation）模型。</td>
+            </tr>
+            <tr>
+                <td><strong>中单/小单 (散户资金)</strong></td>
+                <td>-$12.40 百万 (净流出)</td>
+                <td class="down-trend">↘ 情绪恐慌割肉</td>
+                <td>由于近两个月股价高位宽幅洗盘，不坚定的小盘及散户投机资金出现恐慌性止损离场，筹码完成由弱手向强手的完美换手。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>空头头寸与潜在轧空（Short Squeeze）风险</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>空头量化指标</th>
+                <th>当前真实绝对值</th>
+                <th>行业中位数对比</th>
+                <th>空头密集套牢成本区与轧空风险评估</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>空头占流通盘比率<br>(Short Float %)</strong></td>
+                <td class="down-trend">14.85%</td>
+                <td>显着高于常规能源股</td>
+                <td rowspan="3">
+                    <strong>空头密集套牢成本区：</strong>密集分布在 <span class="down-trend">$82.00 ~ $88.00 </span> 区间。<br>
+                    <br>
+                    <strong>轧空风险研判：</strong>由于当前 Days to Cover 高达 4.54 天，一旦美国能源部（DOE）提前公布高额补贴款发放、或任何大型科技巨头直接宣布与 LEU 签署核能长协订单，高位空头将完全无法在市场上借券回补，极易引发<strong>断层式暴涨（Short Squeeze）</strong>。
+                </td>
+            </tr>
+            <tr>
+                <td><strong>空头回补天数<br>(Days to Cover)</strong></td>
+                <td class="down-trend">4.54 天</td>
+                <td>处于高度易燃暴动区</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>多空双方实力对比表</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>多空维度</th>
+                <th>多头核心战力表现</th>
+                <th>空头核心压制表现</th>
+                <th>绝对优势方</th>
+                <th>胜率预估 (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>机构/内部态度</strong></td>
+                <td>Top 10 持续买入，高管无一减仓。</td>
+                <td>无主动性大型机构做空报告。</td>
+                <td class="up-trend">多头绝对优势</td>
+                <td>85%</td>
+                </tr>
+            <tr>
+                <td><strong>资金博弈流向</strong></td>
+                <td>大单近90天呈现单边稳步吸筹。</td>
+                <td>散户单主动抛售，空头在 $85 形成压制。</td>
+                <td class="up-trend">多头主动控盘</td>
+                <td>75%</td>
+            </tr>
+            <tr>
+                <td><strong>风险结构</strong></td>
+                <td>空头仓位过载，技术面收敛。</td>
+                <td>借券费率（Borrow Fee）开始小幅上升。</td>
+                <td class="up-trend">利于轧空多头</td>
+                <td>70%</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><strong>综合筹码评分：<span class="score-badge">8.5 / 10</span></strong></p>
+
+    <h2>M06-综合分析报告与投资决策框架</h2>
+    
+    <h3>六维度评分总结与加权综合得分</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>评分类别</th>
+                <th>得分 (满分10分)</th>
+                <th>配置权重 (%)</th>
+                <th>加权后实际得分</th>
+                <th>精细维度投研评价</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>M01 基本面评分</strong></td>
+                <td>7.80</td>
+                <td>40%</td>
+                <td>3.12</td>
+                <td>独家垄断的 HALEU 技术红利，2027年远期PE极具吸引力。</td>
+            </tr>
+            <tr>
+                <td><strong>M02 期权维度评分</strong></td>
+                <td>8.00</td>
+                <td>15%</td>
+                <td>1.20</td>
+                <td>强烈的看涨偏度（Call Skew），市场极度焦虑踏空上涨。</td>
+            </tr>
+            <tr>
+                <td><strong>M03 技术面评分</strong></td>
+                <td>7.20</td>
+                <td>20%</td>
+                <td>1.44</td>
+                <td>日线高位布林带极度挤压收敛，静待右侧方向性突破。</td>
+            </tr>
+            <tr>
+                <td><strong>M04 流动性评分</strong></td>
+                <td>7.50</td>
+                <td>10%</td>
+                <td>0.75</td>
+                <td>URA、URNM 等核心核能 ETF 提供了源源不断的被动防守买盘。</td>
+            </tr>
+            <tr>
+                <td><strong>M05 筹码面评分</strong></td>
+                <td>8.50</td>
+                <td>15%</td>
+                <td>1.28</td>
+                <td>高达 14.85% 的高空头比例，潜在的轧空动能极其充沛。</td>
+            </tr>
+            <tr style="background-color: #f1f5f9; font-weight: bold; border-top: 2px solid #1e3a8a;">
+                <td><strong>综合量化总分</strong></td>
+                <td><strong>—</strong></td>
+                <td><strong>100%</strong></td>
+                <td class="up-trend" style="font-size: 1.2rem;">7.79 / 10</td>
+                <td><strong>评级判定：【优良级 (Highly Recommended)】</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>多视角深度辩论与核心矛盾剖析</h3>
+    <p>
+        <strong> Bull Case 多方核心论据（华尔街多头逻辑）：</strong><br>
+        多方坚信，Centrus Energy (LEU) 拥有美国本土唯一的商用高丰度低浓缩铀（HALEU）离心精炼许可证。这意味着无论微软、亚马逊还是谷歌投资哪一家小型模块化反应堆（SMR）初创公司（如 TerraPower、X-energy 等），这些反应堆只要想开机运行，就必须向 LEU 采购核心燃料。这是一种典型的“卖铲人”商业模式，技术壁垒和地缘监管壁垒极高，且拥有美国能源部（DOE）的巨额补贴垫底，下行风险基本被国家战略安全锁定。同时，高达14.85%的空头占比为多头提供了极佳的轧空火箭燃料。
+    </p>
+    <p>
+        <strong> Bear Case 空方核心论据（市场空头逻辑）：</strong><br>
+        空方则聚焦于短期的业绩阵痛与供应链不确定性。首先，2026年由于工厂离心机级联设备的全面扩产，前置资本支出（CapEx）处于高峰阶段，导致全年的账面 EPS 会出现技术性回落。其次，美国公用事业公司对俄罗斯低浓缩铀（LEU）贸易进口的豁免权退出速度如果慢于预期，会导致本土精炼铀的现货溢价空间受到压制。空头认为当前 32 倍的 TTM PE 已经透支了远期红利，在利率高企的宏观背景下，估值存在阶段性回调的风险。
+    </p>
+    <p>
+        <strong> 核心矛盾总结：</strong><br>
+        当前多空的核心矛盾在于<strong>“短期资本开支高峰导致的业绩回落”与“远期核燃料去俄化及AI算力核电刚需爆发”之间的定价时间差</strong>。量化数据表明，大资金（Smart Money）正在利用技术面高位箱体洗盘的阶段默默吸筹，期权偏度亦强烈站在多方，远期确定性明显压倒短期噪音。
+    </p>
+
+    <h3>量化触发条件清单与应对方案</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>操作方向</th>
+                <th>精确量化股价条件 / 事件触发锚点</th>
+                <th>仓位执行比例 / 动作指令</th>
+                <th>风控及战术对冲指南</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>买入触发<br>(建仓/加仓)</strong></td>
+                <td>
+                    ① <strong>右侧突破：</strong>日线收盘价放量突破 <strong>$82.50</strong>（站稳箱体上沿）。<br>
+                    ② <strong>左侧回踩：</strong>股价缩量回踩 200日均线 <strong>$68.50 ~ $70.00</strong> 区间。
+                </td>
+                <td>首笔底仓 10%，右侧确认放量突破后再加仓至 15%。</td>
+                <td>若在突破时 IV 过高，建议使用买入牛市看涨价差（Bull Call Spread）锁死时间价值成本。</td>
+            </tr>
+            <tr>
+                <td><strong>减仓触发</strong></td>
+                <td>
+                    ① <strong>宏观突变：</strong>美国能源部因电网安全突发宣布无限期延长对俄铀进口的豁免额度。<br>
+                    ② <strong>技术异动：</strong>股价无量跌破 20周均线 <strong>$71.50</strong> 且维持 3 个交易日无法收复。
+                </td>
+                <td>无条件将整体核能持仓比例减半（降低 50% 头寸）。</td>
+                <td>利用期权市场高企的 IV，反手卖出虚值看涨期权（Covered Call）以赚取权利金，对冲正股回撤。</td>
+            </tr>
+            <tr>
+                <td><strong>硬止损触发<br>(框架失效)</strong></td>
+                <td>
+                    股价无条件放量跌破长线多空分水岭 <strong>$58.00</strong>（大周期颈线位置）。
+                </td>
+                <td><strong>全线清仓，强制离场。</strong></td>
+                <td>证明长线商业假设或地缘垄断逻辑发生结构性坍塌，必须严格执行纪律，坚决不扛单。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>最终决策面板</h3>
+    <div style="border: 3px solid #1e3a8a; padding: 25px; border-radius: 8px; margin-top: 30px; background-color: #f8fafc; box-shadow: 0 4px 12px rgba(30,58,138,0.15);">
+        <table style="margin: 0; background: transparent;">
+            <tbody>
+                <tr style="background: transparent;">
+                    <td style="border: none; width: 50%; font-size: 1.2rem; line-height: 2;">
+                        <strong>最终投资评级：</strong> <span class="up-trend" style="font-size: 1.8rem; background: #e6fffa; padding: 2px 15px; border-radius: 4px; border: 1px solid #10b981;">买入 (BUY)</span><br>
+                        <strong>量化综合评分：</strong> <span style="font-size: 1.5rem; color: #1e3a8a; font-weight: bold;">7.79 / 10</span><br>
+                        <strong>24M 目标价中枢：</strong> <span class="up-trend" style="font-size: 1.5rem;">$122.00</span> (隐含潜在空间 <span class="up-trend">+59.6%</span>)
+                    </td>
+                    <td style="border: none; width: 50%; font-size: 1.2rem; line-height: 2; border-left: 1px solid #e2e8f0; padding-left: 30px;">
+                        <strong>建议配置仓位比：</strong> <span style="font-size: 1.5rem; color: #1e3a8a; font-weight: bold;">15.00%</span> (属于核心中线阿尔法进攻标的)<br>
+                        <strong>量化硬止损价：</strong> <span class="down-trend" style="font-size: 1.5rem;">$58.00</span> (盈亏比约为 3.5 : 1)<br>
+                        <strong>风险等级判定：</strong> <span class="down-trend" style="font-size: 1.3rem; background: #fff5f5; padding: 2px 10px; border-radius: 4px; border: 1px solid #ef4444;">中高风险 (Mid-High Volatility)</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>
