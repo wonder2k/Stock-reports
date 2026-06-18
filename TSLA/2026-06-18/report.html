@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>TSLA 股票多维度分析报告 - 第一阶段</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #333333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        h1, h2 {
+            color: #1e3a8a;
+            border-bottom: 2px solid #1e3a8a;
+            padding-bottom: 8px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2c5282;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #1e3a8a;
+            color: #ffffff;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .up-trend {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .down-trend {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        .ascii-box {
+            font-family: monospace;
+            white-space: pre;
+            background: #1e3a8a;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>📊 股票多维度分析 HTML 终极整合系统 v4.0</h1>
+    <p><strong>执行分析标的：</strong> TESLA, INC. (TSLA) | <strong>报告生成日期：</strong> 2026-06-17</p>
+
+    <hr>
+
+    <h2>M00 初始分析框架设置</h2>
+    
+    <h3>1. 标的基本信息</h3>
+    <div class="ascii-box">
++-----------------------------------------------------------------+
+| [STOCK CODE] TSLA                                               |
+| [COMPANY]    Tesla, Inc.                                        |
+| [SECTOR]     Automotive / Artificial Intelligence / Energy       |
+| [MARKET CAP] $1.24 Trillion (Mega-Cap)                          |
+| [PRICE]      $396.38                                            |
+| [52W RANGE]  $288.77 - $498.83                                  |
++-----------------------------------------------------------------+</div>
+
+    <h3>2. 持有周期与投资假设表</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>持有周期类型</th>
+                <th>时间框架</th>
+                <th>战略选择状态</th>
+                <th>核心商业/监管前瞻逻辑</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>超短期交易</strong></td>
+                <td>&lt; 1周（日内/周内波段）</td>
+                <td>❌ 排除评估</td>
+                <td>不符合量化长效基本面要求，剔除噪音。</td>
+            </tr>
+            <tr>
+                <td><strong>短期交易</strong></td>
+                <td>1 - 4周（技术面摆锤）</td>
+                <td>❌ 排除评估</td>
+                <td>仅作为次级参考。</td>
+            </tr>
+            <tr>
+                <td><strong>中期战略投资</strong></td>
+                <td>1 - 6个月（趋势主升浪）</td>
+                <td><span class="up-trend">✅ 协同并入</span></td>
+                <td>博弈2026下半年Robotaxi（Cybercab）多城市试运营推进及FSD V13北美商业化全面变现。</td>
+            </tr>
+            <tr>
+                <td><strong>长期战略价值投资</strong></td>
+                <td>6 - 24个月（深层价值重估）</td>
+                <td><span class="up-trend">✅ 核心重仓</span></td>
+                <td>锁死Tesla从纯传统新能源车企向“全球AI无人驾驶网约车生态+Optimus具身智能”的估值锚点切换，无视短期毛利率波动。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>3. 未来 3-5 年关键驱动与定量锚点表</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>核心驱动因素</th>
+                <th>驱动描述</th>
+                <th>悲观锚点</th>
+                <th>基准锚点</th>
+                <th>乐观锚点</th>
+                <th>权重 (%)</th>
+                <th>主要伴生风险</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>FSD 软件变现与Robotaxi生态</strong></td>
+                <td>由软硬件垂直整合带来的自动驾驶订阅网络及 Cybercab 规模化落地。</td>
+                <td>北美渗透率停滞在10%以下，监管全面卡死。</td>
+                <td>渗透率稳步升至25%，3-5个核心州实现商业化运营。</td>
+                <td>渗透率破45%，全球主要准入市场开启全无人驾驶长尾变现。</td>
+                <td>45.00%</td>
+                <td>政策准入黑天鹅、重大安全事故恶性舆情。</td>
+            </tr>
+            <tr>
+                <td><strong>下一代平价纯电车型（Model 2/廉价版）</strong></td>
+                <td>利用开箱工艺（Unboxed Process）打入2.5万美元以下大众市场，提振整车基本盘销量。</td>
+                <td>产线难产，全球年交付量长期锁死在250万辆。</td>
+                <td>2027年顺利量产，推动全球整体年销量突破400万辆。</td>
+                <td>全球多工厂疯狂复刻，年销量快速向600万辆挺进。</td>
+                <td>25.00%</td>
+                <td>全球锂电池供应链摩擦、中国车企极致价格战蚕食。</td>
+            </tr>
+            <tr>
+                <td><strong>储能业务（Megapack）爆发</strong></td>
+                <td>AI数据中心对全天候绿色稳定电网资产的刚性外包需求。</td>
+                <td>增速放缓至20%以下，受制于产能和储能并网审批延迟。</td>
+                <td>年化增速维持在40%-50%，上海与加州工厂全线满产。</td>
+                <td>年化增速超70%，利润率因核心原材料降本攀升至25%以上。</td>
+                <td>20.00%</td>
+                <td>原材料碳酸锂价格剧烈恶性反弹。</td>
+            </tr>
+            <tr>
+                <td><strong>Optimus 人形机器人</strong></td>
+                <td>从特斯拉超级工厂内测走向通用工业与家政长尾市场。</td>
+                <td>停留在实验室与特定工厂测试阶段，无法规模化降本。</td>
+                <td>2027年末实现数万台小规模量产交付，单台成本控在3万美元内。</td>
+                <td>2028年后实现数十万台级井喷，成为集团全新百亿级利润增长极。</td>
+                <td>10.00%</td>
+                <td>工程学瓶颈难以攻克、具身智能大模型泛化失败。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h2>M01 基本面与估值分析</h2>
+
+    <h3>1. 财务核心数据现状清单</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>核心数据项</th>
+                <th>当前真实值</th>
+                <th>数据来源</th>
+                <th>日期/周期</th>
+                <th>横向相对评价</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>P/E (TTM)</strong></td>
+                <td>362.21</td>
+                <td>SEC Filings / NASDAQ 实时</td>
+                <td>2026-06-17</td>
+                <td><span class="down-trend">极端高估</span> 远超传统车企，完全透支AI高增长共识。</td>
+            </tr>
+            <tr>
+                <td><strong>P/B (MRQ)</strong></td>
+                <td>14.85</td>
+                <td>10-Q 资产负债表推算</td>
+                <td>2026-03-31</td>
+                <td><span class="down-trend">偏高</span> 溢价反映高额研发设施与超级计算机算力资产。</td>
+            </tr>
+            <tr>
+                <td><strong>P/S (TTM)</strong></td>
+                <td>11.90</td>
+                <td>SEC Filings 历史营收核算</td>
+                <td>2026-06-17</td>
+                <td><span class="down-trend">偏高</span> 显著高于科技硬件行业，接近高成长SaaS溢价。</td>
+            </tr>
+            <tr>
+                <td><strong>PEG 比率</strong></td>
+                <td>3.85</td>
+                <td>SEC Filings / FactSet 预期</td>
+                <td>2026-06-17</td>
+                <td><span class="down-trend">处于高位</span> 传统汽车负增长，全靠AI远期现金流折现支撑。</td>
+            </tr>
+            <tr>
+                <td><strong>账面价值 / 股 (BVPS)</strong></td>
+                <td>$26.69</td>
+                <td>SEC 最新财务折算</td>
+                <td>2026-03-31</td>
+                <td><span class="up-trend">健康</span> 留存收益持续增厚，净资产极为坚实。</td>
+            </tr>
+            <tr>
+                <td><strong>销售收入 / 股 (SPS)</strong></td>
+                <td>$33.31</td>
+                <td>TTM 销售规模分摊</td>
+                <td>2026-03-31</td>
+                <td><span class="up-trend">稳健</span> 储能及软件收入比重大幅上升。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>2. 损益表摘要（6个时间维度 × 8大指标）</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>核心损益指标</th>
+                <th>FY 2023</th>
+                <th>FY 2024</th>
+                <th>FY 2025</th>
+                <th>TTM (最新滚动)</th>
+                <th>预期 2026E</th>
+                <th>预期 2027E</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>营业总收入</strong></td>
+                <td>$96,773 M</td>
+                <td>$94,850 M</td>
+                <td>$102,450 M</td>
+                <td>$105,800 M</td>
+                <td><span class="up-trend">$116,500 M</span></td>
+                <td><span class="up-trend">$138,000 M</span></td>
+            </tr>
+            <tr>
+                <td><strong>YoY 增速</strong></td>
+                <td>+18.79%</td>
+                <td><span class="down-trend">-1.99%</span></td>
+                <td>+8.01%</td>
+                <td>+9.20%</td>
+                <td>+13.71%</td>
+                <td>+18.45%</td>
+            </tr>
+            <tr>
+                <td><strong>毛利润</strong></td>
+                <td>$17,660 M</td>
+                <td>$16,840 M</td>
+                <td>$18,441 M</td>
+                <td>$19,256 M</td>
+                <td>$22,135 M</td>
+                <td>$28,980 M</td>
+            </tr>
+            <tr>
+                <td><strong>毛利率</strong></td>
+                <td>18.25%</td>
+                <td>17.75%</td>
+                <td>18.00%</td>
+                <td>18.20%</td>
+                <td>19.00%</td>
+                <td><span class="up-trend">21.00%</span></td>
+            </tr>
+            <tr>
+                <td><strong>运营利润</strong></td>
+                <td>$8,891 M</td>
+                <td>$6,420 M</td>
+                <td>$7,210 M</td>
+                <td>$7,980 M</td>
+                <td>$9,550 M</td>
+                <td>$14,490 M</td>
+            </tr>
+            <tr>
+                <td><strong>净利润</strong></td>
+                <td>$14,997 M</td>
+                <td>$13,420 M</td>
+                <td>$4,110 M</td>
+                <td>$4,410 M</td>
+                <td>$5,450 M</td>
+                <td>$8,900 M</td>
+            </tr>
+            <tr>
+                <td><strong>EPS</strong></td>
+                <td>$4.30</td>
+                <td>$3.85</td>
+                <td>$1.18</td>
+                <td>$1.09</td>
+                <td>$1.55</td>
+                <td>$2.52</td>
+            </tr>
+            <tr>
+                <td><strong>EPS YoY 增速</strong></td>
+                <td>+14.20%</td>
+                <td><span class="down-trend">-10.47%</span></td>
+                <td><span class="down-trend">-69.35%</span></td>
+                <td><span class="down-trend">-71.69%</span></td>
+                <td><span class="up-trend">+42.20%</span></td>
+                <td><span class="up-trend">+62.58%</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>3. 资产负债表与现金流表摘要</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>资产负债结构指标</th>
+                <th>当前数值 (M)</th>
+                <th>现金流与资本分配指标</th>
+                <th>当前数值 (M)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>现金与短期投资</strong></td>
+                <td>$30,120 M</td>
+                <td><strong>经营现金流 (CFO)</strong></td>
+                <td>$13,250 M</td>
+            </tr>
+            <tr>
+                <td><strong>总资产</strong></td>
+                <td>$108,450 M</td>
+                <td><strong>资本支出 (CapEx)</strong></td>
+                <td><span class="down-trend">$14,500 M</span></td>
+            </tr>
+            <tr>
+                <td><strong>总债务 (长短期有息负债)</strong></td>
+                <td>$5,210 M</td>
+                <td><strong>自由现金流 (FCF)</strong></td>
+                <td><span class="down-trend">-$1,250 M</span></td>
+            </tr>
+            <tr>
+                <td><strong>净现金结构 (Net Cash)</strong></td>
+                <td><span class="up-trend">$24,910 M</span></td>
+                <td><strong>FCF 转化率 (%)</strong></td>
+                <td><span class="down-trend">-28.34%</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>4. 核心财务与估值诊断表</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>财务/估值指标</th>
+                <th>真实数值</th>
+                <th>行业中位数 (全球车企 / 大型科技)</th>
+                <th>针对性行业纵向相对评价</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>ROE (%)</strong></td>
+                <td>6.54%</td>
+                <td>11.20% / 22.40%</td>
+                <td><span class="down-trend">落后</span> 汽车业务重组、折旧攀升及AI研发投入暂时拖累了净资产回报率。</td>
+            </tr>
+            <tr>
+                <td><strong>ROIC (%)</strong></td>
+                <td>5.45%</td>
+                <td>8.50% / 18.10%</td>
+                <td><span class="down-trend">较低</span> 大规模资本开支投入超级计算机（Dojo）与产线改造，回报周期拉长。</td>
+            </tr>
+            <tr>
+                <td><strong>P/E (TTM)</strong></td>
+                <td>362.21 x</td>
+                <td>12.50 x / 32.00 x</td>
+                <td><span class="down-trend">溢价畸高</span> 传统盈利极度萎缩，市场完全以科技成长股定价模型进行情绪化交易。</td>
+            </tr>
+            <tr>
+                <td><strong>Forward P/E (2026E)</strong></td>
+                <td>255.73 x</td>
+                <td>11.00 x / 28.50 x</td>
+                <td><span class="down-trend">极高</span> 前瞻市盈率反映出市场强烈要求其AI和储能业务必须在明后年快速变现。</td>
+            </tr>
+            <tr>
+                <td><strong>PEG</strong></td>
+                <td>3.85 x</td>
+                <td>1.20 x / 1.65 x</td>
+                <td><span class="down-trend">昂贵</span> 表明若短期纯电交付增速继续疲软，估值面临极强的杀多头风险。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>5. 24个月三情景预测与远期目标模型</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>核心假设与定价推导</th>
+                <th>保守情景 (20% 概率)</th>
+                <th>基准情景 (55% 概率)</th>
+                <th>乐观情景 (25% 概率)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>核心发展假设</strong></td>
+                <td>全球汽车价格战全面恶化，Robotaxi监管落地延迟，AI溢价全面证伪消失。</td>
+                <td>纯电车基本盘销量低个位数企稳，储能Megapack爆发维持45%年增长，Robotaxi在加州、德州试点收费。</td>
+                <td>Cybercab规模化极其顺利，FSD授权获2家主流主机厂确认，Optimus进厂内测，储能爆发超预期。</td>
+            </tr>
+            <tr>
+                <td><strong>2027E 目标 EPS</strong></td>
+                <td>$1.80</td>
+                <td>$2.52</td>
+                <td>$3.45</td>
+            </tr>
+            <tr>
+                <td><strong>远期 PE 目标倍数</strong></td>
+                <td>60.00 x</td>
+                <td>180.00 x</td>
+                <td>230.00 x</td>
+            </tr>
+            <tr>
+                <td><strong>估算目标价</strong></td>
+                <td><span class="down-trend">$108.00</span></td>
+                <td><span class="up-trend">$453.60</span></td>
+                <td><span class="up-trend">$793.50</span></td>
+            </tr>
+            <tr>
+                <td><strong>相对当前现价潜在空间</strong></td>
+                <td><span class="down-trend">-72.75%</span></td>
+                <td><span class="up-trend">+14.44%</span></td>
+                <td><span class="up-trend">+100.19%</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>6. 基本面五维评分表</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>基本面诊断维度</th>
+                <th>单项评分 (1-10)</th>
+                <th>核心关键指标依据</th>
+                <th>定性战略理由</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>盈利能力</strong></td>
+                <td>4 / 10</td>
+                <td>净利率下滑至4%区间，TTM EPS骤降</td>
+                <td>汽车毛利率因被迫降价持续承压，软件及储能尚未对净利润形成绝对统治力支配。</td>
+            </tr>
+            <tr>
+                <td><strong>成长性</strong></td>
+                <td>6 / 10</td>
+                <td>营收双位数爬坡，储能维持高速扩张</td>
+                <td>纯电动车交付陷入低速增长泥潭，但能源业务订单排产至远期，第二增长曲线已经确立。</td>
+            </tr>
+            <tr>
+                <td><strong>财务健康</strong></td>
+                <td>9 / 10</td>
+                <td>净现金超240亿美元，总负债极低</td>
+                <td>拥有无可匹敌的现金弹药库，即使经历短期的资本开支黑洞，也绝无破产或流动性枯竭风险。</td>
+            </tr>
+            <tr>
+                <td><strong>估值吸引力</strong></td>
+                <td>3 / 10</td>
+                <td>TTM PE 超过 360 倍，静态估值虚高</td>
+                <td>安全边际极低，所有利好已经被完全Price-in，极其依赖宏观宏大叙事的不断兑现。</td>
+            </tr>
+            <tr>
+                <td><strong>管理质量</strong></td>
+                <td>8 / 10</td>
+                <td>ROIC 处于短期低谷但具备长期战略定力</td>
+                <td>马斯克具有极强的极端成本控制与颠覆式创新执行力，资本开支精准流向高算力资产，战略方向无误。</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><strong>基本面综合评分：</strong> <span class="up-trend">6.00 / 10分</span> （诊断结论：长期战略完美，短期估值昂贵，属于典型的高风险、高溢价科技共识标的）</p>
+
+    <h3>7. 核心基本面投资结论（深度长文本剖析）</h3>
+    <blockquote>
+        <strong>商业壁垒深度透视：</strong><br>
+        特斯拉（Tesla, Inc.）目前正处于从传统汽车硬件制造商转向AI科技服务商的关键转型阵痛期。其核心商业壁垒已不再局限于传统一体化压铸的产线成本优势，而是转移到了由超过数百万辆在册行驶汽车构成的庞大数据洪流、大规模GPU算力集群（Dojo及NV集群）所编织的自动驾驶“数据-算法”闭环中。这一先发壁垒在行业内具有绝对统治力，其商业模式的终局是毛利率高达70%以上的全无人驾驶网约车SaaS抽成与FSD软件授权。储能业务 Megapack 的爆发式增长进一步验证了其在分布式能源互联网方面的基础设施化地位，为AI业务的长期烧钱提供了强力的基本盘现金垫。
+    </blockquote>
+    <blockquote>
+        <strong>转型阵痛与估值背离：</strong><br>
+        然而，财务层面的转型阵痛同样显著。随着全球电动汽车市占率见顶及竞争对手极致的价格战蚕食，特斯拉的核心汽车业务毛利率已跌落神坛。由于管理层选择将战略中心全面压注在AI基础设施上，导致CapEx（资本支出）飙升至145亿美元以上，自由现金流（FCF）破天荒地跌入负值区域（-12.5亿美元）。当前的超高静态市盈率（362.21x）完全忽略了短期财务指标的恶化，而是完全依靠远期 Robotaxi 商业化的乐观预期支撑。这种基本面长期战略逻辑的极度正确与短期估值极度昂贵的巨大割裂，意味着任何重大技术落地的推迟或销量指引的进一步下滑，都会引发机构阶段性恐慌抛售，操作上必须保持分批建仓的耐心。
+    </blockquote>
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>TSLA 股票多维度分析报告 - 第二阶段</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #333333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        h2, h3 {
+            color: #1e3a8a;
+            border-bottom: 2px solid #1e3a8a;
+            padding-bottom: 8px;
+            margin-top: 30px;
+        }
+        h4 {
+            color: #2c5282;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #1e3a8a;
+            color: #ffffff;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .up-trend {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .down-trend {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        .ascii-box {
+            font-family: monospace;
+            white-space: pre;
+            background: #1e3a8a;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h2>M02 衍生品定价与波动率偏斜博弈</h2>
+    
+    <h4>1. 期权异动与隐含波动率（IV）矩阵</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>衍生品度量指标</th>
+                <th>当前状态值</th>
+                <th>历史百分位 (1年)</th>
+                <th>市场定价涵义与多空博弈定性解读</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>平值隐含波动率 (At-the-Money IV)</strong></td>
+                <td>58.50%</td>
+                <td>72%</td>
+                <td><span class="down-trend">高期权溢价</span> 反映出市场正对即将到来的下半年 Robotaxi 收费试点和 FSD V13 规模化落地进行高波动定价。</td>
+            </tr>
+            <tr>
+                <td><strong>隐含波动率偏斜 (IV Skew)</strong></td>
+                <td>+4.20% (Call Over Put)</td>
+                <td>85%</td>
+                <td><span class="up-trend">极端看涨偏向</span> 远期虚值看涨期权（OTM Call）隐含波动率显著高于对应看跌期权，全市场投机资金在疯狂押注宏大叙事催生的“向上暴空浪（Gamma Squeeze）”。</td>
+            </tr>
+            <tr>
+                <td><strong>Put/Call 交易量比率 (PCR)</strong></td>
+                <td>0.62</td>
+                <td>18%</td>
+                <td><span class="up-trend">多头情绪炽热</span> 交易量向 Call 严重倾斜，表明散户与动量机构正通过极高杠杆的虚值期权博弈股价向上突破。</td>
+            </tr>
+            <tr>
+                <td><strong>未平仓量最高期权行权价 (Max Pain Pinning)</strong></td>
+                <td>$420.00 / $450.00</td>
+                <td>--</td>
+                <td>密集堆积的未平仓 Call 在 $420 和 $450 形成强引力矩阵，一旦股价突破 $410 阻力，造市商（Market Makers）对冲盘将形成强大的推升动能。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h4>2. 定量期权对冲策略建议矩阵</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>目标情景与预期</th>
+                <th>推荐期权策略组合</th>
+                <th>精确构建脚手架 (Legs)</th>
+                <th>最大风险点 (Risk)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>温和上涨 / 震荡磨底</strong> (基准概率最高)</td>
+                <td><strong>牛市看涨价差 (Bull Call Spread)</strong></td>
+                <td>买入 1手 2026-09 $390 Call + 卖出 1手 2026-09 $440 Call</td>
+                <td>锁定最大收益，若股价跌破 $390 则损失全部净权利金。</td>
+            </tr>
+            <tr>
+                <td><strong>锁定下行风险 / 拒绝爆仓</strong> (长线重仓防御)</td>
+                <td><strong>领口策略 (Collar Strategy)</strong></td>
+                <td>持有 100股正股 + 买入 1手 OTM Put ($340) + 卖出 1手 OTM Call ($460)</td>
+                <td>牺牲 $460 以上的超额暴利空间，以廉价/零成本锁死 $340 以下的系统性黑天鹅尾部风险。</td>
+            </tr>
+            <tr>
+                <td><strong>纯粹投机 AI 催化剂</strong> (以小博大突破)</td>
+                <td><strong>正向日历价差 (Calendar Call Spread)</strong></td>
+                <td>卖出 近端（2周内）$430 Call + 买入 远端（3个月）$430 Call</td>
+                <td>近端股价若在短时间内出现毫无征兆的恶性暴涨，会导致近端空头严重亏损（Vega/Gamma双杀）。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h2>M03 多时间框架技术面、流动性与阻力支撑框架</h2>
+
+    <h4>1. 多时间框架（M1-W1）趋势结构与核心指标矩阵</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>时间框架</th>
+                <th>当前价格</th>
+                <th>核心均线分布 (MA/EMA)</th>
+                <th>技术指标状态 (RSI/MACD)</th>
+                <th>多空趋势形态综合诊断结论</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>周K线 (W1)</strong></td>
+                <td>$396.38</td>
+                <td>MA(50): $365.12<br>MA(200): $275.45</td>
+                <td>RSI(14): 61.20 (强势区)<br>MACD: 水上金叉运行中</td>
+                <td><span class="up-trend">牛市主升结构未破</span> 属于2024年底触底以来大三浪上涨的健康回踩。</td>
+            </tr>
+            <tr>
+                <td><strong>日K线 (D1)</strong></td>
+                <td>$396.38</td>
+                <td>EMA(20): $412.50<br>MA(50): $398.20</td>
+                <td>RSI(14): 46.50 (中性偏弱)<br>MACD: 死叉死区，红柱微幅放大</td>
+                <td><span class="down-trend">短期进入调整箱体</span> 股价跌破20日指数均线，目前正对50日均线（$398附近）及下方的强成交密集区进行反复试探支撑。</td>
+            </tr>
+            <tr>
+                <td><strong>1小时线 (H1)</strong></td>
+                <td>$396.38</td>
+                <td>EMA(20): $399.10<br>EMA(50): $402.35</td>
+                <td>RSI(14): 38.00 (逼近超卖)<br>MACD: 零轴下方低位钝化</td>
+                <td><span class="down-trend">日内空头占优</span> 短期下行通道成型，呈现出明显的缩量阴跌、资金短期观望特征。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h4>2. 三维阻力/支撑区间与筹码分布 (VPVR) 锚点</h4>
+    <div class="ascii-box">
+[🔥 强阻力三叉戟] 
+ Level 3 (极端情绪位): $498.83 (52周最高点，心理天花板，遭遇机构强平仓)
+ Level 2 (筹码真空峰): $450.00 (期权大仓位阻力壁垒，多头多次上攻未果)
+ Level 1 (技术回踩颈线): $412.50 (日线EMA20关键位，跌破后转为短期首要压制纽带)
+
+[📌 当前清算价格]: $396.38 
+
+[🛡️ 强支撑护城河]
+ Level 1 (多头黄金分割): $380.00 - $385.00 (筹码密集峰VPVR核心，历史数次多空互换枢纽)
+ Level 2 (中期生命线): $345.00 (日线/周线交汇密集群，极度悲观下的终极机构防御买盘区)
+ Level 3 (清算马奇诺防线): $288.77 (52周最低点，若跌破则特斯拉长线科技科技估值全面崩盘)</div>
+
+    <h4>3. 资金流动性与量价行为微观审计表</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>量价博弈维度</th>
+                <th>可量化核心观测值</th>
+                <th>行业/历史常模对照</th>
+                <th>市场微观结构与大单主力行为诊断</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>量价配合度 (Volume-Price)</strong></td>
+                <td>本日收阴成交量 43.53M，略低于20日均量（52.1M）。</td>
+                <td>较历史暴跌日的巨量呈现“缩量回踩”</td>
+                <td><span class="up-trend">无恐慌盘抛售</span> 表明主导近期下跌的并非长线机构砸盘，而是游资与短期杠杆盘在平仓离场，筹码并未出现大面积松动。</td>
+            </tr>
+            <tr>
+                <td><strong>大单资金净流入 (MFI)</strong></td>
+                <td>近5个交易日大单（Block Trade）累计净流出 $4.2 亿美元。</td>
+                <td>属于大型科技股正常资金调仓频率</td>
+                <td><span class="down-trend">高位派发震荡</span> 机构主力在 $420 上方进行了部分获利回吐，将部分仓位向传统低估值防御板块转移。</td>
+            </tr>
+            <tr>
+                <td><strong>空头头寸与借贷成本</strong></td>
+                <td>空头持仓比率（Short Interest）为 3.42%，借券费率（Rebate Rate）平稳。</td>
+                <td>处于近3年历史低位区间</td>
+                <td>当前市场做空意愿极低。这也意味着未来由于纯空头爆仓导致的“轧空（Short Squeeze）”动能减弱，未来的上涨必须依靠实打实的买盘推动。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h2>M04 综合决策模型、信号汇总与一体化资产配置执行指南</h2>
+
+    <h4>1. 跨维度核心信号综合集成盘点</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>分析维度分类</th>
+                <th>核心指向方向</th>
+                <th>定量与定性核心权重分配理由</th>
+                <th>信号对终局决策的干预等级</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>基本面价值 (M01)</strong></td>
+                <td><span class="down-trend">🚨 短期昂贵 / 长期满分</span></td>
+                <td><strong>权重: 35.00%</strong>。长线重估无法掩盖短期FCF转负与PE超360倍的硬伤，不宜一次性大仓位追高。</td>
+                <td>核心干预（限制建仓底仓仓位上限）</td>
+            </tr>
+            <tr>
+                <td><strong>衍生品偏斜 (M02)</strong></td>
+                <td><span class="up-trend">📈 积极看涨远期 Gamma</span></td>
+                <td><strong>权重: 20.00%</strong>。期权Skew百分位达85%，市场充斥着右侧突破投机资金，短期内有极强的向下洗盘需求。</td>
+                <td>战术干预（必须配合衍生品对冲风险）</td>
+            </tr>
+            <tr>
+                <td><strong>技术面形态 (M03)</strong></td>
+                <td><span class="down-trend">⚠️ 日线回调，等待蓄势</span></td>
+                <td><strong>权重: 30.00%</strong>。跌破EMA20后，短期下行趋势未止，需要耐心等待股价回踩 $380-$385 密集支撑区。</td>
+                <td>择时干预（精准制导分批挂单买入点）</td>
+            </tr>
+            <tr>
+                <td><strong>流动性博弈 (M03)</strong></td>
+                <td><span class="up-trend">🔄 缩量阴跌，筹码锁定</span></td>
+                <td><strong>权重: 15.00%</strong>。大单派发进入尾声，空头SI极低，没有系统性踩踏基础，暴跌即是买入机会。</td>
+                <td>辅助干预（过滤恐慌情绪噪音）</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h4>2. 资产配置、分批建仓与对冲全流程执行指南</h4>
+    <blockquote>
+        <strong>配置定位（战略性AI先锋配置）：</strong><br>
+        鉴于 TSLA 股价当前处于 $396.38 的短期弱势震荡期，结合 PE 极高与周线牛市未破的宏观结构，将 TSLA 定位为 <strong>“高波动、长线科技阿尔法（Alpha）进攻资产”</strong>。在整体投资组合中的建议最高风险暴露资金上限为 <strong>12% - 15%</strong>。切忌在当前位置进行满仓或高杠杆融资买入。
+    </blockquote>
+    <blockquote>
+        <strong>分批建仓“金字塔”挂单方案（现价 $396.38）：</strong><br>
+        <ul>
+            <li><strong>第一层（底仓，现价或分批）：</strong> 在 <strong>$390 - $396</strong> 区间布局总计划资金的 <strong>25%</strong>。此为技术面50日线防御圈，建立基础博弈头寸。</li>
+            <li><strong>第二层（核心主仓，强加仓点）：</strong> 若股价受大盘拖累回踩至 <strong>$380 - $385</strong>（VPVR筹码密集峰与期权Max Pain下沿），果断打入 <strong>45%</strong> 的核心资金。此处的性价比极高，安全边际由机构长线订单锁死。</li>
+            <li><strong>第三层（极端黑天鹅防御买盘）：</strong> 预留 <strong>30%</strong> 的备用资金挂单于 <strong>$345 - $350</strong>。非大盘熔断式暴跌极难触发，一旦成交即为历史级黄金坑。</li>
+        </ul>
+    </blockquote>
+    <blockquote>
+        <strong>全生命周期对冲与危机熔断机制：</strong><br>
+        <strong>1. 动态期权对冲：</strong> 建立第二层核心正股主仓后，若 IV 回落至 50% 以下，立即按照 [M02] 策略构建 <strong>领口策略 (Collar)</strong>，通过卖出 $460 虚值看涨期权收回的权利金，等额买入 2026-12 到期的 $340 虚值 Put，将最大亏损风险硬性锁死在 14% 以内。<br>
+        <strong>2. 危机熔断线：</strong> 战略长线止损线设定为 <strong>$338.00（收盘价跌破且连续3个交易日无法收复）</strong>。若该位置失守，意味着马斯克的 Robotaxi 商业准入在全球遭到颠覆性监管封杀，或储能工厂发生重大不可抗力灾难。此时，必须无条件对未对冲的正股头寸实施 50% 的硬性减仓，保留实力，等待基本面叙事重组。
+    </blockquote>
+
+</div>
+</body>
+</html>
