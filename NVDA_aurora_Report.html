@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NVDA_aurora — Aurora Analysis Report</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js" integrity="sha384-0fn0yC/2J95JdMNZyJJK4r7w/5zAs8KfJyhqM+PDiSYqMVoWmU6FYGNq6bMb1xL" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabernet-grafik@400,500,600,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* ===========================================
+   AURORA — Theme Variables
+   =========================================== */
+:root {
+    --bg-primary: #0c0a1e;
+    --bg-secondary: #151230;
+    --bg-card: rgba(21, 18, 48, 0.7);
+    --text-primary: #f0edff;
+    --text-secondary: #a89cd6;
+    --accent-1: #6366f1;
+    --accent-2: #06b6d4;
+    --border-glow: rgba(99, 102, 241, 0.2);
+    --glow-indigo: rgba(99, 102, 241, 0.25);
+    --glow-cyan: rgba(6, 182, 212, 0.2);
+    --font-display: 'Cabernet Grafik', serif;
+    --font-body: 'Inter', sans-serif;
+    --title-size: clamp(2rem, 7vw, 5.5rem);
+    --h2-size: clamp(1.25rem, 3vw, 2.2rem);
+    --h3-size: clamp(0.9rem, 1.8vw, 1.35rem);
+    --body-size: clamp(0.75rem, 1.5vw, 1.05rem);
+    --small-size: clamp(0.6rem, 0.9vw, 0.8rem);
+    --slide-padding: clamp(1.5rem, 5vw, 4rem);
+    --content-gap: clamp(0.75rem, 2vw, 2rem);
+    --element-gap: clamp(0.35rem, 1vw, 1rem);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow-x: hidden; background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-body); }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+
+/* ===========================================
+   SLIDE BASE
+   =========================================== */
+.slide {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.slide-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-height: 100%;
+    overflow: hidden;
+    padding: var(--slide-padding);
+}
+
+/* ===========================================
+   GRID
+   =========================================== */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+/* ===========================================
+   AURORA Decorative Elements
+   =========================================== */
+/* Subtle dot pattern instead of grid lines */
+.dots-bg {
+    background-image: radial-gradient(rgba(168, 156, 214, 0.08) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+/* Aurora wave overlay for title slide */
+.aurora-wave {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+.aurora-wave::before {
+    content: '';
+    position: absolute;
+    width: 120%;
+    height: 60%;
+    top: -10%;
+    left: -10%;
+    background:
+        radial-gradient(ellipse 80% 50% at 20% 30%, rgba(99, 102, 241, 0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 60% 20%, rgba(6, 182, 212, 0.10) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 35% at 40% 60%, rgba(99, 102, 241, 0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 70% 45% at 80% 50%, rgba(6, 182, 212, 0.06) 0%, transparent 70%);
+    filter: blur(60px);
+    animation: aurora-drift 8s ease-in-out infinite alternate;
+}
+.aurora-wave::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 40%;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(12, 10, 30, 0.6) 0%, transparent 100%);
+}
+@keyframes aurora-drift {
+    0% { transform: translateX(0) scale(1); opacity: 0.7; }
+    50% { transform: translateX(5%) scale(1.1); opacity: 1; }
+    100% { transform: translateX(-3%) scale(0.95); opacity: 0.8; }
+}
+
+.card-glow {
+    box-shadow: 0 0 20px var(--glow-indigo), 0 0 40px rgba(99, 102, 241, 0.06);
+    border: 1px solid var(--border-glow);
+}
+.card-glow-cyan {
+    box-shadow: 0 0 20px var(--glow-cyan), 0 0 40px rgba(6, 182, 212, 0.06);
+    border: 1px solid rgba(6, 182, 212, 0.2);
+}
+.accent-line {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    margin-bottom: clamp(0.75rem, 2vw, 1.5rem);
+    border-radius: 2px;
+}
+
+/* ===========================================
+   Reveal Animations
+   =========================================== */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo); }
+.reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo); }
+.reveal-scale { opacity: 0; transform: scale(0.92); transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo); }
+.slide.visible .reveal, .slide.visible .reveal-left, .slide.visible .reveal-scale { opacity: 1; transform: none; }
+.reveal:nth-child(2) { transition-delay: 0.1s; }
+.reveal:nth-child(3) { transition-delay: 0.2s; }
+.reveal:nth-child(4) { transition-delay: 0.3s; }
+.reveal-left:nth-child(2) { transition-delay: 0.1s; }
+.reveal-left:nth-child(3) { transition-delay: 0.2s; }
+
+/* ===========================================
+   Navigation Dots
+   =========================================== */
+.nav-dots {
+    position: fixed;
+    right: clamp(10px, 2vw, 24px);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.nav-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(168, 156, 214, 0.15);
+    border: 1px solid rgba(168, 156, 214, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.nav-dot.active {
+    background: var(--accent-1);
+    box-shadow: 0 0 12px var(--glow-indigo);
+    border-color: var(--accent-1);
+}
+.nav-dot:hover { background: rgba(99, 102, 241, 0.5); }
+
+/* ===========================================
+   Keyboard Hint
+   =========================================== */
+.keyboard-hint {
+    position: fixed;
+    bottom: clamp(12px, 2vh, 20px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    font-size: var(--small-size);
+    color: rgba(240, 237, 255, 0.2);
+    font-family: var(--font-body);
+    pointer-events: none;
+}
+.keyboard-hint kbd {
+    display: inline-block;
+    padding: 2px 6px;
+    border: 1px solid rgba(240, 237, 255, 0.1);
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: var(--small-size);
+}
+
+/* ===========================================
+   SLIDE 1 — Title Slide
+   =========================================== */
+.title-slide { text-align: center; justify-content: center; }
+.title-slide .slide-content { align-items: center; position: relative; z-index: 1; }
+.rating-badge {
+    display: inline-block;
+    padding: clamp(6px, 1vw, 12px) clamp(16px, 3vw, 36px);
+    border-radius: 50px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--h3-size);
+    letter-spacing: 0.05em;
+    margin-bottom: var(--content-gap);
+}
+.rating-badge.buy { background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; }
+.rating-badge.accumulate { background: linear-gradient(135deg, #86efac, #22c55e); color: #052e16; }
+.rating-badge.hold { background: linear-gradient(135deg, #facc15, #eab308); color: #422006; }
+.rating-badge.reduce { background: linear-gradient(135deg, #f97316, #ea580c); color: #fff; }
+.rating-badge.sell { background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; }
+.ticker-symbol {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--title-size);
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.company-name { font-size: var(--h2-size); color: var(--text-secondary); margin-bottom: var(--element-gap); }
+.sub-info { font-size: var(--body-size); color: var(--text-secondary); }
+.sub-info strong { color: var(--text-primary); }
+
+/* ===========================================
+   SLIDE 2 — Key Metrics
+   =========================================== */
+.metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.5rem, 1.5vw, 1rem); }
+.metric-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(168, 156, 214, 0.08);
+    border-radius: 12px;
+    padding: clamp(1rem, 2vw, 1.75rem);
+    text-align: center;
+    backdrop-filter: blur(4px);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.metric-card:hover { border-color: var(--accent-1); box-shadow: 0 0 20px var(--glow-indigo); }
+.metric-label { font-size: var(--small-size); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.metric-value { font-family: var(--font-display); font-weight: 600; font-size: var(--h3-size); color: var(--text-primary); }
+.metric-value.positive { color: #22c55e; }
+.metric-value.negative { color: #ef4444; }
+.metric-value.warning { color: #facc15; }
+.metric-value.neutral { color: var(--accent-2); }
+
+/* ===========================================
+   SLIDE 3 — Radar Chart
+   =========================================== */
+.radar-wrapper { flex: 1; width: 100%; min-height: 0; display: flex; align-items: center; justify-content: center; }
+#radarChart { width: 100%; height: 100%; max-height: min(70vh, 500px); }
+
+/* ===========================================
+   SLIDE 4 — Bull / Bear Debate
+   =========================================== */
+.debate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 2vw, 2rem); flex: 1; max-height: 75%; }
+.debate-panel {
+    padding: clamp(1rem, 2vw, 2rem);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vh, 1rem);
+    overflow-y: auto;
+}
+.debate-panel.bull {
+    background: rgba(34, 197, 94, 0.06);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+.debate-panel.bear {
+    background: rgba(239, 68, 68, 0.06);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+.debate-title { font-family: var(--font-display); font-weight: 600; font-size: var(--h3-size); }
+.debate-panel ul { list-style: none; display: flex; flex-direction: column; gap: clamp(0.4rem, 1vh, 0.8rem); }
+.debate-panel li {
+    font-size: var(--body-size);
+    line-height: 1.5;
+    color: var(--text-secondary);
+    padding-left: 1.2em;
+    position: relative;
+}
+.debate-panel li::before { content: "\25B8"; position: absolute; left: 0; }
+.debate-panel.bull li::before { color: #22c55e; }
+.debate-panel.bear li::before { color: #ef4444; }
+
+/* ===========================================
+   SLIDE 5 — Final Decision
+   =========================================== */
+.final-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 120px), 1fr)); gap: clamp(0.5rem, 1vw, 0.75rem); }
+.score-item {
+    text-align: center;
+    padding: clamp(0.5rem, 1.5vw, 1rem);
+    background: var(--bg-card);
+    border-radius: 10px;
+    border: 1px solid rgba(168, 156, 214, 0.06);
+}
+.score-label { font-size: var(--small-size); color: var(--text-secondary); }
+.score-value { font-family: var(--font-display); font-weight: 600; font-size: var(--h3-size); margin-top: 4px; }
+.final-score-big { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.5rem, 8vw, 6rem); line-height: 1; }
+.final-rating-big { font-family: var(--font-display); font-weight: 700; font-size: var(--h2-size); letter-spacing: 0.08em; }
+
+/* ===========================================
+   Responsive
+   =========================================== */
+@media (max-height: 700px) {
+    :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.5rem, 1.5vw, 1rem); --title-size: clamp(1.5rem, 5.5vw, 3rem); --h2-size: clamp(1rem, 2.5vw, 1.6rem); }
+    .debate-panel { padding: clamp(0.5rem, 1.5vw, 1rem); }
+    .keyboard-hint { display: none; }
+}
+@media (max-height: 600px) {
+    :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.2rem, 5vw, 2.5rem); --body-size: clamp(0.65rem, 1.1vw, 0.85rem); }
+    .nav-dots { display: none; }
+    .debate-grid { grid-template-columns: 1fr; max-height: 85%; }
+    .debate-panel ul { gap: 0.3rem; }
+}
+@media (max-width: 600px) {
+    :root { --title-size: clamp(1.5rem, 8vw, 2.8rem); }
+    .metric-grid { grid-template-columns: repeat(2, 1fr); }
+    .debate-grid { grid-template-columns: 1fr; }
+    .keyboard-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+    html { scroll-behavior: auto; }
+    .aurora-wave::before { animation: none; }
+}
+</style>
+</head>
+<body>
+<!-- Navigation Dots -->
+<nav class="nav-dots" id="navDots"></nav>
+<div class="keyboard-hint">Use <kbd>&uarr;</kbd><kbd>&darr;</kbd> or <kbd>Space</kbd> to navigate slides &middot; Scroll wheel</div>
+
+<!-- ============================================
+     SLIDE 1 — Title
+     ============================================ -->
+<section class="slide title-slide">
+    <div class="aurora-wave"></div>
+    <div class="slide-content">
+        <div class="rating-badge buy reveal">BUY</div>
+        <div class="ticker-symbol reveal">NVDA_aurora</div>
+        <div class="company-name reveal">NVIDIA Corp</div>
+        <div class="sub-info reveal">
+            Score <strong>8.5</strong> &middot; 全新深度研究 &middot; 2026-06-07
+        </div>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 2 — Key Metrics
+     ============================================ -->
+<section class="slide dots-bg">
+    <div class="slide-content">
+        <div class="accent-line reveal"></div>
+        <h2 class="reveal" style="font-family:var(--font-display);font-size:var(--h2-size);margin-bottom:var(--content-gap);">Key Metrics</h2>
+        <div class="metric-grid reveal-scale">
+            <div class="metric-card">
+                <div class="metric-label">Price</div>
+                <div class="metric-value neutral">185.40</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">RSI (14)</div>
+                <div class="metric-value neutral">62.5</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">PE Ratio</div>
+                <div class="metric-value neutral">28.5</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Short %</div>
+                <div class="metric-value neutral">2.1%</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">YTD</div>
+                <div class="metric-value positive">+120.5%</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">MACD</div>
+                <div class="metric-value neutral" style="font-size:var(--small-size);">Bullish</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 3 — Radar Chart
+     ============================================ -->
+<section class="slide">
+    <div class="slide-content">
+        <div class="accent-line reveal"></div>
+        <h2 class="reveal" style="font-family:var(--font-display);font-size:var(--h2-size);margin-bottom:clamp(0.5rem,1.5vw,1rem);">5-Dimension Score Model</h2>
+        <div class="radar-wrapper reveal-scale">
+            <div id="radarChart"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 4 — Bull / Bear Debate
+     ============================================ -->
+<section class="slide dots-bg">
+    <div class="slide-content">
+        <div class="accent-line reveal"></div>
+        <h2 class="reveal" style="font-family:var(--font-display);font-size:var(--h2-size);margin-bottom:clamp(0.5rem,1.5vw,1rem);">Bull vs Bear Debate</h2>
+        <div class="debate-grid reveal-scale">
+            <div class="debate-panel bull">
+                <div class="debate-title" style="color:#22c55e;">Bull Case</div>
+                <ul><li>AI tailwind</li><li>Excellent margins</li></ul>
+            </div>
+            <div class="debate-panel bear">
+                <div class="debate-title" style="color:#ef4444;">Bear Case</div>
+                <ul><li>Valuation</li><li>Competition</li></ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 5 — Final Decision
+     ============================================ -->
+<section class="slide" style="text-align:center;">
+    <div class="slide-content" style="align-items:center;">
+        <div class="reveal" style="margin-bottom:var(--content-gap);">
+            <div class="final-score-big" style="background:linear-gradient(135deg, var(--accent-1), var(--accent-2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">8.5</div>
+            <div style="font-size:var(--small-size);color:var(--text-secondary);letter-spacing:0.08em;text-transform:uppercase;margin-top:clamp(0.25rem,0.5vw,0.5rem);">Score</div>
+        </div>
+        <div class="rating-badge buy reveal">BUY</div>
+        <div class="sub-info reveal" style="margin-top:var(--content-gap);">全新深度研究 &middot; Framework v5 &middot; 2026-06-07</div>
+        <div class="final-grid reveal" style="margin-top:var(--content-gap);max-width:600px;width:100%;">
+            <div class="score-item"><div class="score-label">基本面</div><div class="score-value" style="color:#22c55e">8</div></div><div class="score-item"><div class="score-label">技术面</div><div class="score-value" style="color:#facc15">7.5</div></div><div class="score-item"><div class="score-label">情绪面</div><div class="score-value" style="color:#22c55e">8.5</div></div><div class="score-item"><div class="score-label">宏观</div><div class="score-value" style="color:#22c55e">9</div></div><div class="score-item"><div class="score-label">风险</div><div class="score-value" style="color:#facc15">7.5</div></div>
+        </div>
+    </div>
+</section>
+
+<script>
+// ==========================================
+// SlidePresentation Controller
+// ==========================================
+class SlidePresentation {
+    constructor() {
+        this.slides = document.querySelectorAll('.slide');
+        this.current = 0;
+        this.isScrolling = false;
+        this.setupObserver();
+        this.setupKeyboard();
+        this.setupWheel();
+        this.setupTouch();
+        this.setupNavDots();
+        this.initChart();
+    }
+    setupObserver() {
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                entry.target.classList.toggle('visible', entry.isIntersecting);
+                if (entry.isIntersecting) {
+                    this.current = Array.from(this.slides).indexOf(entry.target);
+                    this.updateDots();
+                }
+            });
+        }, { threshold: 0.3 });
+        this.slides.forEach(s => obs.observe(s));
+    }
+    goTo(i) {
+        if (i < 0 || i >= this.slides.length || this.isScrolling) return;
+        this.isScrolling = true;
+        this.slides[i].scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => { this.isScrolling = false; }, 600);
+    }
+    setupKeyboard() {
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.goTo(this.current + 1); }
+            if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); this.goTo(this.current - 1); }
+        });
+    }
+    setupWheel() {
+        let ticking = false;
+        document.addEventListener('wheel', e => {
+            if (ticking) return;
+            ticking = true;
+            setTimeout(() => { ticking = false; }, 500);
+            if (e.target.closest('.debate-panel')) return;
+            if (e.deltaY > 0) this.goTo(this.current + 1);
+            else this.goTo(this.current - 1);
+        }, { passive: true });
+    }
+    setupTouch() {
+        let startY = 0;
+        document.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
+        document.addEventListener('touchend', e => {
+            const dy = startY - e.changedTouches[0].clientY;
+            if (Math.abs(dy) > 40) {
+                if (dy > 0) this.goTo(this.current + 1);
+                else this.goTo(this.current - 1);
+            }
+        }, { passive: true });
+    }
+    setupNavDots() {
+        const container = document.getElementById('navDots');
+        container.innerHTML = '';
+        this.slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+            dot.addEventListener('click', () => this.goTo(i));
+            container.appendChild(dot);
+        });
+    }
+    updateDots() {
+        document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+            dot.classList.toggle('active', i === this.current);
+        });
+    }
+    initChart() {
+        const dom = document.getElementById('radarChart');
+        if (!dom) return;
+        const chart = echarts.init(dom, 'dark');
+        try {
+            const scores = [8,7.5,8.5,9,7.5];
+            const dimLabels = ['基本面','技术面','情绪面','宏观','风险'];
+            const indicators = dimLabels.map(name => ({ name, max: 10 }));
+            const values = scores;
+            chart.setOption({
+                backgroundColor: 'transparent',
+                radar: {
+                    indicator: indicators,
+                    shape: 'circle',
+                    splitNumber: 5,
+                    axisName: { color: '#a89cd6', fontSize: 11 },
+                    splitLine: { lineStyle: { color: 'rgba(99,102,241,0.08)' } },
+                    splitArea: { areaStyle: { color: ['rgba(99,102,241,0.02)', 'rgba(99,102,241,0.04)'] } },
+                    axisLine: { lineStyle: { color: 'rgba(99,102,241,0.1)' } }
+                },
+                series: [{
+                    type: 'radar',
+                    data: [{
+                        value: values,
+                        name: 'Score',
+                        areaStyle: { color: 'rgba(99,102,241,0.15)' },
+                        lineStyle: { color: '#6366f1', width: 2 },
+                        itemStyle: { color: '#6366f1' }
+                    }]
+                }]
+            });
+        } catch (e) {
+            chart.setOption({
+                backgroundColor: 'transparent',
+                radar: {
+                    indicator: [
+                        { name: 'Fundamental', max: 10 },
+                        { name: 'Technical', max: 10 },
+                        { name: 'Sentiment', max: 10 },
+                        { name: 'Macro', max: 10 },
+                        { name: 'Risk', max: 10 }
+                    ],
+                    shape: 'circle',
+                    splitNumber: 5,
+                    axisName: { color: '#a89cd6', fontSize: 11 },
+                    splitLine: { lineStyle: { color: 'rgba(99,102,241,0.08)' } },
+                    splitArea: { areaStyle: { color: ['rgba(99,102,241,0.02)', 'rgba(99,102,241,0.04)'] } },
+                    axisLine: { lineStyle: { color: 'rgba(99,102,241,0.1)' } }
+                },
+                series: [{
+                    type: 'radar',
+                    data: [{ value: [5, 5, 5, 5, 5], name: 'Score', areaStyle: { color: 'rgba(99,102,241,0.15)' }, lineStyle: { color: '#6366f1', width: 2 }, itemStyle: { color: '#6366f1' } }]
+                }]
+            });
+        }
+        window.addEventListener('resize', () => chart.resize());
+    }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>

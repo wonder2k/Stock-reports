@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NVDA_glassmorphism - Glass Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js" integrity="sha384-0fn0yC/2J95JdMNZyJJK4r7w/5zAs8KfJyhqM+PDiSYqMVoWmU6FYGNq6bMb1xL" crossorigin="anonymous"></script>
+<style>
+/* ===== Reset & Base ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+:root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-card: rgba(255, 255, 255, 0.05);
+    --bg-card-hover: rgba(255, 255, 255, 0.08);
+    --bg-card-active: rgba(255, 255, 255, 0.12);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent-1: #38bdf8;
+    --accent-2: #818cf8;
+    --accent-gradient: linear-gradient(135deg, #38bdf8, #818cf8);
+    --border-glass: rgba(255, 255, 255, 0.1);
+    --border-glass-strong: rgba(255, 255, 255, 0.2);
+    --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+    --font-display: 'Inter', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* ===== Subtle Dot Pattern Background ===== */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: radial-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ===== Ambient Glow Orbs ===== */
+.orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+}
+.orb-1 {
+    width: 500px; height: 500px;
+    background: rgba(56, 189, 248, 0.08);
+    top: -200px; right: -150px;
+    animation: orbFloat 20s ease-in-out infinite;
+}
+.orb-2 {
+    width: 400px; height: 400px;
+    background: rgba(129, 140, 248, 0.07);
+    bottom: -150px; left: -100px;
+    animation: orbFloat 25s ease-in-out infinite reverse;
+}
+.orb-3 {
+    width: 300px; height: 300px;
+    background: rgba(56, 189, 248, 0.05);
+    bottom: 20%; right: 10%;
+    animation: orbFloat 18s ease-in-out infinite 5s;
+}
+
+@keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(40px, -30px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+/* ===== Slide Container (Scroll-Snap) ===== */
+.slides-container {
+    width: 100vw;
+    height: 100vh; height: 100dvh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    -ms-scroll-snap-type: y mandatory;
+    -webkit-overflow-scrolling: touch;
+    z-index: 1;
+}
+.slides-container::-webkit-scrollbar { display: none; }
+
+.slide {
+    width: 100%;
+    height: 100vh; height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 40px;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.slide.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .slide { opacity: 1; transform: none; }
+}
+
+/* ===== Glass Card ===== */
+.glass-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-glass);
+    transition: var(--transition);
+}
+.glass-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-glass-strong);
+}
+
+/* ===== Slide 1: Title ===== */
+.slide-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 32px;
+}
+
+.title-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 40px;
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-glass);
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.rating-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 18px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-glass);
+}
+.rating-badge.buy {
+    background: rgba(34, 197, 94, 0.12);
+    border-color: rgba(34, 197, 94, 0.25);
+    color: #4ade80;
+}
+.rating-badge.strong-buy {
+    background: rgba(34, 197, 94, 0.18);
+    border-color: rgba(34, 197, 94, 0.35);
+    color: #4ade80;
+}
+.rating-badge.hold {
+    background: rgba(250, 204, 21, 0.12);
+    border-color: rgba(250, 204, 21, 0.25);
+    color: #facc15;
+}
+.rating-badge.sell {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.25);
+    color: #f87171;
+}
+.rating-badge.strong-sell {
+    background: rgba(239, 68, 68, 0.18);
+    border-color: rgba(239, 68, 68, 0.35);
+    color: #f87171;
+}
+
+.title-ticker {
+    font-family: var(--font-display);
+    font-size: 80px;
+    font-weight: 800;
+    letter-spacing: -3px;
+    line-height: 1;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.title-company {
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-top: -8px;
+}
+
+.title-meta {
+    display: flex;
+    gap: 24px;
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+.title-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.title-meta .dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--text-muted);
+}
+
+.title-score {
+    font-size: 18px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+.title-score strong {
+    font-weight: 700;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ===== Slide 2: Key Metrics ===== */
+.slide-label {
+    position: absolute;
+    top: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+    max-width: 900px;
+}
+
+.metric-card {
+    padding: 28px 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.metric-card .metric-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+.metric-card .metric-value {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.1;
+}
+.metric-card .metric-value.positive { color: #4ade80; }
+.metric-card .metric-value.negative { color: #f87171; }
+.metric-card .metric-value.neutral { color: var(--text-primary); }
+.metric-card .metric-value.accent {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.metric-card .metric-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* ===== Slide 3: Radar ===== */
+.radar-wrapper {
+    width: 100%;
+    max-width: 700px;
+    height: 520px;
+}
+.radar-wrapper .slide-label {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+#radarChart {
+    width: 100%;
+    height: 100%;
+}
+
+/* ===== Slide 4: Bull / Bear Debate ===== */
+.debate-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    width: 100%;
+    max-width: 1100px;
+}
+
+.debate-panel {
+    padding: 36px 32px;
+}
+.debate-panel .panel-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-glass);
+}
+.debate-panel .panel-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+.debate-panel.bull .panel-icon {
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+}
+.debate-panel.bear .panel-icon {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+}
+.debate-panel .panel-title {
+    font-size: 20px;
+    font-weight: 700;
+}
+.debate-panel.bull .panel-title { color: #4ade80; }
+.debate-panel.bear .panel-title { color: #f87171; }
+.debate-panel .panel-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.debate-panel .panel-items li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+.debate-panel .panel-items li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+}
+.debate-panel.bull .panel-items li::before { background: #4ade80; }
+.debate-panel.bear .panel-items li::before { background: #f87171; }
+
+/* ===== Slide 5: Final Decision ===== */
+.final-decision {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 40px;
+    max-width: 700px;
+}
+
+.final-score-ring {
+    position: relative;
+    width: 160px; height: 160px;
+}
+.final-score-ring svg {
+    width: 100%; height: 100%;
+    transform: rotate(-90deg);
+}
+.final-score-ring .ring-bg {
+    fill: none;
+    stroke: rgba(255,255,255,0.06);
+    stroke-width: 6;
+}
+.final-score-ring .ring-fg {
+    fill: none;
+    stroke: url(#scoreGradient);
+    stroke-width: 6;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1.5s ease;
+}
+.final-score-ring .score-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-display);
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+.final-rating-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 28px;
+    border-radius: 100px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-glass);
+}
+.final-rating-badge.buy {
+    background: rgba(34, 197, 94, 0.12);
+    border-color: rgba(34, 197, 94, 0.25);
+    color: #4ade80;
+}
+.final-rating-badge.strong-buy {
+    background: rgba(34, 197, 94, 0.18);
+    border-color: rgba(34, 197, 94, 0.35);
+    color: #4ade80;
+}
+.final-rating-badge.hold {
+    background: rgba(250, 204, 21, 0.12);
+    border-color: rgba(250, 204, 21, 0.25);
+    color: #facc15;
+}
+.final-rating-badge.sell {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.25);
+    color: #f87171;
+}
+.final-rating-badge.strong-sell {
+    background: rgba(239, 68, 68, 0.18);
+    border-color: rgba(239, 68, 68, 0.35);
+    color: #f87171;
+}
+
+.final-dimensions {
+    width: 100%;
+}
+.final-dimensions .dims-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+}
+.final-dimensions .dims-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+.final-dimensions .dim-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 18px;
+    background: var(--bg-card);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-sm);
+}
+.final-dimensions .dim-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+.final-dimensions .dim-score {
+    font-size: 14px;
+    font-weight: 700;
+    font-family: var(--font-display);
+}
+
+/* ===== Navigation Dots ===== */
+.nav-dots {
+    position: fixed;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 100;
+}
+.nav-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+}
+.nav-dot:hover { background: rgba(255,255,255,0.3); }
+.nav-dot.active {
+    background: var(--accent-1);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+}
+.nav-dot .dot-tooltip {
+    position: absolute;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-glass);
+    padding: 4px 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+.nav-dot:hover .dot-tooltip { opacity: 1; }
+
+/* ===== Scrollbar ===== */
+.slide::-webkit-scrollbar { width: 4px; }
+.slide::-webkit-scrollbar-track { background: transparent; }
+.slide::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+/* ===== Animations ===== */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.slide.active .glass-card,
+.slide.active .title-ticker,
+.slide.active .title-company,
+.slide.active .title-meta,
+.slide.active .title-score,
+.slide.active .title-badge,
+.slide.active .final-score-ring,
+.slide.active .final-rating-badge,
+.slide.active .final-dimensions {
+    animation: fadeInUp 0.6s ease forwards;
+}
+.slide.active .title-ticker { animation-delay: 0.1s; }
+.slide.active .title-company { animation-delay: 0.2s; }
+.slide.active .title-meta { animation-delay: 0.3s; }
+.slide.active .title-score { animation-delay: 0.4s; }
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .slide { padding: 24px 16px; }
+    .title-ticker { font-size: 48px; letter-spacing: -2px; }
+    .title-company { font-size: 18px; }
+    .title-badge { padding: 12px 24px; font-size: 12px; }
+    .title-meta { flex-direction: column; gap: 8px; align-items: center; }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .metric-card { padding: 20px 16px; }
+    .metric-card .metric-value { font-size: 28px; }
+    .debate-container { grid-template-columns: 1fr; gap: 20px; }
+    .debate-panel { padding: 24px 20px; }
+    .radar-wrapper { max-width: 100%; height: 400px; }
+    .nav-dots { right: 16px; gap: 10px; }
+    .nav-dot { width: 8px; height: 8px; }
+    .final-decision { gap: 28px; }
+    .final-score-ring { width: 120px; height: 120px; }
+    .final-score-ring .score-text { font-size: 32px; }
+}
+
+@media (max-width: 480px) {
+    .metrics-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .title-ticker { font-size: 36px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Ambient Glow Orbs -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- SVG Defs -->
+<svg style="position:absolute;width:0;height:0;">
+    <defs>
+        <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#38bdf8" />
+            <stop offset="100%" stop-color="#818cf8" />
+        </linearGradient>
+    </defs>
+</svg>
+
+<!-- Navigation Dots -->
+<nav class="nav-dots" id="navDots">
+    <button class="nav-dot active" data-slide="0">
+        <span class="dot-tooltip">Overview</span>
+    </button>
+    <button class="nav-dot" data-slide="1">
+        <span class="dot-tooltip">Key Metrics</span>
+    </button>
+    <button class="nav-dot" data-slide="2">
+        <span class="dot-tooltip">Radar</span>
+    </button>
+    <button class="nav-dot" data-slide="3">
+        <span class="dot-tooltip">Debate</span>
+    </button>
+    <button class="nav-dot" data-slide="4">
+        <span class="dot-tooltip">Decision</span>
+    </button>
+</nav>
+
+<div class="slides-container" id="slidesContainer">
+
+    <!-- ===== Slide 1: Title ===== -->
+    <section class="slide slide-title active" data-slide="0">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:32px;">
+            <div class="title-badge">
+                <span>Stock Analysis Report</span>
+                <span class="rating-badge buy" id="titleRatingBadge">BUY</span>
+            </div>
+            <h1 class="title-ticker">NVDA_glassmorphism</h1>
+            <p class="title-company">NVIDIA Corp</p>
+            <div class="title-meta">
+                <span>2026-06-07</span>
+                <span class="dot"></span>
+                <span>全新深度研究</span>
+            </div>
+            <div class="title-score">
+                Overall Score: <strong>8.5</strong>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Slide 2: Key Metrics ===== -->
+    <section class="slide" data-slide="1">
+        <div style="position:relative;width:100%;max-width:900px;">
+            <div class="slide-label">Key Metrics</div>
+            <div class="metrics-grid">
+                <div class="glass-card metric-card">
+                    <span class="metric-label">Price</span>
+                    <span class="metric-value accent">185.40</span>
+                    <span class="metric-sub">Current price</span>
+                </div>
+                <div class="glass-card metric-card">
+                    <span class="metric-label">RSI (14)</span>
+                    <span class="metric-value ${rsi_14 >= 70 ? 'negative' : rsi_14 <= 30 ? 'positive' : 'neutral'}">62.5</span>
+                    <span class="metric-sub">Momentum indicator</span>
+                </div>
+                <div class="glass-card metric-card">
+                    <span class="metric-label">P / E</span>
+                    <span class="metric-value neutral">28.5</span>
+                    <span class="metric-sub">Valuation ratio</span>
+                </div>
+                <div class="glass-card metric-card">
+                    <span class="metric-label">Short %</span>
+                    <span class="metric-value ${short_pct > 10 ? 'negative' : short_pct > 5 ? 'neutral' : 'positive'}">2.1%%</span>
+                    <span class="metric-sub">Shares shorted</span>
+                </div>
+                <div class="glass-card metric-card">
+                    <span class="metric-label">YTD</span>
+                    <span class="metric-value ${ytd.startsWith('+') ? 'positive' : ytd.startsWith('-') ? 'negative' : 'neutral'}">+120.5%</span>
+                    <span class="metric-sub">Year-to-date return</span>
+                </div>
+                <div class="glass-card metric-card">
+                    <span class="metric-label">MACD</span>
+                    <span class="metric-value ${macd_signal === 'Bullish' ? 'positive' : 'negative'}">Bullish</span>
+                    <span class="metric-sub">Trend signal</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Slide 3: Radar ===== -->
+    <section class="slide" data-slide="2">
+        <div class="radar-wrapper glass-card" style="padding:32px;">
+            <div class="slide-label">Score Breakdown</div>
+            <div id="radarChart"></div>
+        </div>
+    </section>
+
+    <!-- ===== Slide 4: Bull / Bear Debate ===== -->
+    <section class="slide" data-slide="3">
+        <div style="width:100%;max-width:1100px;">
+            <div class="slide-label" style="position:relative;top:auto;left:auto;transform:none;margin-bottom:24px;">Bull vs Bear</div>
+            <div class="debate-container">
+                <div class="glass-card debate-panel bull">
+                    <div class="panel-header">
+                        <div class="panel-icon">&#9650;</div>
+                        <span class="panel-title">Bull Case</span>
+                    </div>
+                    <ul class="panel-items"><li>AI tailwind</li><li>Excellent margins</li></ul>
+                </div>
+                <div class="glass-card debate-panel bear">
+                    <div class="panel-header">
+                        <div class="panel-icon">&#9660;</div>
+                        <span class="panel-title">Bear Case</span>
+                    </div>
+                    <ul class="panel-items"><li>Valuation</li><li>Competition</li></ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Slide 5: Final Decision ===== -->
+    <section class="slide" data-slide="4">
+        <div class="final-decision">
+            <div class="slide-label" style="position:relative;top:auto;left:auto;transform:none;">Final Verdict</div>
+
+            <div class="final-score-ring">
+                <svg viewBox="0 0 160 160">
+                    <circle class="ring-bg" cx="80" cy="80" r="68" />
+                    <circle class="ring-fg" id="scoreRing" cx="80" cy="80" r="68"
+                        stroke-dasharray="427.26"
+                        stroke-dashoffset="427.26" />
+                </svg>
+                <span class="score-text">8.5</span>
+            </div>
+
+            <div class="final-rating-badge buy" id="finalRatingBadge">BUY</div>
+
+            <div class="final-dimensions">
+                <div class="dims-title">Dimension Scores</div>
+                <div class="dims-grid" id="dimGrid"><div class="score-item"><div class="score-label">基本面</div><div class="score-value" style="color:#22c55e">8</div></div><div class="score-item"><div class="score-label">技术面</div><div class="score-value" style="color:#facc15">7.5</div></div><div class="score-item"><div class="score-label">情绪面</div><div class="score-value" style="color:#22c55e">8.5</div></div><div class="score-item"><div class="score-label">宏观</div><div class="score-value" style="color:#22c55e">9</div></div><div class="score-item"><div class="score-label">风险</div><div class="score-value" style="color:#facc15">7.5</div></div></div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    /* ===== Slide Presentation Controller (Scroll-Snap) ===== */
+    var slides = document.querySelectorAll('.slide');
+    var dots = document.querySelectorAll('.nav-dot');
+    var container = document.getElementById('slidesContainer');
+    var totalSlides = slides.length;
+    var currentSlide = 0;
+
+    /* ===== Intersection Observer for Reveal ===== */
+    if ('IntersectionObserver' in window) {
+        var revealObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, { threshold: 0.3 });
+        slides.forEach(function(s) { revealObserver.observe(s); });
+    } else {
+        slides.forEach(function(s) { s.classList.add('revealed'); });
+    }
+
+    /* ===== Track active slide via scroll ===== */
+    function updateActiveSlide() {
+        var scrollCenter = container.scrollTop + container.clientHeight / 2;
+        var newIdx = 0;
+        slides.forEach(function(s, i) {
+            var rect = s.getBoundingClientRect();
+            var sTop = container.scrollTop + rect.top;
+            if (scrollCenter >= sTop && scrollCenter <= sTop + rect.height) {
+                newIdx = i;
+            }
+        });
+        if (newIdx !== currentSlide) {
+            currentSlide = newIdx;
+            dots.forEach(function(d, i) {
+                d.classList.toggle('active', i === currentSlide);
+            });
+            if (currentSlide === 2 && radarChartInstance) {
+                setTimeout(function() { radarChartInstance.resize(); }, 100);
+            }
+        }
+    }
+
+    container.addEventListener('scroll', updateActiveSlide, { passive: true });
+
+    /* ===== Keyboard Navigation ===== */
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            container.scrollBy({ top: container.clientHeight, behavior: 'smooth' });
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            container.scrollBy({ top: -container.clientHeight, behavior: 'smooth' });
+        } else if (e.key === 'Home') {
+            e.preventDefault();
+            container.scrollTo({ top: 0, behavior: 'smooth' });
+        } else if (e.key === 'End') {
+            e.preventDefault();
+            container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+        }
+    });
+
+    /* ===== Nav Dots Click ===== */
+    dots.forEach(function(dot) {
+        dot.addEventListener('click', function() {
+            var idx = parseInt(this.getAttribute('data-slide'));
+            container.scrollTo({ top: idx * container.clientHeight, behavior: 'smooth' });
+        });
+    });
+
+    /* ===== ECharts Radar ===== */
+    var radarChartInstance = null;
+    var radarDom = document.getElementById('radarChart');
+
+    if (radarDom && typeof echarts !== 'undefined') {
+        try {
+            var scoresData = [8,7.5,8.5,9,7.5];
+            var dimLabels = ['基本面','技术面','情绪面','宏观','风险'];
+            var categories = dimLabels;
+            var values = scoresData;
+            var maxVal = 10;
+
+            radarChartInstance = echarts.init(radarDom, null, { renderer: 'canvas' });
+
+            var option = {
+                backgroundColor: 'transparent',
+                radar: {
+                    indicator: categories.map(function(name) {
+                        return { name: name, max: maxVal };
+                    }),
+                    shape: 'polygon',
+                    splitNumber: 3,
+                    axisName: {
+                        color: '#94a3b8',
+                        fontSize: 11,
+                        fontWeight: 500,
+                        fontFamily: 'Inter, sans-serif'
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: 'rgba(255,255,255,0.06)'
+                        }
+                    },
+                    splitArea: {
+                        areaStyle: {
+                            color: ['rgba(56,189,248,0.02)', 'rgba(129,140,248,0.02)']
+                        }
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: 'rgba(255,255,255,0.06)'
+                        }
+                    }
+                },
+                series: [{
+                    type: 'radar',
+                    data: [{
+                        value: values,
+                        name: 'Score',
+                        areaStyle: {
+                            color: {
+                                type: 'radial',
+                                x: 0.5, y: 0.5, r: 0.8,
+                                colorStops: [
+                                    { offset: 0, color: 'rgba(56,189,248,0.3)' },
+                                    { offset: 0.5, color: 'rgba(129,140,248,0.2)' },
+                                    { offset: 1, color: 'rgba(56,189,248,0.05)' }
+                                ],
+                                global: false
+                            }
+                        },
+                        lineStyle: {
+                            color: '#38bdf8',
+                            width: 2
+                        },
+                        itemStyle: {
+                            color: '#818cf8',
+                            borderWidth: 2,
+                            borderColor: '#38bdf8'
+                        }
+                    }],
+                    symbol: 'circle',
+                    symbolSize: 6,
+                    label: {
+                        show: true,
+                        color: '#f8fafc',
+                        fontSize: 11,
+                        fontWeight: 600,
+                        fontFamily: 'Inter, sans-serif',
+                        formatter: function(params) { return params.value; }
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        backgroundColor: 'rgba(15,23,42,0.9)',
+                        borderColor: 'rgba(255,255,255,0.1)',
+                        borderWidth: 1,
+                        textStyle: {
+                            color: '#f8fafc',
+                            fontSize: 12,
+                            fontFamily: 'Inter, sans-serif'
+                        }
+                    }
+                }]
+            };
+
+            radarChartInstance.setOption(option);
+        } catch(e) {
+            // If ECharts fails silently — radar DOM may be hidden
+            radarChartInstance = null;
+        }
+    }
+
+    /* ===== Score Ring Animation ===== */
+    function animateRing() {
+        var ring = document.getElementById('scoreRing');
+        if (!ring) return;
+        var score = 8.5;
+        var circumference = 2 * Math.PI * 68; // r=68
+        var offset = circumference - (score / 100) * circumference;
+        setTimeout(function() {
+            ring.style.transition = 'stroke-dashoffset 1.5s ease';
+            ring.style.strokeDashoffset = offset;
+        }, 400);
+    }
+
+    // Animate ring when slide 5 is revealed (IntersectionObserver handles this)
+    // Fallback check
+    var ringCheck = setInterval(function() {
+        var lastSlide = slides[4];
+        if (lastSlide && lastSlide.classList.contains('revealed')) {
+            animateRing();
+            clearInterval(ringCheck);
+        }
+    }, 500);
+
+    /* ===== Resize Handler ===== */
+    window.addEventListener('resize', function() {
+        if (radarChartInstance) {
+            radarChartInstance.resize();
+        }
+    });
+
+})();
+</script>
+</body>
+</html>

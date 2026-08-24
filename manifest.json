@@ -39,7 +39,8 @@
     "TSLA": [
       { "date": "2026-06-18", "path": "TSLA/2026-06-18/report.html", "mode": "1", "preset": "corporate-light" },
       { "date": "2026-06-10", "path": "TSLA/2026-06-10/report.html", "mode": "1", "preset": "corporate-light" },
-      { "date": "2026-06-08", "path": "TSLA/2026-06-08/report.html", "mode": "1", "preset": "corporate-light" }
+      { "date": "2026-06-08", "path": "TSLA/2026-06-08/report.html", "mode": "1", "preset": "corporate-light" },
+      { "date": "2026-08-24", "path": "TSLA/2026-08-24/report.html", "mode": "1", "preset": "corporate-light" }
     ]
   }
 }

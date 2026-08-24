@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NVDA_minimal-bold — Stock Analysis Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js" integrity="sha384-0fn0yC/2J95JdMNZyJJK4r7w/5zAs8KfJyhqM+PDiSYqMVoWmU6FYGNq6bMb1xL" crossorigin="anonymous"></script>
+<style>
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f8f8;
+    --bg-card: #f3f4f6;
+    --text-primary: #111111;
+    --text-secondary: #525252;
+    --accent-1: #2563eb;
+    --accent-2: #dc2626;
+    --font-display: 'Libre Franklin', sans-serif;
+    --font-body: 'Libre Franklin', sans-serif;
+    --border-color: #d1d5db;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: var(--font-body);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.slides-container {
+    height: 100vh;
+    width: 100vw;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+}
+.slide {
+    min-height: 100vh;
+    width: 100%;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 64px;
+    background: var(--bg-primary);
+    position: relative;
+    transition: opacity 0.2s ease;
+}
+.grid-bg {
+    background-image:
+        linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+}
+
+/* Navigation dots */
+.nav-dots {
+    position: fixed;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 1000;
+}
+.nav-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid var(--text-primary);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    padding: 0;
+}
+.nav-dot.active {
+    background: var(--text-primary);
+    transform: scale(1.2);
+}
+.nav-dot:hover {
+    background: var(--text-primary);
+    opacity: 0.5;
+}
+
+/* Slide indicator */
+.slide-indicator {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    z-index: 1000;
+    background: var(--bg-primary);
+    padding: 6px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+}
+
+/* Slide 1: Title */
+.title-slide { text-align: center; }
+.rating-badge {
+    display: inline-block;
+    padding: 10px 28px;
+    border-radius: 6px;
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+}
+.rating-badge.buy { background: #16a34a; color: #fff; }
+.rating-badge.accumulate { background: #22c55e; color: #fff; }
+.rating-badge.hold { background: #eab308; color: #111; }
+.rating-badge.reduce { background: #f97316; color: #fff; }
+.rating-badge.sell { background: #dc2626; color: #fff; }
+
+.ticker-gradient {
+    font-family: var(--font-display);
+    font-size: 96px;
+    font-weight: 800;
+    letter-spacing: -3px;
+    line-height: 1;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #111111, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.company-name {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+}
+.title-meta {
+    font-size: 13px;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.title-meta span { margin: 0 8px; }
+.title-meta .sep { color: var(--border-color); }
+
+/* Slide 2: Key Metrics */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 800px;
+    width: 100%;
+}
+.metric-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    transition: border-color 0.15s ease;
+    box-shadow: none;
+}
+.metric-card:hover { border-color: var(--accent-1); }
+.metric-value {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 4px;
+}
+.metric-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+.metric-change {
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 8px;
+}
+.metric-change.positive { color: #16a34a; }
+.metric-change.negative { color: var(--accent-2); }
+
+/* Slide 3: Radar Chart */
+.chart-container { width: 100%; max-width: 600px; height: 480px; }
+
+/* Slide 4: Bull / Bear Debate */
+.debate-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 1000px;
+    width: 100%;
+}
+.debate-panel {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 32px;
+    background: var(--bg-secondary);
+}
+.debate-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border-color);
+}
+.debate-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+}
+.debate-icon.bull { background: #16a34a; color: #fff; }
+.debate-icon.bear { background: var(--accent-2); color: #fff; }
+.debate-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+.debate-items { list-style: none; }
+.debate-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+.debate-item:last-child { border-bottom: none; }
+.debate-item strong { font-weight: 600; }
+
+/* Slide 5: Final Decision */
+.final-score {
+    font-family: var(--font-display);
+    font-size: 80px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+.final-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+.final-rating {
+    margin-bottom: 32px;
+}
+.per-dim-section {
+    margin-top: 32px;
+    max-width: 700px;
+    width: 100%;
+}
+.per-dim-section h3 {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    text-align: center;
+}
+.per-dim-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+}
+.per-dim-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 16px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+    transition: border-color 0.15s ease;
+}
+.per-dim-card:hover { border-color: var(--accent-1); }
+.per-dim-card strong {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+/* Slide titles */
+.slide-title {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .slide { padding: 32px 24px; }
+    .ticker-gradient { font-size: 56px; letter-spacing: -1px; }
+    .company-name { font-size: 18px; }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .metric-value { font-size: 24px; }
+    .debate-grid { grid-template-columns: 1fr; gap: 16px; }
+    .final-score { font-size: 56px; }
+    .nav-dots { right: 12px; gap: 8px; }
+    .nav-dot { width: 8px; height: 8px; }
+    .chart-container { height: 360px; }
+}
+@media (max-width: 480px) {
+    .metrics-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="slides-container" id="slidesContainer">
+
+    <!-- Slide 1: Title -->
+    <section class="slide title-slide grid-bg">
+        <div class="rating-badge buy">BUY</div>
+        <div class="ticker-gradient">NVDA_minimal-bold</div>
+        <div class="company-name">NVIDIA Corp</div>
+        <div class="title-meta">
+            <span>全新深度研究</span>
+            <span class="sep">|</span>
+            <span>2026-06-07</span>
+        </div>
+    </section>
+
+    <!-- Slide 2: Key Metrics -->
+    <section class="slide grid-bg">
+        <h2 class="slide-title">Key Metrics</h2>
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value">185.40</div>
+                <div class="metric-label">Price</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">62.5</div>
+                <div class="metric-label">RSI (14)</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">28.5</div>
+                <div class="metric-label">P / E</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">2.1%%</div>
+                <div class="metric-label">Short % Float</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">
+                    <span class="metric-change ${ytd.startsWith('+') ? 'positive' : 'negative'}">+120.5%</span>
+                </div>
+                <div class="metric-label">YTD Return</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">
+                    <span class="metric-change ${macd_signal.includes('bullish') ? 'positive' : 'negative'}">Bullish</span>
+                </div>
+                <div class="metric-label">MACD Signal</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 3: Radar Chart -->
+    <section class="slide grid-bg">
+        <h2 class="slide-title">Factor Scorecard</h2>
+        <div class="chart-container" id="radarChart"></div>
+    </section>
+
+    <!-- Slide 4: Bull / Bear Debate -->
+    <section class="slide grid-bg">
+        <h2 class="slide-title">Bull vs Bear Debate</h2>
+        <div class="debate-grid">
+            <div class="debate-panel">
+                <div class="debate-header">
+                    <div class="debate-icon bull">B</div>
+                    <div class="debate-title">Bull Case</div>
+                </div>
+                <ul class="debate-items">
+                    <li>AI tailwind</li><li>Excellent margins</li>
+                </ul>
+            </div>
+            <div class="debate-panel">
+                <div class="debate-header">
+                    <div class="debate-icon bear">B</div>
+                    <div class="debate-title">Bear Case</div>
+                </div>
+                <ul class="debate-items">
+                    <li>Valuation</li><li>Competition</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 5: Final Decision -->
+    <section class="slide title-slide grid-bg">
+        <div class="final-label">Score</div>
+        <div class="final-score">8.5</div>
+        <div class="final-rating">
+            <span class="rating-badge buy">BUY</span>
+        </div>
+        <div class="per-dim-section">
+            <h3>Dimension Breakdown</h3>
+            <div class="per-dim-grid">
+                <div class="score-item"><div class="score-label">基本面</div><div class="score-value" style="color:#22c55e">8</div></div><div class="score-item"><div class="score-label">技术面</div><div class="score-value" style="color:#facc15">7.5</div></div><div class="score-item"><div class="score-label">情绪面</div><div class="score-value" style="color:#22c55e">8.5</div></div><div class="score-item"><div class="score-label">宏观</div><div class="score-value" style="color:#22c55e">9</div></div><div class="score-item"><div class="score-label">风险</div><div class="score-value" style="color:#facc15">7.5</div></div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<!-- Navigation dots -->
+<div class="nav-dots" id="navDots"></div>
+
+<!-- Slide indicator -->
+<div class="slide-indicator" id="slideIndicator">1 / 5</div>
+
+<script>
+function SlidePresentation() {
+    'use strict';
+
+    var container = document.getElementById('slidesContainer');
+    var slides = container.querySelectorAll('.slide');
+    var navDotsEl = document.getElementById('navDots');
+    var slideIndicatorEl = document.getElementById('slideIndicator');
+    var totalSlides = slides.length;
+    var currentIndex = 0;
+    var isScrolling = false;
+
+    // Build nav dots
+    slides.forEach(function(_, i) {
+        var dot = document.createElement('div');
+        dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('data-index', i);
+        dot.addEventListener('click', function() { goToSlide(parseInt(this.getAttribute('data-index'))); });
+        navDotsEl.appendChild(dot);
+    });
+
+    function updateActiveDot(index) {
+        var dots = navDotsEl.querySelectorAll('.nav-dot');
+        dots.forEach(function(d, i) { d.classList.toggle('active', i === index); });
+    }
+
+    function updateIndicator(index) {
+        slideIndicatorEl.textContent = (index + 1) + ' / ' + totalSlides;
+    }
+
+    function goToSlide(index) {
+        if (index < 0 || index >= totalSlides || isScrolling) return;
+        isScrolling = true;
+        currentIndex = index;
+        slides[index].scrollIntoView({ behavior: 'smooth' });
+        updateActiveDot(index);
+        updateIndicator(index);
+        setTimeout(function() { isScrolling = false; }, 400);
+    }
+
+    // IntersectionObserver for scroll detection
+    var observerOptions = { root: container, threshold: 0.5 };
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting && !isScrolling) {
+                var idx = Array.prototype.indexOf.call(slides, entry.target);
+                if (idx !== -1) {
+                    currentIndex = idx;
+                    updateActiveDot(idx);
+                    updateIndicator(idx);
+                }
+            }
+        });
+    }, observerOptions);
+    slides.forEach(function(s) { observer.observe(s); });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            goToSlide(currentIndex + 1);
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            goToSlide(currentIndex - 1);
+        }
+    });
+
+    // Wheel scroll (skip if inside debate panel)
+    container.addEventListener('wheel', function(e) {
+        var target = e.target;
+        while (target) {
+            if (target.classList && target.classList.contains('debate-panel')) return;
+            target = target.parentElement;
+        }
+    }, { passive: true });
+
+    // Touch navigation
+    var touchStartY = 0;
+    container.addEventListener('touchstart', function(e) {
+        touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+    container.addEventListener('touchend', function(e) {
+        var diff = touchStartY - e.changedTouches[0].screenY;
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) goToSlide(currentIndex + 1);
+            else goToSlide(currentIndex - 1);
+        }
+    }, { passive: true });
+
+    // ECharts Radar Chart
+    function initRadar() {
+        var dom = document.getElementById('radarChart');
+        if (!dom) return;
+
+        var scores;
+        try { scores = JSON.parse('[8,7.5,8.5,9,7.5]'); } catch(e) { return; }
+        if (!scores || !Array.isArray(scores)) return;
+
+        var dimLabels = ['基本面','技术面','情绪面','宏观','风险'];
+        var chart = echarts.init(dom, null);
+        var indicators = dimLabels.map(function(d) {
+            return { name: d, max: 10 };
+        });
+        var values = scores;
+
+        var option = {
+            radar: {
+                indicator: indicators,
+                radius: '65%',
+                center: ['50%', '50%'],
+                axisName: {
+                    color: '#525252',
+                    fontSize: 12,
+                    fontWeight: 500
+                },
+                splitLine: {
+                    lineStyle: { color: 'rgba(0,0,0,0.08)' }
+                },
+                splitArea: {
+                    areaStyle: {
+                        color: ['rgba(37,99,235,0.02)', 'rgba(37,99,235,0.04)']
+                    }
+                },
+                axisLine: {
+                    lineStyle: { color: 'rgba(0,0,0,0.1)' }
+                }
+            },
+            series: [{
+                type: 'radar',
+                data: [{ value: values }],
+                areaStyle: {
+                    color: 'rgba(37,99,235,0.1)'
+                },
+                lineStyle: {
+                    color: '#2563eb',
+                    width: 2
+                },
+                itemStyle: {
+                    color: '#2563eb'
+                },
+                symbol: 'circle',
+                symbolSize: 6
+            }]
+        };
+
+        chart.setOption(option);
+
+        // Resize observer
+        var ro = new ResizeObserver(function() { chart.resize(); });
+        ro.observe(dom);
+    }
+
+    // Init on load
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initRadar);
+    } else {
+        initRadar();
+    }
+
+    // Init indicator
+    updateIndicator(0);
+}
+
+new SlidePresentation();
+</script>
+</body>
+</html>

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NVDA 深度多维度量化分析报告</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@400,600,700&f[]=satoshi@400,500,700&display=swap">
+<style>
+/* ===========================================
+   NEON CYBER — 主题变量
+   =========================================== */
+:root {
+    --bg-primary: #0a0f1c;
+    --bg-secondary: #111827;
+    --bg-card: rgba(17, 24, 39, 0.7);
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --accent-cyan: #00f0ff;
+    --accent-magenta: #ff00aa;
+    --accent-dim: rgba(0, 240, 255, 0.12);
+    --border-glow: rgba(0, 240, 255, 0.2);
+    --glow-cyan: rgba(0, 240, 255, 0.3);
+    --glow-magenta: rgba(255, 0, 170, 0.25);
+    --font-display: 'Clash Display', sans-serif;
+    --font-body: 'Satoshi', sans-serif;
+    --title-size: clamp(2rem, 7vw, 5.5rem);
+    --h2-size: clamp(1.25rem, 3vw, 2.2rem);
+    --h3-size: clamp(0.9rem, 1.8vw, 1.35rem);
+    --body-size: clamp(0.75rem, 1.5vw, 1.05rem);
+    --small-size: clamp(0.6rem, 0.9vw, 0.8rem);
+    --slide-padding: clamp(1.5rem, 5vw, 4rem);
+    --content-gap: clamp(0.75rem, 2vw, 2rem);
+    --element-gap: clamp(0.35rem, 1vw, 1rem);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow-x: hidden; background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-body); }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+
+/* ===========================================
+   SLIDE BASE — viewport-fit 强制
+   =========================================== */
+.slide {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.slide-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-height: 100%;
+    overflow: hidden;
+    padding: var(--slide-padding);
+}
+
+/* ===========================================
+   GRID
+   =========================================== */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+/* ===========================================
+   NEON CYBER 装饰元素
+   =========================================== */
+.grid-bg {
+    background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+}
+.glow-cyan { box-shadow: 0 0 30px var(--glow-cyan), 0 0 60px rgba(0, 240, 255, 0.08); border: 1px solid var(--border-glow); }
+.glow-magenta { box-shadow: 0 0 30px var(--glow-magenta), 0 0 60px rgba(255, 0, 170, 0.08); border: 1px solid rgba(255, 0, 170, 0.2); }
+.accent-line {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+    margin-bottom: clamp(0.75rem, 2vw, 1.5rem);
+    border-radius: 2px;
+}
+
+/* ===========================================
+   入场动画
+   =========================================== */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo); }
+.reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo); }
+.reveal-scale { opacity: 0; transform: scale(0.92); transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo); }
+.slide.visible .reveal, .slide.visible .reveal-left, .slide.visible .reveal-scale { opacity: 1; transform: none; }
+.reveal:nth-child(2) { transition-delay: 0.1s; }
+.reveal:nth-child(3) { transition-delay: 0.2s; }
+.reveal:nth-child(4) { transition-delay: 0.3s; }
+.reveal-left:nth-child(2) { transition-delay: 0.1s; }
+.reveal-left:nth-child(3) { transition-delay: 0.2s; }
+
+/* ===========================================
+   导航点
+   =========================================== */
+.nav-dots {
+    position: fixed;
+    right: clamp(10px, 2vw, 24px);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.nav-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.nav-dot.active {
+    background: var(--accent-cyan);
+    box-shadow: 0 0 12px var(--glow-cyan);
+    border-color: var(--accent-cyan);
+}
+.nav-dot:hover { background: rgba(0, 240, 255, 0.5); }
+
+/* ===========================================
+   键盘提示
+   =========================================== */
+.keyboard-hint {
+    position: fixed;
+    bottom: clamp(12px, 2vh, 20px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    font-size: var(--small-size);
+    color: rgba(255,255,255,0.2);
+    font-family: var(--font-body);
+    pointer-events: none;
+}
+.keyboard-hint kbd {
+    display: inline-block;
+    padding: 2px 6px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: var(--small-size);
+}
+
+/* ===========================================
+   SLIDE 1 — 标题页
+   =========================================== */
+.title-slide { text-align: center; justify-content: center; }
+.title-slide .slide-content { align-items: center; }
+.rating-badge {
+    display: inline-block;
+    padding: clamp(6px, 1vw, 12px) clamp(16px, 3vw, 36px);
+    border-radius: 50px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--h3-size);
+    letter-spacing: 0.05em;
+    margin-bottom: var(--content-gap);
+}
+.rating-badge.buy { background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; }
+.rating-badge.accumulate { background: linear-gradient(135deg, #86efac, #22c55e); color: #052e16; }
+.rating-badge.hold { background: linear-gradient(135deg, #facc15, #eab308); color: #422006; }
+.rating-badge.reduce { background: linear-gradient(135deg, #f97316, #ea580c); color: #fff; }
+.rating-badge.sell { background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; }
+.ticker-symbol {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--title-size);
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.company-name { font-size: var(--h2-size); color: var(--text-secondary); margin-bottom: var(--element-gap); }
+.sub-info { font-size: var(--body-size); color: var(--text-secondary); }
+.sub-info strong { color: var(--text-primary); }
+
+/* ===========================================
+   SLIDE 2 — 核心指标
+   =========================================== */
+.metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.5rem, 1.5vw, 1rem); }
+.metric-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: clamp(1rem, 2vw, 1.75rem);
+    text-align: center;
+    backdrop-filter: blur(4px);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.metric-card:hover { border-color: var(--accent-cyan); box-shadow: 0 0 20px var(--glow-cyan); }
+.metric-label { font-size: var(--small-size); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.metric-value { font-family: var(--font-display); font-weight: 600; font-size: var(--h3-size); color: var(--text-primary); }
+.metric-value.positive { color: #22c55e; }
+.metric-value.negative { color: #ef4444; }
+.metric-value.warning { color: #facc15; }
+.metric-value.neutral { color: var(--accent-cyan); }
+
+/* ===========================================
+   SLIDE 3 — 雷达图
+   =========================================== */
+.radar-wrapper { flex: 1; width: 100%; min-height: 0; display: flex; align-items: center; justify-content: center; }
+#radarChart { width: 100%; height: 100%; max-height: min(70vh, 500px); }
+
+/* ===========================================
+   SLIDE 4 — 多空辩论
+   =========================================== */
+.debate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 2vw, 2rem); flex: 1; max-height: 75%; }
+.debate-panel {
+    padding: clamp(1rem, 2vw, 2rem);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vh, 1rem);
+    overflow-y: auto;
+}
+.debate-panel.bull {
+    background: rgba(34, 197, 94, 0.06);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+.debate-panel.bear {
+    background: rgba(239, 68, 68, 0.06);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+.debate-title { font-family: var(--font-display); font-weight: 600; font-size: var(--h3-size); }
+.debate-panel ul { list-style: none; display: flex; flex-direction: column; gap: clamp(0.4rem, 1vh, 0.8rem); }
+.debate-panel li {
+    font-size: var(--body-size);
+    line-height: 1.5;
+    color: var(--text-secondary);
+    padding-left: 1.2em;
+    position: relative;
+}
+.debate-panel li::before { content: "▸"; position: absolute; left: 0; }
+.debate-panel.bull li::before { color: #22c55e; }
+.debate-panel.bear li::before { color: #ef4444; }
+
+/* ===========================================
+   SLIDE 5 — 决策页
+   =========================================== */
+.final-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 120px), 1fr)); gap: clamp(0.5rem, 1vw, 0.75rem); }
+.score-item {
+    text-align: center;
+    padding: clamp(0.5rem, 1.5vw, 1rem);
+    background: var(--bg-card);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.04);
+}
+.score-label { font-size: var(--small-size); color: var(--text-secondary); }
+.score-value { font-family: var(--font-display); font-weight: 600; font-size: var(--h3-size); margin-top: 4px; }
+.final-score-big { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.5rem, 8vw, 6rem); line-height: 1; }
+.final-rating-big { font-family: var(--font-display); font-weight: 700; font-size: var(--h2-size); letter-spacing: 0.08em; }
+
+/* ===========================================
+   响应式
+   =========================================== */
+@media (max-height: 700px) {
+    :root { --slide-padding: clamp(0.75rem, 3vw, 2rem); --content-gap: clamp(0.5rem, 1.5vw, 1rem); --title-size: clamp(1.5rem, 5.5vw, 3rem); --h2-size: clamp(1rem, 2.5vw, 1.6rem); }
+    .debate-panel { padding: clamp(0.5rem, 1.5vw, 1rem); }
+    .keyboard-hint { display: none; }
+}
+@media (max-height: 600px) {
+    :root { --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem); --content-gap: clamp(0.3rem, 1vw, 0.75rem); --title-size: clamp(1.2rem, 5vw, 2.5rem); --body-size: clamp(0.65rem, 1.1vw, 0.85rem); }
+    .nav-dots { display: none; }
+    .debate-grid { grid-template-columns: 1fr; max-height: 85%; }
+    .debate-panel ul { gap: 0.3rem; }
+}
+@media (max-width: 600px) {
+    :root { --title-size: clamp(1.5rem, 8vw, 2.8rem); }
+    .metric-grid { grid-template-columns: repeat(2, 1fr); }
+    .debate-grid { grid-template-columns: 1fr; }
+    .keyboard-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+    html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+<!-- 导航点 -->
+<nav class="nav-dots" id="navDots"></nav>
+<div class="keyboard-hint">按 <kbd>↑</kbd><kbd>↓</kbd> 或 <kbd>Space</kbd> 切换幻灯片 · 鼠标滚轮翻页</div>
+
+<!-- ============================================
+     SLIDE 1 — 标题页
+     ============================================ -->
+<section class="slide title-slide">
+    <div class="slide-content">
+        <div class="rating-badge accumulate reveal">ACCUMULATE</div>
+        <div class="ticker-symbol reveal">NVDA</div>
+        <div class="company-name reveal">NVIDIA Corp</div>
+        <div class="sub-info reveal">
+            综合评分 <strong>7.69</strong> · 执行模式：全新深度研究 · 2026-06-06
+        </div>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 2 — 核心指标
+     ============================================ -->
+<section class="slide grid-bg">
+    <div class="slide-content">
+        <div class="accent-line reveal"></div>
+        <h2 class="reveal" style="font-family:var(--font-display);font-size:var(--h2-size);margin-bottom:var(--content-gap);">关键指标一览</h2>
+        <div class="metric-grid reveal-scale">
+            <div class="metric-card">
+                <div class="metric-label">当前价格</div>
+                <div class="metric-value neutral">$185.40</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">RSI (14)</div>
+                <div class="metric-value neutral">62.5</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">PE Ratio</div>
+                <div class="metric-value neutral">28.5x</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">卖空比例</div>
+                <div class="metric-value neutral">2.1%</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">年初至今</div>
+                <div class="metric-value positive">+12.0%</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">MACD</div>
+                <div class="metric-value neutral" style="font-size:var(--small-size);">多头状态 (Bullish)</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 3 — 五维雷达图
+     ============================================ -->
+<section class="slide">
+    <div class="slide-content">
+        <div class="accent-line reveal"></div>
+        <h2 class="reveal" style="font-family:var(--font-display);font-size:var(--h2-size);margin-bottom:clamp(0.5rem,1.5vw,1rem);">五维评分模型</h2>
+        <div class="radar-wrapper reveal-scale">
+            <div id="radarChart"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 4 — 多空辩论
+     ============================================ -->
+<section class="slide grid-bg">
+    <div class="slide-content">
+        <div class="accent-line reveal"></div>
+        <h2 class="reveal" style="font-family:var(--font-display);font-size:var(--h2-size);margin-bottom:clamp(0.5rem,1.5vw,1rem);">M05 多空决策辩论</h2>
+        <div class="debate-grid reveal-scale">
+            <div class="debate-panel bull">
+                <div class="debate-title" style="color:#22c55e;">🟢 看涨方</div>
+                <ul><li>高估值反映市场对公司未来增长的强烈信心和定价权溢价，成长性足以消化当前估值。</li><li>RSI 62.5 显示当前处于强势区间，资金持续流入，趋势动能充足。</li><li>分析师共识评级为 BUY，卖方研究普遍看好，机构持仓有望进一步增加。</li></ul>
+            </div>
+            <div class="debate-panel bear">
+                <div class="debate-title" style="color:#ef4444;">🔴 看跌方</div>
+                <ul><li>估值虽不高，但若增长不及预期则该安全垫也将被侵蚀，需关注营收增速拐点。</li><li>卖空比例仅 2.1%，说明市场缺乏对立观点，一旦情绪转向将缺乏对手盘支撑。</li><li>年初至今涨幅 +12.0% 已积累可观的获利盘，历史回测显示连续上涨后回撤概率上升。</li></ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================
+     SLIDE 5 — 最终决策
+     ============================================ -->
+<section class="slide" style="text-align:center;">
+    <div class="slide-content" style="align-items:center;">
+        <div class="reveal" style="margin-bottom:var(--content-gap);">
+            <div class="final-score-big" style="background:linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">7.69</div>
+            <div style="font-size:var(--small-size);color:var(--text-secondary);letter-spacing:0.08em;text-transform:uppercase;margin-top:clamp(0.25rem,0.5vw,0.5rem);">综合评分</div>
+        </div>
+        <div class="rating-badge accumulate reveal">ACCUMULATE</div>
+        <div class="sub-info reveal" style="margin-top:var(--content-gap);">执行模式：全新深度研究 · 框架 v5.0 · 2026-06-06</div>
+        <div class="final-grid reveal" style="margin-top:var(--content-gap);max-width:600px;width:100%;">
+            <div class="score-item"><div class="score-label">基本面</div><div class="score-value" style="color:#facc15">7.5</div></div>
+            <div class="score-item"><div class="score-label">技术面</div><div class="score-value" style="color:#22c55e">8</div></div>
+            <div class="score-item"><div class="score-label">情绪面</div><div class="score-value" style="color:#22c55e">8</div></div>
+            <div class="score-item"><div class="score-label">宏观</div><div class="score-value" style="color:#facc15">7.2</div></div>
+            <div class="score-item"><div class="score-label">风险</div><div class="score-value" style="color:#22c55e">8</div></div>
+        </div>
+    </div>
+</section>
+
+<script>
+// ==========================================
+// SlidePresentation Controller
+// ==========================================
+class SlidePresentation {
+    constructor() {
+        this.slides = document.querySelectorAll('.slide');
+        this.current = 0;
+        this.isScrolling = false;
+        this.setupObserver();
+        this.setupKeyboard();
+        this.setupWheel();
+        this.setupTouch();
+        this.setupNavDots();
+        this.initChart();
+    }
+    setupObserver() {
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                entry.target.classList.toggle('visible', entry.isIntersecting);
+                if (entry.isIntersecting) {
+                    this.current = Array.from(this.slides).indexOf(entry.target);
+                    this.updateDots();
+                }
+            });
+        }, { threshold: 0.3 });
+        this.slides.forEach(s => obs.observe(s));
+    }
+    goTo(i) {
+        if (i < 0 || i >= this.slides.length || this.isScrolling) return;
+        this.isScrolling = true;
+        this.slides[i].scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => { this.isScrolling = false; }, 600);
+    }
+    setupKeyboard() {
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.goTo(this.current + 1); }
+            if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); this.goTo(this.current - 1); }
+        });
+    }
+    setupWheel() {
+        let ticking = false;
+        document.addEventListener('wheel', e => {
+            if (ticking) return;
+            ticking = true;
+            setTimeout(() => { ticking = false; }, 500);
+            // Only intercept if the event isn't inside a scrollable panel
+            if (e.target.closest('.debate-panel')) return;
+            if (e.deltaY > 0) this.goTo(this.current + 1);
+            else this.goTo(this.current - 1);
+        }, { passive: true });
+    }
+    setupTouch() {
+        let startY = 0;
+        document.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
+        document.addEventListener('touchend', e => {
+            const dy = startY - e.changedTouches[0].clientY;
+            if (Math.abs(dy) > 40) {
+                if (dy > 0) this.goTo(this.current + 1);
+                else this.goTo(this.current - 1);
+            }
+        }, { passive: true });
+    }
+    setupNavDots() {
+        const container = document.getElementById('navDots');
+        container.innerHTML = '';
+        this.slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+            dot.addEventListener('click', () => this.goTo(i));
+            container.appendChild(dot);
+        });
+    }
+    updateDots() {
+        document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+            dot.classList.toggle('active', i === this.current);
+        });
+    }
+    initChart() {
+        const dom = document.getElementById('radarChart');
+        if (!dom) return;
+        const chart = echarts.init(dom, 'dark');
+        chart.setOption({
+            backgroundColor: 'transparent',
+            radar: {
+                indicator: [
+                    { name: '基本面
+Fundamental', max: 10 },
+                    { name: '技术面
+Technical', max: 10 },
+                    { name: '情绪面
+Sentiment', max: 10 },
+                    { name: '宏观
+Macro', max: 10 },
+                    { name: '风险
+Risk', max: 10 }
+                ],
+                shape: 'circle',
+                splitNumber: 5,
+                axisName: { color: '#94a3b8', fontSize: 11 },
+                splitLine: { lineStyle: { color: 'rgba(0,240,255,0.08)' } },
+                splitArea: { areaStyle: { color: ['rgba(0,240,255,0.02)', 'rgba(0,240,255,0.04)'] } },
+                axisLine: { lineStyle: { color: 'rgba(0,240,255,0.1)' } }
+            },
+            series: [{
+                type: 'radar',
+                data: [{
+                    value: [7.5, 8, 8, 7.2, 8],
+                    name: '综合评估',
+                    areaStyle: { color: 'rgba(0,240,255,0.15)' },
+                    lineStyle: { color: '#00f0ff', width: 2 },
+                    itemStyle: { color: '#00f0ff' }
+                }]
+            }]
+        });
+        window.addEventListener('resize', () => chart.resize());
+    }
+}
+new SlidePresentation();
+</script>
+</body>
+</html>
